@@ -61,3 +61,9 @@ def split_sql_tables(tables):
 BC_table = load_data_sql(["B", "C"], "data")
 ABC_table = load_data_sql(["A", "B", "C"], "data")
 split_sql_tables([BC_table, ABC_table])
+
+def build_rtree(element):
+	# Initialize tree
+	rtree_property = index.Property()
+	rtree_idx = index.Index(element + "_rtree", properties = p)
+	return 
