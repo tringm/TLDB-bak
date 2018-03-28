@@ -1,12 +1,11 @@
 # NOTE: Current conditions
-# Data : loading_data is contained in a upper level directory - data
+# Data: loading_data is contained in a upper level directory - data
 # 		 seperated files containing id and value for each element
 # 		 (element_v.dat for value and element_id.dat for id)
-# Coordinates of an Entry : tuple of list and int [[index], value]
-# Index : Currently using new index system instead of Dewey
+# Coordinates of an Entry [[], int]: list contains index and value
+# Index: Currently using new index system instead of Dewey
 # 		  list of int [left_pos, rightpos]
 # 					
-
 
 
 import numpy as np
@@ -57,7 +56,11 @@ def load_element(element_name):
 		raise ValueError('Id and value files have different size')
 	entries = []
 	for i in range(len(ids)):
-		entries.append(Entry([ids[i], int(values[i])]))				# Convert value from string to int
+		entry_id = [int(x) for x in ids[i].split()]						# Convert list of string id -> list of int
+		entries.append(Entry([entry_id, int(values[i])]))
+
+		# for Dewey index
+		# entries.append(Entry([ids[i], int(values[i])]))				# Convert value from string to int
 	return entries
 
 
@@ -98,69 +101,113 @@ def sort_entries(entries, dimension):
 	return quickSort(entries, 0, len(entries) - 1, dimension)
 
 
-def find_boundary_entries(entries):
+def get_boundary_entries(entries):
 	"""Summary
 	Find the MBR of list of Entries 
 	Args:
 	    entries [Entry]: list of input entries
 	
 	Returns:
-	    [index, value]: tuple of index and value
+	    ([index_low, index_high], [value_low, value_high]): tuple of index and value boundary
 	"""
-	boundary = []
-	min_index = 
+	first_entry_coordinates = entries[0].coordinates
+	index_low = first_entry_coordinates[0][0]
+	index_high = first_entry_coordinates[0][1]
+	value_low = first_entry_coordinates[1]
+	value_high = first_entry_coordinates[1]
 	for i in range(len(entries)):
+		entry_coordinates = entries[i].coordinates
+		index_low = min(index_low, entry_coordinates[0][0])
+		index_high = max(index_high, entry_coordinates[0][1])
+		value_low = min(value_low, entry_coordinates[1])
+		value_high = max(value_high, entry_coordinates[1])
+	return ([index_low, index_high], [value_low, value_high])
 
-	return boundary
 
-
-
-
-def rtree_bulk_loading(entries, max_n_children, dimension):
+def bulk_loading(entries, max_n_children, dimension):
+	"""Summary
+	Bulk loading RTree based on Overlap Minimizing Top-down Bulk Loading Algorithm
+	Args:
+	    entries [Entry]: list of input entries
+	    max_n_children (int): maximum number of children in a node of RTree
+	    dimension (int): dimension to cut when bulk loading (currently only value dimension - 1)
+	
+	Returns:
+	    Node: root node of loaded RTree
+	
+	Raises:
+	    ValueError: Check dimension and max_n_children
+	"""
 	if (dimension != 1):
 		raise ValueError('Currently only support the value dimension of coordinates')
+	if (max_n_children == 1):
+		raise ValueError('Maximum number of children nodes must be > 1')
 
 	# sort entries based on value
-	entries = sort_entries(entries, dimension)
-
+	sort_entries(entries, dimension)
 	n_entries = len(entries)
 	# Configuration
 	queue_node = queue.Queue()																			# Queue for node at each level
 	queue_range = queue.Queue()																			# Queue for range of a node at each level
 
 	# Initialization
+	# Create root node
 	root = Node(max_n_children)
-	queue_node.put(root)
-	queue_node.put([0, n_entries])
+	root.boundary = get_boundary_entries(entries)
 
-	height = math.ceil(math.log(n_entries, max_n_children))												# Calculate the hight of the tree based on max_n_children
-	level = 1																							# Current level to calculate split
-	n_node_prev_level = 1
-	
+	queue_node.put(root)
+	queue_range.put([0, n_entries])
+
 
 	while not queue_node.empty():
 		current_node = queue_node.get()
 		current_range = queue_range.get()
 		current_n_entries = current_range[1] - current_range[0] 										# Number of entries contained in this current node
+		height = math.ceil(math.log(current_n_entries, max_n_children))									# Calculate the height of this subtree based on max_n_children
+		# print('height ', height)
+		# print('current_range ', current_range)
+		# print('current_n_entries ', current_n_entries)
 
 		# if current node contains has n_entries <= max_n_children then this is a leaf and proceed to add entries
 		if (current_n_entries <= max_n_children):
-
+			# print("Add entries in leaf")
+			# print('before n entries ', len(current_node.entries))
+			adding_entries = entries[current_range[0]:current_range[1]]
+			for i in range(len(adding_entries)):
+				current_node.entries.append(adding_entries[i])
+			# print("After n entries ", len(current_node.entries))
 
 		else:
-			n_entries_subtree = max_n_children ** (height - level)										# Number of entries contained in the subtree of this node
+			# print('Adding new nodes')
+			n_entries_subtree = max_n_children ** (height - 1)										# Number of entries contained in the subtree of this node
 			n_slices = math.floor(math.sqrt(math.ceil(current_n_entries / n_entries_subtree)))          # Number of slices according to the formula of OMT
 
+			# divide into n_slice + 1 nodes, add to current node
 			for i in range(n_slices + 1):
+				# print('Node ', i)
+				range_low = current_range[0]  + i * max_n_children
+				range_high = range_low + max_n_children 
+				# last group might have more than max_n_children
+				if (i == n_slices):
+					range_high = current_range[1]
+				# print('range ', range_low, range_high)
+				subtree_node = Node(max_n_children)
+				subtree_node.parent = current_node
+				subtree_node.boundary = get_boundary_entries(entries[range_low:range_high])
+				current_node.children.append(subtree_node)
+				# print('boundary ', subtree_node.boundary)
+				queue_node.put(subtree_node)
+				queue_range.put([range_low, range_high])
+	return root
 
 
 
+
+
+
+# print(get_boundary_entries(A))
 
 # Test sorting entries
-# A = load_element('A')
-# for i in range(len(A)):
-# 	entry = A[i]
-# 	print(entry.coordinates)
 # sort_entries(A, 1)
 # print('sorted')
 # for i in range(len(A)):
@@ -174,3 +221,4 @@ def rtree_bulk_loading(entries, max_n_children, dimension):
 # 	queue.put(i)
 # while not queue.empty():
 # 	print(queue.get())
+

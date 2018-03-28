@@ -1,4 +1,12 @@
 class Entry:
+
+	"""Summary
+	Entry
+	
+	Attributes:
+	    coordinates [[index1, index2], value]:  list contains index and value 
+	"""
+	
 	def __init__(self, coordinates):
 		self.coordinates = coordinates
 
