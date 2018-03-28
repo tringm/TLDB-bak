@@ -1,8 +1,6 @@
 class Entry:
-	def __init__(self, coordinates, value, entry_id):
+	def __init__(self, coordinates):
 		self.coordinates = coordinates
-		self.value = value
-		self.id = entry_id
 
 	def is_inside(self, boundary):
 		"""Summary
