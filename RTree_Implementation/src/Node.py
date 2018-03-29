@@ -49,6 +49,11 @@ class Node:
 
 
 	def print_node(self, level = 0):
+		"""Summary
+		Simple implementation to print this node and its children
+		Args:
+		    level (int, optional): current level for printing
+		"""
 		if (len(self.entries) > 0):
 			print('\t' * level + 'Leaf Node: ', self.boundary)
 			for i in range(len(self.entries)):

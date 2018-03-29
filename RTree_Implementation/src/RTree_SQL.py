@@ -1,16 +1,7 @@
 # NOTE: Current conditions
 # Data: loading_data is contained in a upper level directory - data
-# 		 seperated files containing id and value for each element
-# 		 (element_v.dat for value and element_id.dat for id)
-# Coordinates of an Entry [[], int]: list contains index and value
-# Index: Currently using new index system instead of Dewey
-# 		  list of int [left_pos, rightpos]
-# 					
+# Coordinates of an Entry []: list contains values of each column
 
-
-import numpy as np
-import pandas as pd
-import os.path
 import queue
 import math
 
@@ -28,56 +19,39 @@ def load_text_file(filename):
 	    list [String]: 
 	"""
 	with open(filename) as f:
-		content = f.readlines()
+		content = f.readlines()[1:]											# Skip first line containing labels
 	content = [x.strip() for x in content]
 	return content
 
 
-def load_element(element_name):
+def load(table_name):
 	"""Summary
-	This function load elements value and ids, and put them as coordinate in Entry
-	Entry[0] = id, Entry[1] = value
+	This function load contents of the SQL table file and put them as coordinate in Entry
 	
 	Args:
 	    element_name (string):
 	
 	Returns:
 	    list [Entry]: 
-	
-	Raises:
-	    ValueError: raised if values file and ids file has different length
-	
 	"""
-	id_file_path = "../data/" + element_name + "_id.dat" 
-	value_file_path = "../data/" + element_name + "_v.dat" 
-	ids = load_text_file(id_file_path)
-	values = load_text_file(value_file_path)
-	if (len(ids) != len(values)):
-		raise ValueError('Id and value files have different size')
+	file_path = "../data/" + table_name + "_table.dat"
+	content = load_text_file(file_path)
 	entries = []
-	for i in range(len(ids)):
-		entry_id = [int(x) for x in ids[i].split()]						# Convert list of string id -> list of int
-		entries.append(Entry([entry_id, int(values[i])]))
-
-		# for Dewey index
-		# entries.append(Entry([ids[i], int(values[i])]))				# Convert value from string to int
+	for i in range(len(content)):
+		entries.append(Entry([int(x) for x in content[i].split()]))			# Convert list of string -> list of int
 	return entries
 
 
 def sort_entries(entries, dimension):
 	"""Summary
 	Quick sort list of entries according to value of a dimension
-	WARNING: currently only working for dimension 1 (values)
 	
 	Args:
 	    dimension (int): dimension of Entry to be sorted
 	    entries [Entry]: list of input entries
 	
 	Returns:
-	    [Entry]: sorted entries
-	
-	Raises:
-	    ValueError: raised if dimension != 1
+	    [Entry]: sorted list of  entries
 	"""
 	def partition(entries, low, high, dimension):
 		i = low - 1
@@ -95,10 +69,7 @@ def sort_entries(entries, dimension):
 			quickSort(entries, low, partition_index - 1, dimension)
 			quickSort(entries, partition_index + 1, high, dimension)
 
-	if (dimension != 1):
-		raise ValueError('Currently only support the value dimension of coordinates')
-
-	return quickSort(entries, 0, len(entries) - 1, dimension)
+	quickSort(entries, 0, len(entries) - 1, dimension)
 
 
 def get_boundary_entries(entries):
@@ -108,20 +79,20 @@ def get_boundary_entries(entries):
 	    entries [Entry]: list of input entries
 	
 	Returns:
-	    ([index_low, index_high], [value_low, value_high]): tuple of index and value boundary
+	    (): n_tuple of boundary for n_dimension
 	"""
+	boundary = []
 	first_entry_coordinates = entries[0].coordinates
-	index_low = first_entry_coordinates[0][0]
-	index_high = first_entry_coordinates[0][1]
-	value_low = first_entry_coordinates[1]
-	value_high = first_entry_coordinates[1]
-	for i in range(len(entries)):
-		entry_coordinates = entries[i].coordinates
-		index_low = min(index_low, entry_coordinates[0][0])
-		index_high = max(index_high, entry_coordinates[0][1])
-		value_low = min(value_low, entry_coordinates[1])
-		value_high = max(value_high, entry_coordinates[1])
-	return ([index_low, index_high], [value_low, value_high])
+	for dimension in range(len(first_entry_coordinates)):
+		low = first_entry_coordinates[dimension]
+		high = first_entry_coordinates[dimension]
+		for i in range(len(entries)):
+			entry_coordinates = entries[i].coordinates
+			low = min(low, entry_coordinates[dimension])
+			high = max(high, entry_coordinates[dimension])
+		boundary.append([low, high])
+	return boundary
+
 
 
 def bulk_loading(entries, max_n_children, dimension):
@@ -138,8 +109,6 @@ def bulk_loading(entries, max_n_children, dimension):
 	Raises:
 	    ValueError: Check dimension and max_n_children
 	"""
-	if (dimension != 1):
-		raise ValueError('Currently only support the value dimension of coordinates')
 	if (max_n_children == 1):
 		raise ValueError('Maximum number of children nodes must be > 1')
 
@@ -148,7 +117,7 @@ def bulk_loading(entries, max_n_children, dimension):
 	n_entries = len(entries)
 	# Configuration
 	queue_node = queue.Queue()																			# Queue for node at each level
-	queue_range = queue.Queue()																			# Queue for range of a node at each level
+	queue_range = queue.Queue()																			# Queue for range of entries contained in a node at each level
 
 	# Initialization
 	# Create root node
@@ -179,7 +148,7 @@ def bulk_loading(entries, max_n_children, dimension):
 
 		else:
 			# print('Adding new nodes')
-			n_entries_subtree = max_n_children ** (height - 1)										# Number of entries contained in the subtree of this node
+			n_entries_subtree = max_n_children ** (height - 1)											# Number of entries contained in the subtree of this node
 			n_slices = math.floor(math.sqrt(math.ceil(current_n_entries / n_entries_subtree)))          # Number of slices according to the formula of OMT
 
 			# divide into n_slice + 1 nodes, add to current node
