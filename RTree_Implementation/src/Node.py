@@ -66,3 +66,20 @@ class Node:
 			print('\t' * level, self.boundary)
 			for child in self.children:
 				child.print_node(level + 1)
+
+
+	def print_node_not_filtered(self, level = 0):
+		"""Summary
+		Simple implementation to print this node and its children
+		Args:
+		    level (int, optional): current level for printing
+		"""
+		if not self.filtered:
+			if (len(self.entries) > 0):
+				print('\t' * level, self.boundary, 'is Leaf')
+				for i in range(len(self.entries)):
+					print('\t' * (level + 1), self.entries[i].coordinates)
+			else:
+				print('\t' * level, self.boundary)
+				for child in self.children:
+					child.print_node_not_filtered(level + 1)
