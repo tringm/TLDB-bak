@@ -6,12 +6,14 @@ class Node:
 	"""RTree Node
 	
 	Attributes:
-		boundary [[int, int], [int, int]]: MBR
-								  Each tuple contains list of 2 ints [lower_bound, upper_bound] of a dimension
-		children [Node]: list of children nodes
-		entries [Entry]: list of entries (if this node is a leaf node)
-		max_n_children (int): maximum number of child Node
-		parent (Node): parent Node
+	    filtered (bool): True if this node if filtered
+	    max_n_children (int): maximum number of child Node
+	    parent (Node): parent Node
+	    value_filtered (bool): True if this node has been value filtered
+	    boundary [[int, int], [int, int]]: MBR
+	    						  Each tuple contains list of 2 ints [lower_bound, upper_bound] of a dimension
+	    children [Node]: list of children nodes
+	    entries [Entry]: list of entries (if this node is a leaf node)
 	"""
 	
 	def __init__(self, max_n_children):
@@ -21,6 +23,7 @@ class Node:
 		self.boundary = []
 		self.entries = []
 		self.filtered = False
+		self.value_filtered = False
 	
 	def update_boundary(self, coordinates):
 		n_dimensions = len(coordinates)
