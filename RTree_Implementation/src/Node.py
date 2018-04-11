@@ -20,6 +20,7 @@ class Node:
 		self.children = []
 		self.boundary = []
 		self.entries = []
+		self.filtered = False
 	
 	def update_boundary(self, coordinates):
 		n_dimensions = len(coordinates)
@@ -55,7 +56,7 @@ class Node:
 		    level (int, optional): current level for printing
 		"""
 		if (len(self.entries) > 0):
-			print('\t' * level + 'Leaf Node: ', self.boundary)
+			print('\t' * level, self.boundary, 'is Leaf')
 			for i in range(len(self.entries)):
 				print('\t' * (level + 1), self.entries[i].coordinates)
 		else:
