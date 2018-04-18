@@ -7,7 +7,7 @@ class Node:
 	
 	Attributes:
 	    filtered (bool): True if this node if filtered
-	    link (list): a list contains linked element with this node
+	    link (dict): a dict contains a list of nodes (to be checked when filtering) for each linked element 
 	    max_n_children (int): maximum number of child Node
 	    parent (Node): parent Node
 	    boundary [[int, int], [int, int]]: MBR
@@ -23,7 +23,7 @@ class Node:
 		self.boundary = []
 		self.entries = []
 		self.filtered = False
-		self.link = []
+		self.link = {}
 	
 	def update_boundary(self, coordinates):
 		n_dimensions = len(coordinates)

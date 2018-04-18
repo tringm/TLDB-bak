@@ -1,33 +1,84 @@
 import RTree_XML
 import RTree_SQL
 import queue
+import os
 from Node import Node
 from Entry import Entry
 
 
-def build_RTree_XML(element_name, max_n_children, dimension = 1):
+def load_elements(folder_name, elements_name, max_n_children):
+    """Summary
+    Load multiple elements and return list of root node of each element's R_Tree
+    Args:
+        folder_name (string)
+        elements_name (list of string): list of name of elements in XML query
+        max_n_children (int): maximum number of children in R_Tree
+    
+    Returns:
+        dict[string, Node]: dict with key is name of element and value is corresponding root node of RTree_XML
+    """
+    elements_root = {}
+    for element_name in elements_name:
+        elements_root[element_name] = build_RTree_XML(folder_name, element_name, max_n_children)
+    return(elements_root)
+
+def build_RTree_XML(folder_name, element_name, max_n_children, dimension = 1):
     """Summary
     Build a RTree for an XML element
+    
     Args:
-        element_name (string): 
+        folder_name (string): 
+        element_name (string)
+        max_n_children (int): maximum number of children in RTree
+        dimension (int, optional): dimenstion to be sorted for RTree, currently 1 (value)
+    
+    Returns:
+        Node: root node of built RTree
+    """
+    entries = RTree_XML.load(folder_name, element_name)
+    root = RTree_XML.bulk_loading(entries, max_n_children, dimension)
+    return root
+
+def load_tables(folder_name, elements_name, max_n_children):
+    """Summary
+    Load all tables inside a folder (files that end with _table.dat)
+    Args:
+        folder_name (string):
+        elements_name (list of string): list of elements in XML query
+        max_n_children (int): maximum number of children in R_Tree
+    
+    Returns:
+        dict[string, Node]: dict with key is name of table and value is corresponding root node of RTree_SQL
+    """
+    tables_root = {}
+    for file in os.listdir("../data/" + folder_name):
+        if 'table' in file:
+            table_elements = table_name[:-10].split('_')
+            tables_root[table_elements] = build_RTree_SQL(folder_name, file_name, elements_name, max_n_children)
+    return tables_root
+
+
+def build_RTree_SQL(folder_name, table_name, elements_name, max_n_children):
+    """Summary
+    Build a RTree for a SQL table with each element is a column. This RTree is sorted by element that is at highest level (smallest index in elements list) in XML query tree
+    
+    Args:
+        folder_name (string):
+        table_name (string)
+        elements_name (list of string): list of elements_name in XML query
         max_n_children (int): maximum number of children in RTree
     
     Returns:
         Node: root node of built RTree
     """
-    entries = RTree_XML.load_element(element_name)
-    root = RTree_XML.bulk_loading(entries, max_n_children, dimension)
-    return root
-
-
-def build_RTree_SQL(table_name, max_n_children, dimension):
-    """Summary
-    Build a RTree for a SQL table with each dimension is a column
-    Args:
-        table_name (string): 
-        max_n_children (int): maximum number of children in RTree
-    """
-    entries = RTree_SQL.load(table_name)
+    entries = RTree_SQL.load(folder_name, table_name)
+    
+    # Find which element in table is higest level and sort RTree based on this element 
+    table_elements = table_name[:-10].split('_')
+    index = []
+    for table_element in table_elements:
+        index.append(elements_name.index(table_element))
+    dimension = np.argmin(np.asarray(index))
     root = RTree_SQL.bulk_loading(entries, max_n_children, dimension)
     return root
 
@@ -292,28 +343,77 @@ def pairwise_filtering_ancestor_descendant(A_XML, D_XML, A_SQL, D_SQL, A_D_SQL, 
         # for i in range(len(new_position_D_SQL)):
         #   print(new_position_D_SQL[i].boundary)
 
+def filtering(folder_name, elements_name, relationship_matrix, max_n_children):
+    # Loading XML and SQL database into R_Tree
+    elements_root = load_elements(folder_name, elements_name, max_n_children)
+    tables_root = load_tables(folder_name)
+
+    # Intialization
+    # Start from root, link to root of connected node in XML query
+    for i in range(len(elements_name)):
+        element_name = elements_name[i]
+        element_root = elements_root[elements_name]
+        for j in range(i + 1, elements_name):
+            if (relationship_matrix[i, j] != 0):
+                connected_element = elements_name[j]
+                elements_root.link[connected_element] = []
+                elements_root.link[connected_element].append(elements_root[connected_element])
+
+    root_XML_query = elements_name[0]
+    queue = queue.Queue()
+    queue.put(elements_root[root_XML_query])
+
+    while not queue.empty():
+        current_node = queue.get()
+
+        # Ancestor Descendent filtering
+        # Check with each connected element of this current_node
+        for connected_element in current_node.link.keys():
+            connected_element_nodes = current_node.link[connected_element]              # list of nodes in the connected element that are connected to current_node
+            link_nodes_removed = np.zeros(len(connected_element_nodes))                       # array to store if a node in connected_element_nodes should be removed
+            has_one_satisfied_node = False
+            for i in range(len(connected_element_nodes)):
+                if ancestor_descendant_filter(current_node, connected_element_nodes[i]):
+                    has_one_satisfied_node = True
+                else link_nodes_removed[i] = 1
+
+            # If found no satisfied node -> filter current_node
+            if not has_one_satisfied_node:
+                current_node.filtered = True
+                break
+
+            # Update link of this connected_element
+            new_link_nodes = []
+            for i in range(len(connected_element)):
+                if link_nodes_removed[i] = 0:
+                    new_link_nodes.append(connected_element_nodes[i])
+            current_node.link[connected_element] = new_link_nodes
+
+        # if this current_node is not filtered by structure -> Do Value filtering
+        if not current_node.filtered:
 
 
-root_L_XML = build_RTree_XML('L', 2)
+
+root_L_XML = build_RTree_XML('test_1', 'L', 2)
 print('L_XML')
 root_L_XML.print_node()
 
-root_L_SQL = build_RTree_SQL('L', 2, 0)
-print('L_SQL')
-root_L_SQL.print_node()
+# root_L_SQL = build_RTree_SQL('L', 2, 0)
+# print('L_SQL')
+# root_L_SQL.print_node()
 
-root_K_XML = build_RTree_XML('K', 2)
-print('K_XML')
-root_K_XML.print_node()
+# root_K_XML = build_RTree_XML('K', 2)
+# print('K_XML')
+# root_K_XML.print_node()
 
-root_K_SQL = build_RTree_SQL('K', 2, 0)
-print('K_SQL')
-root_K_SQL.print_node()
+# root_K_SQL = build_RTree_SQL('K', 2, 0)
+# print('K_SQL')
+# root_K_SQL.print_node()
 
-root_L_K_SQL = build_RTree_SQL('L_K', 2, 1)
-print('L_K_SQL')
-root_L_K_SQL.print_node()
+# root_L_K_SQL = build_RTree_SQL('L_K', 2, 1)
+# print('L_K_SQL')
+# root_L_K_SQL.print_node()
 
-pairwise_filtering_ancestor_descendant(root_L_XML, root_K_XML, root_L_SQL, root_K_SQL, root_L_K_SQL, 1)
-root_L_XML.print_node_not_filtered()
-root_K_XML.print_node_not_filtered()
+# pairwise_filtering_ancestor_descendant(root_L_XML, root_K_XML, root_L_SQL, root_K_SQL, root_L_K_SQL, 1)
+# root_L_XML.print_node_not_filtered()
+# root_K_XML.print_node_not_filtered()

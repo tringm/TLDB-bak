@@ -9,33 +9,33 @@ from Node import Node
 from Entry import Entry
 
 
-def load_text_file(filename):
+def load_text_file(file_path):
 	"""Summary
 	Load text file by lines
 	Args:
-	    filename (String): 
+	    file_path (String): 
 	
 	Returns:
 	    list [String]: 
 	"""
-	with open(filename) as f:
+	with open(file_path) as f:
 		content = f.readlines()[1:]											# Skip first line containing labels
 	content = [x.strip() for x in content]
 	return content
 
 
-def load(folder_name, table_name):
+def load(folder_name, file_name):
 	"""Summary
 	This function load contents of the SQL table file and put them as coordinate in Entry
 	
 	Args:
 	    folder_name (string): name of folder containing data files
-	    element_name (string): name of element to be loaded
+	   	file_name (string): name of file containing table
 	
 	Returns:
 	    list of Entries of loaded table
 	"""
-	file_path = "../data/" + folder_name + "/" + table_name + "_table.dat"
+	file_path = "../data/" + folder_name + "/" + file_name
 	content = load_text_file(file_path)
 	entries = []
 	for i in range(len(content)):

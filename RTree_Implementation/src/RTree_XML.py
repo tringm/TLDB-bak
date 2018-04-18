@@ -12,24 +12,25 @@ import math
 
 from Node import Node
 from Entry import Entry
+from Dewey_Index import compare_DeweyId
 
 
-def load_text_file(filename):
+def load_text_file(file_path):
 	"""Summary
 	Load text file by lines
 	Args:
-	    filename (String): 
+	    file_path (String): 
 	
 	Returns:
 	    list [String]: 
 	"""
-	with open(filename) as f:
+	with open(file_path) as f:
 		content = f.readlines()
 	content = [x.strip() for x in content]
 	return content
 
 
-def load_element(folder_name, element_name):
+def load(folder_name, element_name):
 	"""Summary
 	This function load elements value and ids, and put them as coordinate in Entry
 	Entry[0] = id, Entry[1] = value
@@ -99,6 +100,8 @@ def sort_entries(entries, dimension):
 	quickSort(entries, 0, len(entries) - 1, dimension)
 
 
+
+
 def get_boundary_entries(entries):
 	"""Summary
 	Find the MBR of list of Entries 
@@ -115,8 +118,12 @@ def get_boundary_entries(entries):
 	value_high = first_entry_coordinates[1]
 	for i in range(len(entries)):
 		entry_coordinates = entries[i].coordinates
-		index_low = min(index_low, entry_coordinates[0][0])
-		index_high = max(index_high, entry_coordinates[0][1])
+		# Update Index range
+		if compare_DeweyId(entries[i].coordinates[0], index_low):
+			index_low = entries[i].coordinates[0]
+		if compare_DeweyId(index_high, entries[i].coordinates[0]):
+			index_high = entries[i].coordinates[0]
+		# Update value range
 		value_low = min(value_low, entry_coordinates[1])
 		value_high = max(value_high, entry_coordinates[1])
 	return ([index_low, index_high], [value_low, value_high])
