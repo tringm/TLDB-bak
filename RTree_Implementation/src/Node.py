@@ -7,9 +7,9 @@ class Node:
 	
 	Attributes:
 	    filtered (bool): True if this node if filtered
+	    link (list): a list contains linked element with this node
 	    max_n_children (int): maximum number of child Node
 	    parent (Node): parent Node
-	    value_filtered (bool): True if this node has been value filtered
 	    boundary [[int, int], [int, int]]: MBR
 	    						  Each tuple contains list of 2 ints [lower_bound, upper_bound] of a dimension
 	    children [Node]: list of children nodes
@@ -23,7 +23,7 @@ class Node:
 		self.boundary = []
 		self.entries = []
 		self.filtered = False
-		self.value_filtered = False
+		self.link = []
 	
 	def update_boundary(self, coordinates):
 		n_dimensions = len(coordinates)

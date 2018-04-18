@@ -24,17 +24,18 @@ def load_text_file(filename):
 	return content
 
 
-def load(table_name):
+def load(folder_name, table_name):
 	"""Summary
 	This function load contents of the SQL table file and put them as coordinate in Entry
 	
 	Args:
-	    element_name (string):
+	    folder_name (string): name of folder containing data files
+	    element_name (string): name of element to be loaded
 	
 	Returns:
-	    list [Entry]: 
+	    list of Entries of loaded table
 	"""
-	file_path = "../data/" + table_name + "_table.dat"
+	file_path = "../data/" + folder_name + "/" + table_name + "_table.dat"
 	content = load_text_file(file_path)
 	entries = []
 	for i in range(len(content)):

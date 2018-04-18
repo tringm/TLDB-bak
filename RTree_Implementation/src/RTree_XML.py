@@ -5,10 +5,7 @@
 # Data: loading_data is contained in a upper level directory - data
 # 		 seperated files containing id and value for each element
 # 		 (element_v.dat for value and element_id.dat for id)
-# Coordinates of an Entry [[], int]: list contains index and value
-# Index: Currently using new index system instead of Dewey
-# 		  list of int [left_pos, rightpos]
-# 					
+# Coordinates of an Entry [[], int]: list contains index (string, int) and value
 
 import queue
 import math
@@ -32,34 +29,36 @@ def load_text_file(filename):
 	return content
 
 
-def load_element(element_name):
+def load_element(folder_name, element_name):
 	"""Summary
 	This function load elements value and ids, and put them as coordinate in Entry
 	Entry[0] = id, Entry[1] = value
 	
 	Args:
-	    element_name (string):
+	    folder_name (string): name of folder containing data files
+	    element_name (string): name of element to be loaded
 	
 	Returns:
-	    list [Entry]: 
+	    list of Entries of loaded element
 	
 	Raises:
 	    ValueError: raised if values file and ids file has different length
 	
 	"""
-	id_file_path = "../data/" + element_name + "_id.dat" 
-	value_file_path = "../data/" + element_name + "_v.dat" 
+	id_file_path = "../data/" + folder_name + "/" + element_name + "_id.dat" 
+	value_file_path = "../data/" + folder_name + "/" + element_name + "_v.dat" 
 	ids = load_text_file(id_file_path)
 	values = load_text_file(value_file_path)
 	if (len(ids) != len(values)):
 		raise ValueError('Id and value files have different size')
 	entries = []
 	for i in range(len(ids)):
-		entry_id = [int(x) for x in ids[i].split()]						# Convert list of string id -> list of int
-		entries.append(Entry([entry_id, int(values[i])]))
+		# Range Index
+		# entry_id = [int(x) for x in ids[i].split()]						# Convert list of string id -> list of int
+		# entries.append(Entry([entry_id, int(values[i])]))
 
-		# for Dewey index
-		# entries.append(Entry([ids[i], int(values[i])]))				# Convert value from string to int
+		# Dewey index
+		entries.append(Entry([ids[i], int(values[i])]))				# Convert value from string to int
 	return entries
 
 
@@ -110,8 +109,8 @@ def get_boundary_entries(entries):
 	    ([index_low, index_high], [value_low, value_high]): tuple of index and value boundary
 	"""
 	first_entry_coordinates = entries[0].coordinates
-	index_low = first_entry_coordinates[0][0]
-	index_high = first_entry_coordinates[0][1]
+	index_low = first_entry_coordinates[0]
+	index_high = first_entry_coordinates[0]
 	value_low = first_entry_coordinates[1]
 	value_high = first_entry_coordinates[1]
 	for i in range(len(entries)):
