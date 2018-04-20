@@ -71,8 +71,4 @@ def is_parent(id1, id2):
 	return True	
 
 
-A = '1.2.3.4.5'
-B = '1.2.3.4'
-
-print(is_parent(B, A))
 

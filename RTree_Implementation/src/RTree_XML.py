@@ -12,7 +12,7 @@ import math
 
 from Node import Node
 from Entry import Entry
-from Dewey_Index import compare_DeweyId
+from Dewey_Index import *
 
 
 def load_text_file(file_path):
@@ -190,8 +190,8 @@ def bulk_loading(entries, max_n_children, dimension):
 			# divide into n_slice + 1 nodes, add to current node
 			for i in range(n_slices + 1):
 				# print('Node ', i)
-				range_low = current_range[0]  + i * max_n_children
-				range_high = range_low + max_n_children 
+				range_low = current_range[0]  + i * n_entries_subtree
+				range_high = range_low + n_entries_subtree
 				# last group might have more than max_n_children
 				if (i == n_slices):
 					range_high = current_range[1]

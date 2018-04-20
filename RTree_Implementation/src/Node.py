@@ -8,7 +8,7 @@ class Node:
 	Attributes:
 	    filtered (bool): True if this node if filtered
 	    link_XML (dict): a dict contains a list of nodes (to be checked when structure filtering) for each linked element 
-	    link_SQL (dict): a dict contains a list of nodes (to be checked when value filtering) for each linked tables (tables that contain this node element)
+	    link_SQL (dict): a dict contains a list of nodes (to be checked when value filtering) for each linked tables (tables that has this element as highest element in XML query)
 	    max_n_children (int): maximum number of child Node
 	    parent (Node): parent Node
 	    boundary [[int, int], [int, int]]: MBR
