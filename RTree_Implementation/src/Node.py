@@ -63,11 +63,11 @@ class Node:
 		    level (int, optional): current level for printing
 		"""
 		if (len(self.entries) > 0):
-			print('\t' * level, self.boundary, 'is Leaf')
+			print('\t' * (level + 1), 'NODE ', self.boundary, 'is Leaf')
 			for i in range(len(self.entries)):
 				print('\t' * (level + 1), self.entries[i].coordinates)
 		else:
-			print('\t' * level, self.boundary)
+			print('\t' * (level + 1), 'NODE ', self.boundary)
 			for child in self.children:
 				child.print_node(level + 1)
 
@@ -79,13 +79,54 @@ class Node:
 		"""
 		if not self.filtered:
 			if (len(self.entries) > 0):
-				print('\t' * level, self.boundary, 'is Leaf')
-				print('\t' * level, 'Linked with: ')
+				print('\t' * level, 'NODE ', self.boundary, 'is Leaf')
+				print('\t' * (level + 1), 'Linked XML: ')
+				for connected_element_name in self.link_XML.keys():
+					print('\t' * (level + 1), connected_element_name, end = " ")
+					for node in self.link_XML[connected_element_name]:
+						print(node.boundary, end = " ")
+					print()
+				print('\t' * (level + 1), 'Linked SQL: ')
+				for table_name in self.link_SQL.keys():
+					print('\t' * (level + 1), table_name, end = " ")
+					for node in self.link_SQL[table_name]:
+						print(node.boundary, end = " ")
+					print()
+				print('\t' * (level + 1), 'Entries')
 				for i in range(len(self.entries)):
 					print('\t' * (level + 1), self.entries[i].coordinates)
-					for connected_element_name in self.link_XML.keys():
-						print('\t' * (level + 1), 'Linked with ', connected_element_name, (node.boundary for node in self.link_XML[connected_element_name]))
+					
 			else:
-				print('\t' * level, self.boundary)
+				print('\t' * level, 'NODE ', self.boundary)
+				print('\t' * (level + 1), 'Linked XML: ')
+				for connected_element_name in self.link_XML.keys():
+					print('\t' * (level + 1), connected_element_name, end = " ")
+					for node in self.link_XML[connected_element_name]:
+						print(node.boundary, end = " ")
+					print()
+				print('\t' * (level + 1), 'Linked SQL: ')
+				for table_name in self.link_SQL.keys():
+					print('\t' * (level + 1), table_name, end = " ")
+					for node in self.link_SQL[table_name]:
+						print(node.boundary, end = " ")
+					print()
+
+				for child in self.children:
+					child.print_node_not_filtered_with_link(level + 1)
+
+
+	def print_node_not_filtered(self, level = 0):
+		"""Summary
+		Simple implementation to print this node and its children
+		Args:
+		    level (int, optional): current level for printing
+		"""
+		if not self.filtered:
+			if (len(self.entries) > 0):
+				print('\t' * (level + 1), 'NODE ', self.boundary, 'is Leaf')
+				for i in range(len(self.entries)):
+					print('\t' * (level + 1), self.entries[i].coordinates)
+			else:
+				print('\t' * (level + 1), 'NODE ', self.boundary)
 				for child in self.children:
 					child.print_node_not_filtered(level + 1)
