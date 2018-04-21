@@ -50,13 +50,15 @@ def load_tables(folder_name, all_elements_name, max_n_children):
     
     Returns:
         all_tables_root (dict[string, Node]): dict with key is name of table and value is corresponding root node of RTree_SQL
+        all_tables_dimension(dict[string, int]): dict with key is name of table and value is corresponding dimension (index of highest level element in XML query)
     """
     all_tables_root = {}
+    all_tables_dimension = {}
     for file_name in os.listdir("../data/" + folder_name):
         if 'table' in file_name:
             table_elements = file_name[:-10]
-            all_tables_root[table_elements] = build_RTree_SQL(folder_name, file_name, all_elements_name, max_n_children)
-    return all_tables_root
+            all_tables_root[table_elements], all_tables_dimension[table_elements] = build_RTree_SQL(folder_name, file_name, all_elements_name, max_n_children)
+    return (all_tables_root, all_tables_dimension)
 
 
 def build_RTree_SQL(folder_name, file_name, all_elements_name, max_n_children):
@@ -70,7 +72,8 @@ def build_RTree_SQL(folder_name, file_name, all_elements_name, max_n_children):
         max_n_children (int): maximum number of children in RTree
     
     Returns:
-        Node: root node of built RTree
+        root (Node): root node of built RTree
+        dimension (int): index of highest level element in XML query 
     """
     entries = RTree_SQL.load(folder_name, file_name)
     
@@ -82,7 +85,7 @@ def build_RTree_SQL(folder_name, file_name, all_elements_name, max_n_children):
     dimension = np.argmin(np.asarray(index))
 
     root = RTree_SQL.bulk_loading(entries, max_n_children, dimension)
-    return root
+    return (root, dimension)
 
 
 
@@ -220,12 +223,12 @@ def ancestor_descendant_filter(node1, node2):
     node2_high = node2.boundary[0][1]
 
     # 2 cases for false:
-    # 	- node1 is on the left of node2, no intersection
-    # 	- node1 is on the right of node2, no intersection
+    #   - node1 is on the left of node2, no intersection
+    #   - node1 is on the right of node2, no intersection
     # Edge case 1.2.3 < 1.2.3.4 but is ancestor still
     if ((compare_DeweyID(node1_high, node2_low) and not is_ancestor(node1_high, node2_low)) or
-    	(compare_DeweyID(node2_high, node1_low))):
-    	return False
+        (compare_DeweyID(node2_high, node1_low))):
+        return False
     return True
 
     # Range Index
@@ -233,7 +236,25 @@ def ancestor_descendant_filter(node1, node2):
     #     return True
     # return False
 
-
+def intersection_filter(node1, dimension1, node2, dimension2):
+    """Summary
+    This function check if node1 dimension1 range ande node2 dimension2 range intersect
+    Args:
+        node1 (Node): RTree_XML Node
+        dimension1 (int): dimension of node1 (= 1 for value)
+        node2 (Node): RTree_SQL node 
+        dimension2 (int): dimension of node2
+    
+    Returns:
+        Bool: True if intersect
+    """
+    node1_low = node1.boundary[dimension1][0]
+    node1_high = node1.boundary[dimension1][1]
+    node2_low = node2.boundary[dimension2][0]
+    node2_high = node2.boundary[dimension2][1]
+    if (node1_high < node2_low) or (node1_low > node2_high):
+        return False
+    return True
 
 def pairwise_filtering_ancestor_descendant(A_XML, D_XML, A_SQL, D_SQL, A_D_SQL, max_level):
     """Summary
@@ -358,10 +379,64 @@ def pairwise_filtering_ancestor_descendant(A_XML, D_XML, A_SQL, D_SQL, A_D_SQL, 
         # for i in range(len(new_position_D_SQL)):
         #   print(new_position_D_SQL[i].boundary)
 
+def value_filtering(filtering_node, all_tables_dimension):
+    for table in filtering_node.link_SQL.keys():
+        table_nodes = filtering_node.link_SQL[table]            # list of nodes in connected table to be chedk
+        has_one_satisfied_node = False
+        link_nodes_removed = np.zeros(len(table_nodes))         # array to store if a node in tables_nodes should be removed
+        # for condition_node in table_nodes:
+        for i in range(len(table_nodes)):
+            # if this node has already been filtered
+            if table_nodes[i].filtered == True:
+                link_nodes_removed[i] = 1
+
+            if value_intersection_filter(filtering_node, 1, table_nodes[i], all_tables_dimension[table]):
+                has_one_satisfied_node = True
+            else link_nodes_removed[i] = 1
+        
+        # If found no satisfied node -> filter current_node
+        if not has_one_satisfied_node:
+            filtering_node.filtered = True
+            break
+
+        # Update link
+        new_link_nodes = []
+        for i in range(len(table_nodes)):
+            if link_nodes_removed[i] = 0:
+                new_link_nodes.append(table_nodes[i])
+        filtering_node.link_SQL[table] = new_link_nodes
+
+def structure_filtering(filtering_node):
+    for connected_element in filtering_node.link_XML.keys():
+            connected_element_nodes = filtering_node.link_XML[connected_element]              # list of nodes in the connected element to be checked
+            link_nodes_removed = np.zeros(len(connected_element_nodes))                       # array to store if a node in connected_element_nodes should be removed
+            has_one_satisfied_node = False
+            for i in range(len(connected_element_nodes)):
+                # if this node has already been filtered
+                if connected_element_nodes[i].filtered == True:
+                    link_nodes_removed[i] = 1
+
+                if ancestor_descendant_filter(current_node, connected_element_nodes[i]):
+                    has_one_satisfied_node = True
+                else link_nodes_removed[i] = 1
+
+            # If found no satisfied node -> filter current_node
+            if not has_one_satisfied_node:
+                filtering_node.filtered = True
+                break
+
+            # Update link 
+            new_link_nodes = []
+            for i in range(len(connected_element_nodes)):
+                if link_nodes_removed[i] = 0:
+                    new_link_nodes.append(connected_element_nodes[i])
+            filtering_node.link_XML[connected_element] = new_link_nodes
+
+
 def filtering(folder_name, all_elements_name, relationship_matrix, max_n_children):
     # Loading XML and SQL database into R_Tree
     all_elements_root = load_elements(folder_name, all_elements_name, max_n_children)
-    all_tables_root = load_tables(folder_name, all_elements_name, max_n_children)
+    all_tables_root, all_tables_dimension = load_tables(folder_name, all_elements_name, max_n_children)
 
     # print('XML')
     # for element in all_elements_name:
@@ -389,11 +464,8 @@ def filtering(folder_name, all_elements_name, relationship_matrix, max_n_childre
         table_root = all_tables_root[table_elements]
 
         # find highest element
-        index = []
         table_elements_list = table_elements.split('_') 
-        for element_name in table_elements_list:
-            index.append(all_elements_name.index(element_name))
-        highest_element_name = table_elements_list[np.argmin(np.asarray(index))]
+        highest_element_name = table_elements_list[all_tables_dimension[table_elements]]
         # link
         all_elements_root[highest_element_name].link_SQL[table_elements] = []
         all_elements_root[highest_element_name].link_SQL[table_elements].append(table_root)
@@ -413,45 +485,28 @@ def filtering(folder_name, all_elements_name, relationship_matrix, max_n_childre
     #         for connected_table_root in element_root.link_SQL[connected_table_elements]:
     #             print(connected_table_root.boundary)
 
-    	
+        
 
-    # # Push root of XML query RTree root node to queue
-    # queue = queue.Queue()
-    # queue.put(all_elements_root[all_elements_name[0]])
+    # Push root of XML query RTree root node to queue
+    XML_root_element = all_elements_name[0]
+    queue_root = queue.Queue()
+    queue_root.put(all_elements_root[XML_root_element])
 
-    # while not queue.empty():
-    # 	root_node = queue.get()
+    while not queue_root.empty():
+        root_node = queue_root.get()
+        current_node = root_node
 
-    # 	##############
-    # 	# Repeat until no more connection found
-    #     current_node = queue.get()
+        ##############
+        # While there are still linked node
+        while 
 
 
-    # 	# Value filtering for this current node by checking all linked tables
-    # 	# 
+        # Value filtering for this current node by checking all linked tables
+        # value_filtering(current_node)
 
     #     # Ancestor Descendent filtering
     #     # Check with each connected element of this current_node
-    #     for connected_element_name in current_node.link_XML.keys():
-    #         connected_element_nodes = current_node.link_XML[connected_element_name]              # list of nodes in the connected element that are connected to current_node
-    #         link_nodes_removed = np.zeros(len(connected_element_nodes))                       # array to store if a node in connected_element_nodes should be removed
-    #         has_one_satisfied_node = False
-    #         for i in range(len(connected_element_nodes)):
-    #             if ancestor_descendant_filter(current_node, connected_element_nodes[i]):
-    #                 has_one_satisfied_node = True
-    #             else link_nodes_removed[i] = 1
-
-    #         # If found no satisfied node -> filter current_node
-    #         if not has_one_satisfied_node:
-    #             current_node.filtered = True
-    #             break
-
-    #         # Update link of this connected_element
-    #         new_link_nodes = []
-    #         for i in range(len(connected_element)):
-    #             if link_nodes_removed[i] = 0:
-    #                 new_link_nodes.append(connected_element_nodes[i])
-    #         current_node.link[connected_element] = new_link_nodes
+    #     
 
     #     # if this current_node is not filtered by structure -> Do Value filtering
     #     if not current_node.filtered:
