@@ -15,6 +15,9 @@ import numpy as np
 
 
 l1 = ['A', 'B', 'C', 'D']
+
+print(l1.index('A'))
+
 l2 = ['C', 'D', 'A']
 l2_index = []
 for l2_e in l2:

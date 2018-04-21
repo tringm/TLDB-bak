@@ -7,6 +7,7 @@ class Node:
 	
 	Attributes:
 	    filtered (bool): True if this node if filtered
+	    filter_visisted(bool): True if this node has been full filtered before
 	    link_XML (dict): a dict contains a list of nodes (to be checked when structure filtering) for each linked element 
 	    link_SQL (dict): a dict contains a list of nodes (to be checked when value filtering) for each linked tables (tables that has this element as highest element in XML query)
 	    max_n_children (int): maximum number of child Node
@@ -24,34 +25,35 @@ class Node:
 		self.boundary = []
 		self.entries = []
 		self.filtered = False
+		self.filter_visited = False
 		self.link_XML = {}
 		self.link_SQL = {}
 	
-	def update_boundary(self, coordinates):
-		n_dimensions = len(coordinates)
+	# def update_boundary(self, coordinates):
+	# 	n_dimensions = len(coordinates)
 
-		# if boundary is empty
-		if (not self.boundary):
-			for i in range(n_dimensions):
-				self.boundary.append([coordinates[i], coordinates[i]])
-		# Go through each dimension
-		for i in range(n_dimensions):
-			boundary[i][0] = min(boundary[i][0], coordinates[i])
-			boundary[i][1] = max(boundary[i][1], coordinates[i])
+	# 	# if boundary is empty
+	# 	if (not self.boundary):
+	# 		for i in range(n_dimensions):
+	# 			self.boundary.append([coordinates[i], coordinates[i]])
+	# 	# Go through each dimension
+	# 	for i in range(n_dimensions):
+	# 		boundary[i][0] = min(boundary[i][0], coordinates[i])
+	# 		boundary[i][1] = max(boundary[i][1], coordinates[i])
 
 
 	
-	def dynamic_add(self, entry : Entry):
-		# If this node is a leaf node
-		if (len(self.children) == 0):
-			# add entry to this node
-			self.entries.append(entry)
-			# if the boundary is empty or entry is not inside the boundary -> update boundary
-			if (not boundary) or (not entry.is_inside(boundary)):
-				self.update_boundary(entry.coordinates)
-			# if this leaf node contains more than allowed entries -> split
-			if (len(self.entries) > max_n_entries):
-				self.split
+	# def dynamic_add(self, entry : Entry):
+	# 	# If this node is a leaf node
+	# 	if (len(self.children) == 0):
+	# 		# add entry to this node
+	# 		self.entries.append(entry)
+	# 		# if the boundary is empty or entry is not inside the boundary -> update boundary
+	# 		if (not boundary) or (not entry.is_inside(boundary)):
+	# 			self.update_boundary(entry.coordinates)
+	# 		# if this leaf node contains more than allowed entries -> split
+	# 		if (len(self.entries) > max_n_entries):
+	# 			self.split
 
 
 	def print_node(self, level = 0):
@@ -69,8 +71,7 @@ class Node:
 			for child in self.children:
 				child.print_node(level + 1)
 
-
-	def print_node_not_filtered(self, level = 0):
+	def print_node_not_filtered_with_link(self, level = 0):
 		"""Summary
 		Simple implementation to print this node and its children
 		Args:
@@ -79,8 +80,11 @@ class Node:
 		if not self.filtered:
 			if (len(self.entries) > 0):
 				print('\t' * level, self.boundary, 'is Leaf')
+				print('\t' * level, 'Linked with: ')
 				for i in range(len(self.entries)):
 					print('\t' * (level + 1), self.entries[i].coordinates)
+					for connected_element_name in self.link_XML.keys():
+						print('\t' * (level + 1), 'Linked with ', connected_element_name, (node.boundary for node in self.link_XML[connected_element_name]))
 			else:
 				print('\t' * level, self.boundary)
 				for child in self.children:
