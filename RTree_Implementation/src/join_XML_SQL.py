@@ -530,7 +530,25 @@ def validation_XML_SQL(all_elements_name, relationship_matrix, XML_query_root_no
 
     XML_query_root_leaf_nodes = XML_query_root_node.get_leaf_node_not_filtered()
     for node in XML_query_root_leaf_nodes:
+        print(node.boundary)
         node_validation(node, all_elements_name, relationship_matrix)
+
+    print('###############################')
+    for node in XML_query_root_leaf_nodes:
+        print('Node ', node.boundary)
+        if not node.filtered:
+            for entry in node.validated_entries:
+                print('\t', entry.coordinates)
+                print('\t', 'Entry link_XML')
+                for connected_element in entry.link_XML.keys():
+                    print('\t', connected_element)
+                    for entry_XML in entry.link_XML[connected_element]:
+                        print('\t' * 2, entry_XML.coordinates)
+                print('\t', 'Entry link_SQL')
+                for table_name in entry.link_SQL.keys():
+                    print('\t', table_name)
+                    for entry_SQL in entry.link_SQL[table_name]:
+                        print('\t' * 2, entry_SQL.coordinates)
 
 def join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_children):
     """Summary

@@ -86,13 +86,16 @@ class Node:
 		    list of Node:
 		"""
 		# if this node is leaf
-		if (len(self.entries) > 0):
-			return [self]
 		leaf_nodes = []
-		for child in self.children:
-			leaf_nodes_child = child.get_leaf_node_not_filtered()
-			for node in leaf_nodes_child:
-				leaf_nodes.append(node)
+		
+		if not self.filtered:
+			if len(self.entries) > 0:
+				return [self]
+
+			for child in self.children:
+				leaf_nodes_child = child.get_leaf_node_not_filtered()
+				for node in leaf_nodes_child:
+					leaf_nodes.append(node)
 		return leaf_nodes
 
 	def print_node(self, level = 0):
