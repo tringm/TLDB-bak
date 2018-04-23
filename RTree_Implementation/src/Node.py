@@ -8,14 +8,17 @@ class Node:
 	Attributes:
 	    filtered (bool): True if this node if filtered
 	    filter_visisted(bool): True if this node has been full filtered before
-	    link_XML (dict): a dict contains a list of nodes (to be checked when structure filtering) for each linked element 
-	    link_SQL (dict): a dict contains a list of nodes (to be checked when value filtering) for each linked tables (tables that has this element as highest element in XML query)
+	    validation_visited (bool): True if this node has been validated before
+	    link_XML (dict): a dict contains a list of nodes for each linked element (children)
+	    link_SQL (dict): a dict contains a list of nodes for each linked tables (tables that has this element as highest element in XML query)
 	    max_n_children (int): maximum number of child Node
 	    parent (Node): parent Node
 	    boundary [[int, int], [int, int]]: MBR
 	    						  Each tuple contains list of 2 ints [lower_bound, upper_bound] of a dimension
 	    children [Node]: list of children nodes
 	    entries [Entry]: list of entries (if this node is a leaf node)
+	    validated_entries [Entry]: list of entries contained in this node (including children) to be used in validation
+	    element_name (String): name of this node (element name for RTree_XML node and table_name for R_Tree_SQL node)
 	"""
 	
 	def __init__(self, max_n_children):
@@ -24,10 +27,13 @@ class Node:
 		self.children = []
 		self.boundary = []
 		self.entries = []
+		self.validated_entries = []
 		self.filtered = False
 		self.filter_visited = False
+		self.validation_visited = False
 		self.link_XML = {}
 		self.link_SQL = {}
+		self.name = ""
 	
 	# def update_boundary(self, coordinates):
 	# 	n_dimensions = len(coordinates)
@@ -55,6 +61,39 @@ class Node:
 	# 		if (len(self.entries) > max_n_entries):
 	# 			self.split
 
+	def get_entries(self):
+		"""Summary
+		This function return all entries contained in this node (included children's entries)
+		Returns:
+		    list of Entry: 
+		"""
+		# if this node is a leaf node
+		if (len(self.entries) > 0):
+			return self.entries
+		entries = []
+		# else get all child entry
+		for child in self.children:
+			child_entries = child.get_entries()
+			for child_entry in child_entries:
+				entries.append(child_entry)
+		return entries
+
+	def get_leaf_node_not_filtered(self):
+		"""Summary
+		This function return a list of nodes which are the unfiltered leaves of this node
+		
+		Returns:
+		    list of Node:
+		"""
+		# if this node is leaf
+		if (len(self.entries) > 0):
+			return [self]
+		leaf_nodes = []
+		for child in self.children:
+			leaf_nodes_child = child.get_leaf_node_not_filtered()
+			for node in leaf_nodes_child:
+				leaf_nodes.append(node)
+		return leaf_nodes
 
 	def print_node(self, level = 0):
 		"""Summary

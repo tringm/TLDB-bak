@@ -129,7 +129,7 @@ def get_boundary_entries(entries):
 	return ([index_low, index_high], [value_low, value_high])
 
 
-def bulk_loading(entries, max_n_children, dimension):
+def bulk_loading(entries, element_name, max_n_children, dimension):
 	"""Summary
 	Bulk loading RTree based on Overlap Minimizing Top-down Bulk Loading Algorithm
 	Args:
@@ -159,6 +159,7 @@ def bulk_loading(entries, max_n_children, dimension):
 	# Create root node
 	root = Node(max_n_children)
 	root.boundary = get_boundary_entries(entries)
+	root.name = element_name
 
 	queue_node.put(root)
 	queue_range.put([0, n_entries])
@@ -199,6 +200,7 @@ def bulk_loading(entries, max_n_children, dimension):
 				subtree_node = Node(max_n_children)
 				subtree_node.parent = current_node
 				subtree_node.boundary = get_boundary_entries(entries[range_low:range_high])
+				subtree_node.name = element_name
 				current_node.children.append(subtree_node)
 				# print('boundary ', subtree_node.boundary)
 				queue_node.put(subtree_node)
