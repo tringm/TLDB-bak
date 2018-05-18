@@ -6,6 +6,7 @@ import numpy as np
 from Node import Node
 from Entry import Entry
 from Dewey_Index import *
+import sys
 
 
 def load_elements(folder_name, all_elements_name, max_n_children):
@@ -654,8 +655,22 @@ def test_2():
     join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_children)
 
 
+def xiye_test_1():
+    folder_name = 'xiye_test_1'
+    all_elements_name = ['Orderline', 'asin', 'price']
+    relationship_matrix = np.zeros((3, 3))
+    relationship_matrix[0, 1] = 1
+    relationship_matrix[0, 2] = 1
+    max_n_children = 5
+    join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_children)
 
-test_2()
+
+
+iMaxStackSize = 5000
+sys.setrecursionlimit(iMaxStackSize)
+
+# test_2()
+xiye_test_1()
 
 
 

@@ -59,7 +59,7 @@ def load(folder_name, element_name):
 		# entries.append(Entry([entry_id, int(values[i])]))
 
 		# Dewey index
-		entries.append(Entry([ids[i], int(values[i])]))				# Convert value from string to int
+		entries.append(Entry([ids[i], float(values[i])]))				# Convert value from string to int
 	return entries
 
 

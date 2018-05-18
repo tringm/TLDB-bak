@@ -39,7 +39,7 @@ def load(folder_name, file_name):
 	content = load_text_file(file_path)
 	entries = []
 	for i in range(len(content)):
-		entries.append(Entry([int(x) for x in content[i].split()]))			# Convert list of string -> list of int
+		entries.append(Entry([float(x) for x in content[i].split()]))			# Convert list of string -> list of int
 	return entries
 
 
