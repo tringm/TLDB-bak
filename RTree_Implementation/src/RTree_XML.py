@@ -63,9 +63,9 @@ def load(folder_name, element_name):
 	return entries
 
 
-def sort_entries(entries, dimension):
+def sort_entries_recursive(entries, dimension):
 	"""Summary
-	Quick sort list of entries according to value of a dimension
+	Quick sort list of entries according to value of a dimension (recursively)
 	WARNING: currently only working for dimension 1 (values)
 	
 	Args:
@@ -100,7 +100,40 @@ def sort_entries(entries, dimension):
 	quickSort(entries, 0, len(entries) - 1, dimension)
 
 
+def sort_entries(entries, dimension):
+	"""Summary
+	Quick sort list of entries according to value of a dimension (Recursive way)
+	
+	Args:
+	    dimension (int): dimension of Entry to be sorted
+	    entries [Entry]: list of input entries
+	
+	Returns:
+	    [Entry]: sorted list of  entries
+	"""
+	def partition(entries, low, high, dimension):
+		i = low - 1
+		pivot_coordinates = entries[high].coordinates
+		for j in range(low, high):
+			j_coordinate = entries[j].coordinates
+			if (j_coordinate[dimension] <= pivot_coordinates[dimension]):
+				i += 1
+				entries[i], entries[j] = entries[j], entries[i]
+		entries[i + 1], entries[high] = entries[high], entries[i + 1]
+		return (i + 1)
 
+	temp_stack = []
+	low = 0
+	high = len(entries) - 1
+	temp_stack.append((low, high))
+	while temp_stack:
+		pos = temp_stack.pop()
+		low, high = pos[0], pos[1]
+		partition_index = partition(entries, low, high, dimension)
+		if partition_index - 1 > low:
+			temp_stack.append((low, partition_index - 1))
+		if partition_index + 1 < high:
+			temp_stack.append((partition_index + 1, high))
 
 def get_boundary_entries(entries):
 	"""Summary
