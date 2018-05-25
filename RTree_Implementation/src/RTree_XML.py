@@ -112,15 +112,35 @@ def sort_entries(entries, dimension):
 	    [Entry]: sorted list of  entries
 	"""
 	def partition(entries, low, high, dimension):
-		i = low - 1
-		pivot_coordinates = entries[high].coordinates
-		for j in range(low, high):
-			j_coordinate = entries[j].coordinates
-			if (j_coordinate[dimension] <= pivot_coordinates[dimension]):
+		pivot = entries[low]
+		i = low + 1
+		j = high
+		# print(entries[i].coordinates)
+		# print(entries[j].coordinates)
+		while 1:
+			while i <= j and entries[i].coordinates[dimension] <= pivot.coordinates[dimension]:
 				i += 1
-				entries[i], entries[j] = entries[j], entries[i]
-		entries[i + 1], entries[high] = entries[high], entries[i + 1]
-		return (i + 1)
+			while j >= i and entries[j].coordinates[dimension] >= pivot.coordinates[dimension]:
+				j -= 1
+			if j <= i:
+				break
+			entries[i], entries[j] = entries[j], entries[i]
+
+		entries[low], entries[j] = entries[j], entries[low]
+		return j
+	# def partition(entries, low, high, dimension):
+	# 	i = low - 1
+	# 	pivot_coordinates = entries[high].coordinates
+	# 	for j in range(low, high):
+	# 		j_coordinate = entries[j].coordinates
+	# 		if (j_coordinate[dimension] <= pivot_coordinates[dimension]):
+	# 			i += 1
+	# 			entries[i], entries[j] = entries[j], entries[i]
+	# 	entries[i + 1], entries[high] = entries[high], entries[i + 1]
+	# 	return (i + 1)
+
+
+	print('sorting entries')
 
 	temp_stack = []
 	low = 0
@@ -129,11 +149,14 @@ def sort_entries(entries, dimension):
 	while temp_stack:
 		pos = temp_stack.pop()
 		low, high = pos[0], pos[1]
+		# print(low, high)
 		partition_index = partition(entries, low, high, dimension)
 		if partition_index - 1 > low:
 			temp_stack.append((low, partition_index - 1))
 		if partition_index + 1 < high:
 			temp_stack.append((partition_index + 1, high))
+
+	print('end sorting')
 
 def get_boundary_entries(entries):
 	"""Summary
@@ -144,6 +167,7 @@ def get_boundary_entries(entries):
 	Returns:
 	    ([index_low, index_high], [value_low, value_high]): tuple of index and value boundary
 	"""
+	# print(len(entries))
 	first_entry_coordinates = entries[0].coordinates
 	index_low = first_entry_coordinates[0]
 	index_high = first_entry_coordinates[0]
@@ -183,6 +207,7 @@ def bulk_loading(entries, element_name, max_n_children, dimension):
 
 	# sort entries based on value
 	sort_entries(entries, dimension)
+
 	n_entries = len(entries)
 	# Configuration
 	queue_node = queue.Queue()																			# Queue for node at each level
@@ -197,15 +222,15 @@ def bulk_loading(entries, element_name, max_n_children, dimension):
 	queue_node.put(root)
 	queue_range.put([0, n_entries])
 
-
 	while not queue_node.empty():
 		current_node = queue_node.get()
 		current_range = queue_range.get()
 		current_n_entries = current_range[1] - current_range[0] 										# Number of entries contained in this current node
-		height = math.ceil(math.log(current_n_entries, max_n_children))									# Calculate the height of this subtree based on max_n_children
-		# print('height ', height)
+		height = math.ceil(round(math.log(current_n_entries, max_n_children), 5))									# Calculate the height of this subtree based on max_n_children
+		# print('*******')
 		# print('current_range ', current_range)
 		# print('current_n_entries ', current_n_entries)
+		# print('height', height)
 
 		# if current node contains has n_entries <= max_n_children then this is a leaf and proceed to add entries
 		if (current_n_entries <= max_n_children):
@@ -221,15 +246,26 @@ def bulk_loading(entries, element_name, max_n_children, dimension):
 			n_entries_subtree = max_n_children ** (height - 1)											# Number of entries contained in the subtree of this node
 			n_slices = math.floor(math.sqrt(math.ceil(current_n_entries / n_entries_subtree)))          # Number of slices according to the formula of OMT
 
+			# if n_entries_subtree == current_n_entries:
+			# 	n_slices = 0
+
+			# print('n_entries_subtree', n_entries_subtree)
+			# print('n_slices', n_slices)
+
 			# divide into n_slice + 1 nodes, add to current node
 			for i in range(n_slices + 1):
 				# print('Node ', i)
 				range_low = current_range[0]  + i * n_entries_subtree
 				range_high = range_low + n_entries_subtree
+
 				# last group might have more than max_n_children
 				if (i == n_slices):
 					range_high = current_range[1]
 				# print('range ', range_low, range_high)
+
+				# if range_high == range_low:
+				# 	break
+
 				subtree_node = Node(max_n_children)
 				subtree_node.parent = current_node
 				subtree_node.boundary = get_boundary_entries(entries[range_low:range_high])
