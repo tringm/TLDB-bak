@@ -169,7 +169,7 @@ def bulk_loading(entries, table_name, max_n_children, dimension):
 		current_node = queue_node.get()
 		current_range = queue_range.get()
 		current_n_entries = current_range[1] - current_range[0] 										# Number of entries contained in this current node
-		height = math.ceil(math.log(current_n_entries, max_n_children))									# Calculate the height of this subtree based on max_n_children
+		height = math.ceil(round(math.log(current_n_entries, max_n_children), 5))									# Calculate the height of this subtree based on max_n_children
 		# print('height ', height)
 		# print('current_range ', current_range)
 		# print('current_n_entries ', current_n_entries)

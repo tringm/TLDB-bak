@@ -687,8 +687,8 @@ def xiye_test_1():
 iMaxStackSize = 5000
 sys.setrecursionlimit(iMaxStackSize)
 
-# test_2()
-xiye_test_1()
+test_2()
+# xiye_test_1()
 
 
 

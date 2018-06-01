@@ -13,7 +13,7 @@ import math
 from Node import Node
 from Entry import Entry
 from Dewey_Index import *
-
+import timeit
 
 def load_text_file(file_path):
 	"""Summary
@@ -140,7 +140,7 @@ def sort_entries(entries, dimension):
 	# 	return (i + 1)
 
 
-	print('sorting entries')
+	# print('sorting entries')
 
 	temp_stack = []
 	low = 0
@@ -156,7 +156,7 @@ def sort_entries(entries, dimension):
 		if partition_index + 1 < high:
 			temp_stack.append((partition_index + 1, high))
 
-	print('end sorting')
+	# print('end sorting')
 
 def get_boundary_entries(entries):
 	"""Summary
@@ -205,8 +205,11 @@ def bulk_loading(entries, element_name, max_n_children, dimension):
 	if (max_n_children == 1):
 		raise ValueError('Maximum number of children nodes must be > 1')
 
+	start_sorting = timeit.default_timer()
 	# sort entries based on value
 	sort_entries(entries, dimension)
+	end_sorting = timeit.default_timer()
+	print('sorting took: ', end_sorting - start_sorting)
 
 	n_entries = len(entries)
 	# Configuration
