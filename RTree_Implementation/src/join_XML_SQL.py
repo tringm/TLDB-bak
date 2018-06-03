@@ -62,6 +62,7 @@ def load_tables(folder_name, all_elements_name, max_n_children):
     for file_name in os.listdir("../data/" + folder_name):
         if 'table' in file_name:
             table_name = file_name[:-10]
+            print('Loading table: ', table_name)
             all_tables_root[table_name]= build_RTree_SQL(folder_name, file_name, all_elements_name, max_n_children)
     return all_tables_root
 
@@ -744,13 +745,13 @@ def xiye_test_1():
     relationship_matrix = np.zeros((3, 3))
     relationship_matrix[0, 1] = 1
     relationship_matrix[0, 2] = 1
-    max_n_children = 5
+    max_n_children = 20
     join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_children)
 
 
 
-test_2()
-# xiye_test_1()
+# test_2()
+xiye_test_1()
 
 
 
