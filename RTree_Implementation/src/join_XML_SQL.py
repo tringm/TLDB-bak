@@ -362,11 +362,22 @@ def entries_value_validation(validating_node):
         validating_node (RTree_XML Node)
     
     """
+
+    # print("##################################")
+    # print("entries_value_validation ", validating_node.name, validating_node.boundary)
+
     validating_node_entries = validating_node.validated_entries
     validating_node_entries_removed = np.zeros(len(validating_node_entries))
 
+    # print("Entries: ")
+    # for entry in validating_node_entries:
+        # print(entry.coordinates)
+
     for table_name in validating_node.link_SQL.keys():
         # get all entries contained in linked table nodes
+
+        # print("Checking table ", table_name)
+
         table_entries = []
         for table_node in validating_node.link_SQL[table_name]:
             for entry in table_node.get_entries():
@@ -375,20 +386,23 @@ def entries_value_validation(validating_node):
         table_dimension = table_name.split('_').index(validating_node.name)
 
         has_one_matched_entry = False
-
-
         for i in range(len(validating_node_entries)):
             # if this entry hasnt been removed
             if (validating_node_entries_removed[i] == 0):
+
                 validating_node_entry = validating_node_entries[i]
                 validating_node_entry.link_SQL[table_name] = []
 
+                # print("checking entry: ", validating_node_entries[i].coordinates)
+
                 for table_entry in table_entries:
                     if (validating_node_entry.coordinates[1] == table_entry.coordinates[table_dimension]):
+                        # print("Found a good match: ", validating_node_entry.coordinates, table_entry.coordinates)
                         validating_node_entry.link_SQL[table_name].append(table_entry)
 
                 # if this validating_node_entry has no match in table_entries
                 if not validating_node_entry.link_SQL[table_name]:
+                    # print("entry removed")
                     validating_node_entries_removed[i] = 1
 
                 else:
@@ -399,6 +413,7 @@ def entries_value_validation(validating_node):
             return
 
     # Update entries
+    validating_node.validated_entries = []
     for i in range(len(validating_node_entries)):
         if validating_node_entries_removed[i] == 0:
             validating_node.validated_entries.append(validating_node_entries[i])
@@ -444,23 +459,42 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
     Returns:
         TYPE: Description
     """
+
+    # print("##################################")
+    # print("## entries_connected_element_validation ", validating_node.name, validating_node.boundary)
+
     validating_node_entries = validating_node.validated_entries
     validating_node_entries_removed = np.zeros(len(validating_node_entries))
 
     for connected_element_name in validating_node.link_XML.keys():
+        # print("## Checking connected element ", connected_element_name, "for ", validating_node.name)
+
+        # relationship between validating_node and connected_element_node
+        relationship = relationship_matrix[all_elements_name.index(validating_node.name), all_elements_name.index(connected_element_name)]
+        # print("relationship ", relationship)
+
+
         connected_element_nodes = validating_node.link_XML[connected_element_name]
         for connected_element_node in connected_element_nodes:
             # Do validation if not been validated
-            if not connected_element_node.validation_visited:
+            if (not connected_element_node.filtered) and (not connected_element_node.validation_visited):
                 node_validation(connected_element_node, all_elements_name, relationship_matrix)
 
         # get all entries in unfiltered connected_element_nodes
         connected_element_entries = []
         for connected_element_node in connected_element_nodes:
-            for entry in connected_element_node.validated_entries:
-                connected_element_entries.append(entry)
+            if not connected_element_node.filtered:
+                for entry in connected_element_node.validated_entries:
+                    connected_element_entries.append(entry)
+
+
+        # print("## remaining entries: ")
+        # for entry in connected_element_entries:
+            # print(entry.coordinates)
 
         has_one_matched_entry = False
+
+        # print("## Structure check")
 
 
         for i in range(len(validating_node_entries)):
@@ -469,12 +503,14 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
                 validating_node_entry = validating_node_entries[i]
                 validating_node_entry.link_XML[connected_element_name] = []
 
+                # print("validating entry", validating_node_entry.coordinates)
+
                 for connected_element_entry in connected_element_entries:
+                    # print("connected_element_entry", connected_element_entry.coordinates)
                     #######################
                     # structure validation
                     structure_validation_satisfied = False
                     
-                    relationship = relationship_matrix[all_elements_name.index(validating_node.name), all_elements_name.index(connected_element_name)]
                     # if parent_children relationship
                     if relationship == 1:
                         if is_parent(validating_node_entry.coordinates[0], connected_element_entry.coordinates[0]):
@@ -488,11 +524,13 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
                         ####################
                         # value validation
                         if pair_value_validation(validating_node_entry, connected_element_entry, validating_node.name, connected_element_name):
+                            # print("Structure and value satisfied")
                             validating_node_entry.link_XML[connected_element_name].append(connected_element_entry)
 
                 # if this validating_node_entry has no match in connected_element_entries
                 if not validating_node_entry.link_XML[connected_element_name]:
                     validating_node_entries_removed[i] = 1
+                    # print("Validating entry removed")
                 else:
                     has_one_matched_entry = True
 
@@ -501,6 +539,7 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
             return
                     
     # Update entries
+    validating_node.validated_entries = []
     for i in range(len(validating_node_entries)):
         if validating_node_entries_removed[i] == 0:
             validating_node.validated_entries.append(validating_node_entries[i])
@@ -555,6 +594,28 @@ def validation_XML_SQL(all_elements_name, relationship_matrix, XML_query_root_no
     #                 print('\t', table_name)
     #                 for entry_SQL in entry.link_SQL[table_name]:
     #                     print('\t' * 2, entry_SQL.coordinates)
+
+
+
+# def get_final_results(all_elements_name, relationship_matrix, XML_query_root_node):
+
+#     results = []
+    
+#     XML_query_root_leaf_nodes = XML_query_root_node.get_leaf_node_not_filtered()
+
+#     for root_leaf_node in XML_query_root_leaf_nodes:
+#         root_leaf_node_entries = root_leaf_node.validated_entries
+
+#         for root_leaf_node_entry in root_leaf_node_entries:
+#             result = {}
+#             result[all_elements_name[0]] = root_leaf_node_entry
+
+#             for i in range(len(relationship_matrix)):
+#                 for j in range(i + 1, len(relationship_matrix)):
+#                     if relationship_matrix[i, j] != 0:
+#                         entries = 
+
+
 
 def join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_children):
     """Summary
@@ -655,9 +716,13 @@ def join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_chil
     validation_XML_SQL(all_elements_name, relationship_matrix, all_elements_root[XML_query_root_element])
     end_validation = timeit.default_timer()
 
-
-
     print('validation time', end_validation - start_validation)
+
+    ##################################################################
+    # Return final result
+    # get_final_results(all_elements_name, relationship_matrix, all_elements_root[XML_query_root_element])
+
+
 
 
 
@@ -683,9 +748,6 @@ def xiye_test_1():
     join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_children)
 
 
-
-iMaxStackSize = 5000
-sys.setrecursionlimit(iMaxStackSize)
 
 test_2()
 # xiye_test_1()
