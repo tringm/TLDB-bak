@@ -255,7 +255,8 @@ def bulk_loading(entries, element_name, max_n_children, dimension):
 		else:
 			# print('Adding new nodes')
 			n_entries_subtree = max_n_children ** (height - 1)											# Number of entries contained in the subtree of this node
-			n_slices = math.floor(math.sqrt(math.ceil(current_n_entries / n_entries_subtree)))          # Number of slices according to the formula of OMT
+			# n_slices = math.floor(math.sqrt(math.ceil(current_n_entries / n_entries_subtree)))          # Number of slices according to the formula of OMT
+			n_slices = math.ceil(current_n_entries/n_entries_subtree)
 
 			# if n_entries_subtree == current_n_entries:
 			# 	n_slices = 0
@@ -264,13 +265,15 @@ def bulk_loading(entries, element_name, max_n_children, dimension):
 			# print('n_slices', n_slices)
 
 			# divide into n_slice + 1 nodes, add to current node
-			for i in range(n_slices + 1):
-				# print('Node ', i)
+			for i in range(n_slices):
+				n_entries_slice = current_n_entries
+
+				# print('Children Node ', i)
 				range_low = current_range[0]  + i * n_entries_subtree
 				range_high = range_low + n_entries_subtree
 
 				# last group might have more than max_n_children
-				if (i == n_slices):
+				if (i == n_slices - 1):
 					range_high = current_range[1]
 				# print('range ', range_low, range_high)
 
