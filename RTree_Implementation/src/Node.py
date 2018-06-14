@@ -33,6 +33,7 @@ class Node:
 		self.validation_visited = False
 		self.link_XML = {}
 		self.link_SQL = {}
+		self.limit_range = []
 		self.name = ""
 	
 	# def update_boundary(self, coordinates):
