@@ -371,7 +371,7 @@ def connected_element_filtering(filtering_node, connected_element_name, limit_ra
 
 
 
-def initialize_children_link(filtering_node):
+def initialize_children_link(filtering_node, all_elements_name):
     """Summary
     This function intialize children link_XML and link_SQL of a filtered node
     Args:
@@ -382,6 +382,7 @@ def initialize_children_link(filtering_node):
     # print('initialize_children_link', filtering_node.name, filtering_node.boundary)
     link_XML = {}
     link_SQL = {}
+    limit_range = filtering_node.limit_range
     for connected_element_name in filtering_node.link_XML.keys():
         # print("connected_element_name ", connected_element_name)
         link_XML[connected_element_name] = []
@@ -391,7 +392,11 @@ def initialize_children_link(filtering_node):
                 link_XML[connected_element_name].append(connected_element_node)
             else:
                 for connected_element_node_child in connected_element_node.children:
-                    link_XML[connected_element_name].append(connected_element_node_child)
+                    if ((connected_element_node_child.boundary[1][1] < limit_range[all_elements_name.index(connected_element_name)][0]) 
+                    or (connected_element_node_child.boundary[1][0] > limit_range[all_elements_name.index(connected_element_name)][1])):
+                        continue
+                    else:
+                        link_XML[connected_element_name].append(connected_element_node_child)
 
     
     for table_name in filtering_node.link_SQL.keys():
@@ -440,21 +445,23 @@ def full_filtering(filtering_node, all_elements_name, limit_range):
     Args:
         filtering_node (RTree_XML Node)
     """
-    # print('##########################')
-    # print('Full Filtering ', filtering_node.name, filtering_node.boundary)
-
-
+    
+    print('##########################')
+    print('Full Filtering ', filtering_node.name, filtering_node.boundary)
+    print('limit_range', limit_range)
 
     # Mark this node has been visited
     filtering_node.filter_visited = True
     if not filtering_node.filtered:
+        print("############")
+        # print("value filtering")
         updated_limit_range = value_filtering(filtering_node, all_elements_name, limit_range)
     # if filtering_node.filtered:
-    # print("After value filtering ", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
+    print("After value filtering ", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
     
     if not filtering_node.filtered:
-        # print("############")
-        # print("Checking connceted elements")
+        print("############")
+        # print("Checking connected elements")
         for connected_element_name in filtering_node.link_XML.keys():
             # print("Connected filtering: ", connected_element_name)
             # print("updated limit range", updated_limit_range)
@@ -471,15 +478,18 @@ def full_filtering(filtering_node, all_elements_name, limit_range):
                     updated_limit_range[i][1] = connected_filtered_limit_range[i][1]
             # print("updated limit range ", updated_limit_range)
 
-        # print("############")
+        print("############")
 
-    # print("After connected element filtering ", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
+    print("After connected element filtering ", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
+
+    filtering_node.limit_range = updated_limit_range
+    print("limit_range", filtering_node.limit_range)
+
 
     if not filtering_node.filtered:
         # Update children link
-        initialize_children_link(filtering_node)
+        initialize_children_link(filtering_node, all_elements_name)
 
-    filtering_node.limit_range = updated_limit_range
 
 
 def entries_value_validation(validating_node):
@@ -744,22 +754,22 @@ def validation_XML_SQL(all_elements_name, relationship_matrix, XML_query_root_no
         # print(node.boundary)
         node_validation(node, all_elements_name, relationship_matrix)
 
-    # print('###############################')
-    # for node in XML_query_root_leaf_nodes:
-    #     print('Node ', node.boundary)
-    #     if not node.filtered:
-    #         for entry in node.validated_entries:
-    #             print('\t', entry.coordinates)
-    #             print('\t', 'Entry link_XML')
-    #             for connected_element in entry.link_XML.keys():
-    #                 print('\t', connected_element)
-    #                 for entry_XML in entry.link_XML[connected_element]:
-    #                     print('\t' * 2, entry_XML.coordinates)
-    #             print('\t', 'Entry link_SQL')
-    #             for table_name in entry.link_SQL.keys():
-    #                 print('\t', table_name)
-    #                 for entry_SQL in entry.link_SQL[table_name]:
-    #                     print('\t' * 2, entry_SQL.coordinates)
+    print('###############################')
+    for node in XML_query_root_leaf_nodes:
+        print('Node ', node.boundary)
+        if not node.filtered:
+            for entry in node.validated_entries:
+                print('\t', entry.coordinates)
+                print('\t', 'Entry link_XML')
+                for connected_element in entry.link_XML.keys():
+                    print('\t', connected_element)
+                    for entry_XML in entry.link_XML[connected_element]:
+                        print('\t' * 2, entry_XML.coordinates)
+                print('\t', 'Entry link_SQL')
+                for table_name in entry.link_SQL.keys():
+                    print('\t', table_name)
+                    for entry_SQL in entry.link_SQL[table_name]:
+                        print('\t' * 2, entry_SQL.coordinates)
 
 
 
@@ -841,7 +851,7 @@ def join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_chil
         all_elements_root[highest_element_name].link_SQL[table_name].append(table_root)
 
     end_initializing_link = timeit.default_timer()
-    print("Initilize link took: ",end_initializing_link - start_initializing_link)
+    print("Initialize link took: ",end_initializing_link - start_initializing_link)
 
     ################################################################
     # PRINT OUT LINK
@@ -925,15 +935,15 @@ def xiye_test_1():
     relationship_matrix = np.zeros((3, 3))
     relationship_matrix[0, 1] = 1
     relationship_matrix[0, 2] = 1
-    max_n_children = 100
+    max_n_children = 50
     join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_children)
 
 
 
 # test_2()
 
-# output_file_path = 'debug'
-# sys.stdout = open(output_file_path, 'w')
+output_file_path = 'output_text'
+sys.stdout = open(output_file_path, 'w')
 
 xiye_test_1()
 # test_2()

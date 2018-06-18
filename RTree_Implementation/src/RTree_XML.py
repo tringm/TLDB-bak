@@ -219,6 +219,10 @@ def bulk_loading(entries, element_name, max_n_children, dimension):
 		end_sorting = timeit.default_timer()
 		print('sorting took: ', end_sorting - start_sorting)
 
+	'''
+	!!!!!!!!!!!!!!!!!
+	'''
+
 	n_entries = len(entries)
 	# Configuration
 	queue_node = queue.Queue()																			# Queue for node at each level
