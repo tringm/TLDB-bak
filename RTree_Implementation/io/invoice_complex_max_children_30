@@ -1,0 +1,30 @@
+Loading element:  Invoice
+Loaded  50522 entries
+Invoice
+sorting took:  0.3954486760048894
+Loading element:  OrderId
+Loaded  50522 entries
+OrderId
+sorting took:  245.08506702999875
+Loading element:  Orderline
+Loaded  229166 entries
+Orderline
+Loading element:  price
+Loaded  229166 entries
+price
+sorting took:  21.915342294989387
+Loading element:  asin
+Loaded  229166 entries
+asin
+sorting took:  24.32257468700118
+Loading table:  asin_price_OrderId
+Loading table:  Orderline_asin
+Loading table:  Invoice_Orderline
+Loading table:  Invoice_asin
+Loading table:  price_asin
+loading time 487.85870064499613
+Initialize link took:  7.823600026313215e-05
+filtering time 790.6687252069969
+Number of remaining leaf nodes of root: 0
+###############################
+validation time 0.0004339860024629161

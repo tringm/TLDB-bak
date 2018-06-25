@@ -15,6 +15,24 @@ from Entry import Entry
 from Dewey_Index import *
 import timeit
 
+def get_index_highest_element(all_elements_name, table_name):
+    """Summary
+    This function return the index of highest level element (in XML query) of a table name
+    e.g: If query is A->B then get_index_highest_element(['A, B'], 'B_A') = 1
+    Args:
+        all_elements_name (list[string]): list of all XML query elements' name
+        table_name (String): Name of table
+    
+    Returns:
+        int: index
+    """
+    table_elements = table_name.split('_')
+    index = []
+    for element_name in table_elements:
+        index.append(all_elements_name.index(element_name))
+    return np.argmin(np.asarray(index))
+
+
 def load_text_file(file_path):
 	"""Summary
 	Load text file by lines
