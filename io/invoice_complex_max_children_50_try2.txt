@@ -1,0 +1,443 @@
+Loading element:  Invoice
+Loaded  50522 entries
+Invoice
+sorting took:  0.31875599399973
+Loading element:  OrderId
+Loaded  50522 entries
+OrderId
+sorting took:  231.60797598799945
+Loading element:  Orderline
+Loaded  229166 entries
+Orderline
+Loading element:  price
+Loaded  229166 entries
+price
+sorting took:  20.60476209999979
+Loading element:  asin
+Loaded  229166 entries
+asin
+sorting took:  23.01050477699937
+Loading table:  Invoice_asin
+Loading table:  price_asin
+Loading table:  Invoice_Orderline
+Loading table:  Orderline_asin
+Loading table:  asin_price_OrderId
+Loading time:  422.4405945060007
+Initialize link took:  0.0001064629996108124
+######################################
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+One root node filter time: 0.00024208100148825906
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+One root node filter time: 0.0011963510005443823
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+One root node filter time: 0.0009440650010219542
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+ANOTHER VAMPIRE
+One root node filter time: 0.0008969350001279963
+One root node filter time: 1.5610003174515441e-06
+One root node filter time: 1.3179997040424496e-06
+One root node filter time: 1.2729997251881287e-06
+One root node filter time: 1.2109994713682681e-06
+One root node filter time: 1.2309992598602548e-06
+One root node filter time: 1.0740004654508084e-06
+One root node filter time: 1.224001607624814e-06
+One root node filter time: 1.124000846175477e-06
+One root node filter time: 1.1280008038738742e-06
+One root node filter time: 1.2689997674897313e-06
+One root node filter time: 1.1729989637387916e-06
+One root node filter time: 1.2609998520929366e-06
+One root node filter time: 1.1330012057442218e-06
+One root node filter time: 1.164999048341997e-06
+One root node filter time: 1.1690008250297979e-06
+One root node filter time: 1.1320007615722716e-06
+One root node filter time: 1.1540014384081587e-06
+One root node filter time: 1.1009997251676396e-06
+One root node filter time: 0.00019317199985380284
+One root node filter time: 0.00014506599836749956
+One root node filter time: 0.00013482900067174342
+One root node filter time: 1.4639990695286542e-06
+One root node filter time: 1.2370001059025526e-06
+One root node filter time: 1.2519994925241917e-06
+One root node filter time: 1.4180004654917866e-06
+One root node filter time: 1.1990014172624797e-06
+One root node filter time: 1.2069995136698708e-06
+One root node filter time: 1.1260017345193774e-06
+One root node filter time: 1.0300009307684377e-06
+One root node filter time: 1.2569998943945393e-06
+One root node filter time: 1.1080010153818876e-06
+One root node filter time: 1.1259999155299738e-06
+One root node filter time: 1.1449992598500103e-06
+One root node filter time: 1.2109994713682681e-06
+One root node filter time: 1.1750016710720956e-06
+One root node filter time: 1.0019994078902528e-06
+One root node filter time: 1.0769999789772555e-06
+One root node filter time: 1.1350002750987187e-06
+One root node filter time: 1.2330001482041553e-06
+One root node filter time: 1.1519987310748547e-06
+One root node filter time: 1.1610009096330032e-06
+One root node filter time: 1.1779993656091392e-06
+One root node filter time: 1.1350002750987187e-06
+One root node filter time: 1.0399999155197293e-06
+One root node filter time: 1.1330012057442218e-06
+One root node filter time: 1.0769999789772555e-06
+One root node filter time: 1.116999555961229e-06
+One root node filter time: 9.830000635702163e-07
+One root node filter time: 1.038999471347779e-06
+One root node filter time: 1.0969997674692422e-06
+One root node filter time: 1.1290012480458245e-06
+One root node filter time: 9.439991117687896e-07
+One root node filter time: 9.17001671041362e-07
+One root node filter time: 1.0600015230011195e-06
+One root node filter time: 1.107999196392484e-06
+One root node filter time: 9.299983503296971e-07
+One root node filter time: 1.067000994225964e-06
+One root node filter time: 1.0229996405541897e-06
+One root node filter time: 9.559989848639816e-07
+One root node filter time: 1.0329986253054813e-06
+One root node filter time: 1.0519997886149213e-06
+One root node filter time: 9.730010788189247e-07
+One root node filter time: 1.1049996828660369e-06
+One root node filter time: 1.0109997674589977e-06
+One root node filter time: 1.0290004865964875e-06
+One root node filter time: 1.0950006981147453e-06
+One root node filter time: 1.0019994078902528e-06
+One root node filter time: 9.289997251471505e-07
+One root node filter time: 1.0980002116411924e-06
+One root node filter time: 1.1709998943842947e-06
+One root node filter time: 9.930008673109114e-07
+One root node filter time: 9.549985406920314e-07
+One root node filter time: 1.2139989848947152e-06
+One root node filter time: 2.3930006136652082e-06
+One root node filter time: 1.7619986465433612e-06
+One root node filter time: 1.6680005501257256e-06
+One root node filter time: 1.7340007616439834e-06
+One root node filter time: 1.4990000636316836e-06
+One root node filter time: 1.5890000213403255e-06
+One root node filter time: 1.0639996617101133e-06
+One root node filter time: 1.0710009519243613e-06
+One root node filter time: 1.1080010153818876e-06
+One root node filter time: 9.689993021311238e-07
+One root node filter time: 9.69999746303074e-07
+One root node filter time: 1.0290004865964875e-06
+One root node filter time: 1.139000232797116e-06
+One root node filter time: 1.151000105892308e-06
+One root node filter time: 1.1049996828660369e-06
+One root node filter time: 1.0610001481836662e-06
+One root node filter time: 1.0780004231492057e-06
+One root node filter time: 1.3310000213095918e-06
+One root node filter time: 1.2670006981352344e-06
+One root node filter time: 1.0559997463133186e-06
+One root node filter time: 1.0860003385460004e-06
+One root node filter time: 1.1379997886251658e-06
+One root node filter time: 1.0489984560990706e-06
+One root node filter time: 1.0320000001229346e-06
+One root node filter time: 9.030009096022695e-07
+One root node filter time: 9.979994501918554e-07
+One root node filter time: 1.3839999155607074e-06
+One root node filter time: 1.1689990060403943e-06
+One root node filter time: 1.046000761562027e-06
+One root node filter time: 1.3620010577142239e-06
+One root node filter time: 1.0399999155197293e-06
+One root node filter time: 1.1350002750987187e-06
+One root node filter time: 1.0320000001229346e-06
+One root node filter time: 1.1419997463235632e-06
+One root node filter time: 1.0999992809956893e-06
+One root node filter time: 1.0809999366756529e-06
+One root node filter time: 1.0000003385357559e-06
+One root node filter time: 1.2130003597121686e-06
+One root node filter time: 1.1950014595640823e-06
+One root node filter time: 1.0200001270277426e-06
+One root node filter time: 8.629995136288926e-07
+One root node filter time: 1.3730004866374657e-06
+One root node filter time: 1.0789990483317524e-06
+One root node filter time: 1.0879994079004973e-06
+One root node filter time: 1.0560015653027222e-06
+One root node filter time: 1.1000010999850929e-06
+One root node filter time: 1.160000465461053e-06
+One root node filter time: 1.151000105892308e-06
+One root node filter time: 1.0730000212788582e-06
+One root node filter time: 1.1620013538049534e-06
+One root node filter time: 1.3480002962751314e-06
+One root node filter time: 9.900013537844643e-07
+One root node filter time: 1.2830005289288238e-06
+One root node filter time: 1.257998519577086e-06
+One root node filter time: 1.255999450222589e-06
+One root node filter time: 1.0849998943740502e-06
+One root node filter time: 1.1130014172522351e-06
+One root node filter time: 1.1579995771171525e-06
+One root node filter time: 1.308000719291158e-06
+One root node filter time: 9.990017133532092e-07
+One root node filter time: 1.1159991117892787e-06
+One root node filter time: 1.2029995559714735e-06
+One root node filter time: 1.1080010153818876e-06
+One root node filter time: 1.131998942582868e-06
+One root node filter time: 1.1780011845985427e-06
+One root node filter time: 1.0650001058820635e-06
+One root node filter time: 1.1259999155299738e-06
+One root node filter time: 1.0099993232870474e-06
+One root node filter time: 1.1949996405746788e-06
+One root node filter time: 1.1419997463235632e-06
+One root node filter time: 1.1140000424347818e-06
+One root node filter time: 1.0009989637183025e-06
+One root node filter time: 9.519990271655843e-07
+One root node filter time: 1.0860003385460004e-06
+One root node filter time: 1.2159998732386157e-06
+One root node filter time: 1.0660005500540137e-06
+One root node filter time: 1.981999957934022e-06
+One root node filter time: 2.0530005713226274e-06
+One root node filter time: 1.81299947143998e-06
+One root node filter time: 3.3550004445714876e-06
+One root node filter time: 1.936999979079701e-06
+One root node filter time: 2.8559989004861563e-06
+One root node filter time: 1.9990002328995615e-06
+One root node filter time: 2.5009994715219364e-06
+One root node filter time: 2.0380011847009882e-06
+One root node filter time: 2.106000465573743e-06
+One root node filter time: 2.119999408023432e-06
+One root node filter time: 1.77200126927346e-06
+One root node filter time: 1.5960013115545735e-06
+One root node filter time: 1.6739995771786198e-06
+One root node filter time: 1.9760009308811277e-06
+One root node filter time: 1.727001290419139e-06
+One root node filter time: 2.007000148296356e-06
+One root node filter time: 1.5759997040731832e-06
+One root node filter time: 1.7399997886968777e-06
+Filtering time 0.0061574930005008355
+Average filtering time for one node: 3.579937790988858e-05
+######################################
+#######################
+Number of remaining leaf nodes of root after Filtering: 0
+#######################
+#######################
+Number of remaining leaf nodes of root after validation: 0
+#######################
+###############################
+validation time 0.0001964980001503136
