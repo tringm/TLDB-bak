@@ -146,6 +146,7 @@ def value_filtering(filtering_node, all_elements_name):
             # print('\t'+'not has_one_satisfied_node')
             # print('\t'+'link_nodes_removed', link_nodes_removed)
             filtering_node.filtered = True
+            return
 
         # Update link_SQL
         new_link_nodes = []
@@ -500,6 +501,79 @@ def full_filtering(filtering_node, all_elements_name, limit_range):
         initialize_children_link(filtering_node, all_elements_name, limit_range)
 
     return limit_range
+
+
+def entries_value_valiation(validating_node, all_elements_name):
+    print('---------')
+    print("entries_value_validation ", validating_node.name, validating_node.boundary)
+    print("Number of entries in this node: ", len(validating_node_entries))
+
+    possible_results = []
+
+    validating_node.value_validation = True
+
+    validating_node_entries = validating_node.validated_entries
+    validating_node_entries_removed = np.zeros(len(validating_node_entries))
+
+    available_entries = {}
+    for element in all_elements_name:
+        available_entries = []
+
+    for table_name in validating_node.link_SQL.keys():
+        print("\t", "Checking table: ", table_name)
+        start_get_table_entries = timeit.default_timer()
+        table_entries = []
+        for table_node in validating_node.link_SQL[table_name]:
+            for entry in table_node.get_entries():
+                table_entries.append(entry)
+        end_get_table_entries = timeit.default_timer()
+        print("\t", "Got:", len(table_entries), "entries in: ", end_get_table_entries - start_get_table_entries)
+
+        table_dimension = table_name.split('_').index(validating_node.name)
+        table_elements = table_name.split('_')
+
+
+        matches = []
+        for element in all_elements_name:
+            matches[element] = []
+
+        for i in range(len(validating_node_entries)):
+            if (validating_node_entries_removed[i] == 0):
+                has_one_matched_entry = False
+
+                for j in range(len(table_entries)):
+                    if validating_node_entry[i].coordinates[1] == table_entries[j].coordinates[table_dimension]:
+                        has_one_matched_entry = True
+                        a_match = [None] * len(all_elements_name)
+                        for element in table_elements:
+                            index = table_elements.index(element)
+                            a_match[index] = table_entries[j].coordinates[index]
+                        matches.append(a_match)
+
+                if not has_one_matched_entry:
+                    validating_node_entries_removed[i] = 1
+
+        if sum(validating_node_entries_removed) == len(validating_node_entries):
+            validating_node.filtered = True
+            return
+
+        # Combine matches from this table
+
+        for possible_result in possible_results:
+            for match in mathces:
+                zip_list = zip(possible_result, match)
+                for
+
+            
+
+
+
+
+                
+
+
+
+
 
 
 

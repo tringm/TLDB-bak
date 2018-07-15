@@ -30,10 +30,11 @@ class Node:
 		self.validated_entries = []
 		self.filtered = False
 		self.value_filtering_visited = False
-		self.validation_visited = False
+		self.value_validation_visited = False
 		self.link_XML = {}
 		self.link_SQL = {}
 		self.link_SQL_range = {}
+		self.available_entries = {}
 		self.name = ""
 	
 	# def update_boundary(self, coordinates):
