@@ -514,12 +514,13 @@ def entries_value_validation(validating_node):
 
 
     # print("##################################")
+    print('---------')
     print("entries_value_validation ", validating_node.name, validating_node.boundary)
 
     validating_node_entries = validating_node.validated_entries
     validating_node_entries_removed = np.zeros(len(validating_node_entries))
 
-    print("Number of entries: ", len(validating_node_entries))
+    print("Number of entries in this node: ", len(validating_node_entries))
 
     # print("Entries: ")
     # for entry in validating_node_entries:
@@ -538,7 +539,7 @@ def entries_value_validation(validating_node):
                 table_entries.append(entry)
 
         end_get_table_entries = timeit.default_timer()
-        # print("Get table entries took: ", end_get_table_entries - start_get_table_entries)
+        print("\t", "Got:", len(table_entries), "table", table_name ,"entries in: ", end_get_table_entries - start_get_table_entries)
 
         table_dimension = table_name.split('_').index(validating_node.name)
 
@@ -564,6 +565,7 @@ def entries_value_validation(validating_node):
 
                 else:
                     has_one_matched_entry = True
+        print("\t", "Remaining table entries:", len(validating_node_entries_removed) - sum(validating_node_entries_removed))
 
         if not has_one_matched_entry:
             validating_node.filtered = True
@@ -575,7 +577,8 @@ def entries_value_validation(validating_node):
     for i in range(len(validating_node_entries)):
         if validating_node_entries_removed[i] == 0:
             validating_node.validated_entries.append(validating_node_entries[i])
-    print("Remaining entries: ", len(validating_node.validated_entries))
+    print("Remaining entries in this node: ", len(validating_node.validated_entries))
+    print('---------')
 
 def pair_value_validation(validating_node_entry, connected_element_entry, validating_node_name, connected_element_name):
     """Summary
@@ -622,7 +625,7 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
 
     # print("##################################")
     print("entries_connected_element_validation ", validating_node.name, validating_node.boundary)
-    print("Number of entries", validating_node.name, validating_node.boundary, len(validating_node.validated_entries))
+    print("Number of entries", len(validating_node.validated_entries))
 
     validating_node_entries = validating_node.validated_entries
     validating_node_entries_removed = np.zeros(len(validating_node_entries))
@@ -638,16 +641,16 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
         start_connected_element_validation = timeit.default_timer()
         connected_element_nodes = validating_node.link_XML[connected_element_name]
 
-        print("Number of connected_element_node:", len(connected_element_nodes))
-        for connected_element_node in connected_element_nodes:
-            print(connected_element_node.boundary, sep='\t')
+        print("        Number of connected_element_node:", len(connected_element_nodes))
+        # for connected_element_node in connected_element_nodes:
+            # print(connected_element_node.boundary, sep='\t')
 
         for connected_element_node in connected_element_nodes:
             # Do validation if not been validated
             if (not connected_element_node.filtered) and (not connected_element_node.validation_visited):
                 node_validation(connected_element_node, all_elements_name, relationship_matrix)
         end_connected_element_validation = timeit.default_timer()
-        print("Do validation on children" , connected_element_name,"took: ", end_connected_element_validation - start_connected_element_validation)
+        print("        Do validation on children" , connected_element_name,"took: ", end_connected_element_validation - start_connected_element_validation)
 
         # get all entries in unfiltered connected_element_nodes
         connected_element_entries = []
@@ -656,8 +659,8 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
                 for entry in connected_element_node.validated_entries:
                     connected_element_entries.append(entry)
 
-        print("Parent entries: ", len(validating_node_entries))
-        print("Children entries: ", len(connected_element_entries))
+        print("        Parent entries: ", len(validating_node_entries))
+        print("        Children entries: ", len(connected_element_entries))
 
         # print("## remaining entries: ")
         # for entry in connected_element_entries:
@@ -707,10 +710,10 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
                     has_one_matched_entry = True
 
         end_actual_validation = timeit.default_timer()
-        print("Actual validation took: ", end_actual_validation - start_actual_validation)
+        print("        Actual validation took: ", end_actual_validation - start_actual_validation)
 
-        print("Parent remaining entries: ", len(validating_node_entries))
-        print("Children remaining entries: ", len(connected_element_entries))
+        print("        Parent remaining entries: ", len(validating_node_entries))
+        print("        Children remaining entries: ", len(connected_element_entries))
 
         if not has_one_matched_entry:
             validating_node.filtered = True
