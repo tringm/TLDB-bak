@@ -14,6 +14,7 @@ class Entry:
 		self.coordinates = coordinates
 		self.link_XML = {}
 		self.link_SQL = {}
+		self.possible_combinations = []
 
 	def is_inside(self, boundary):
 		"""Summary
@@ -36,4 +37,14 @@ class Entry:
 				break
 
 		return is_inside
+
+	def is_similar(entry):
+		if len(this.coordinates) != len(entry.coordinates):
+			return False
+
+		for i in range(len(this.coordinates)):
+			if this.coordinates[i] != entry.coordinates[i]:
+				return False
+
+		return True
 

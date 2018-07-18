@@ -78,6 +78,7 @@ class Node:
 			child_entries = child.get_entries()
 			for child_entry in child_entries:
 				entries.append(child_entry)
+		self.entries = entries
 		return entries
 
 	def get_leaf_node_not_filtered(self):

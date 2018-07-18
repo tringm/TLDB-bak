@@ -1,7 +1,7 @@
 import RTree_XML
 import RTree_SQL
+from Loader import Loader
 import queue
-import os
 import numpy as np
 from Node import Node
 from Entry import Entry
@@ -11,91 +11,6 @@ import copy
 
 import timeit
 
-
-def load_elements(folder_name, all_elements_name, max_n_children):
-    """Summary
-    Load multiple elements and return list of root node of each element's R_Tree
-    Args:
-        folder_name (string)
-        all_elements_name (list of string): list of name of elements in XML query
-        max_n_children (int): maximum number of children in R_Tree
-    
-    Returns:
-        dict[string, Node]: dict with key is name of element and value is corresponding root node of RTree_XML
-    """
-    all_elements_root = {}
-    for element_name in all_elements_name:
-        print('Loading element: ', element_name)
-        all_elements_root[element_name] = build_RTree_XML(folder_name, element_name, max_n_children)
-    return(all_elements_root)
-
-def build_RTree_XML(folder_name, element_name, max_n_children, dimension = 1):
-    """Summary
-    Build a RTree for an XML element
-    
-    Args:
-        folder_name (string): 
-        element_name (string)
-        max_n_children (int): maximum number of children in RTree
-        dimension (int, optional): dimenstion to be sorted for RTree, currently 1 (value)
-    
-    Returns:
-        Node: root node of built RTree
-    """
-    entries = RTree_XML.load(folder_name, element_name)
-    print('Loaded ', len(entries), 'entries')
-    # print(entries[0].coordinates)
-    root = RTree_XML.bulk_loading(entries, element_name, max_n_children, dimension)
-
-    return root
-
-def load_tables(folder_name, all_elements_name, max_n_children):
-    """Summary
-    Load all tables inside a folder (files that end with _table.dat)
-    Args:
-        folder_name (string):
-        all_elements_name (list of string): list of elements in XML query
-        max_n_children (int): maximum number of children in R_Tree
-    
-    Returns:
-        all_tables_root (dict[string, Node]): dict with key is name of table and value is corresponding root node of RTree_SQL
-    """
-    all_tables_root = {}
-    for file_name in os.listdir("../data/" + folder_name):
-        if 'table' in file_name:
-            table_name = file_name[:-10]
-            print('Loading table: ', table_name)
-            all_tables_root[table_name]= build_RTree_SQL(folder_name, file_name, all_elements_name, max_n_children)
-    return all_tables_root
-
-
-def build_RTree_SQL(folder_name, file_name, all_elements_name, max_n_children):
-    """Summary
-    Build a RTree for a SQL table with each element is a column. This RTree is sorted by element that is at highest level (smallest index in elements list) in XML query tree
-    
-    Args:
-        folder_name (string):
-        file_name (string)
-        all_elements_name (list of string): list of elements_name in XML query
-        max_n_children (int): maximum number of children in RTree
-    
-    Returns:
-        root (Node): root node of built RTree
-        dimension (int): index of highest level element in XML query 
-    """
-    entries = RTree_SQL.load(folder_name, file_name)
-    
-    # Find which element in table is higest level and sort RTree based on this element 
-    table_name = file_name[:-10]
-    dimension = get_index_highest_element(all_elements_name, table_name)
-    # table_elements = file_name[:-10].split('_')
-    # index = []
-    # for element_name in table_elements:
-    #     index.append(all_elements_name.index(element_name))
-    # dimension = np.argmin(np.asarray(index))
-
-    root = RTree_SQL.bulk_loading(entries, table_name, max_n_children, dimension)
-    return root
 
 def get_index_highest_element(all_elements_name, table_name):
     """Summary
@@ -115,7 +30,7 @@ def get_index_highest_element(all_elements_name, table_name):
     return np.argmin(np.asarray(index))
 
 
-def ancestor_descendant_filter(node1, node2):
+def ancestor_descendant_filtering(node1, node2):
     """Summary
     This function check if a node D_XML is descendant of node A_XML
     Args:
@@ -123,7 +38,7 @@ def ancestor_descendant_filter(node1, node2):
         node2 (Node): R_Tree_XML Node to be checked if is descendant
     
     Returns:
-        Bool: True if node1 is ancestor of node2
+        Bool: True if node1 cannot be ancestor of node2
     """
     node1_low = node1.boundary[0][0]
     node1_high = node1.boundary[0][1]
@@ -135,11 +50,11 @@ def ancestor_descendant_filter(node1, node2):
     #   - node1 is on the right of node2, no intersection
     # Edge case 1.2.3 < 1.2.3.4 but is ancestor still
     if (compare_DeweyId(node2_high, node1_low)):
-        return False
+        return True
     if (compare_DeweyId(node1_high, node2_low)):
         if is_ancestor(node1_high, node2_low) == False:
-            return False
-    return True
+            return True
+    return False
 
     # Range Index
     # if ((node1_low <= node2_low) and (node1_high >= node2_high)):
@@ -170,43 +85,57 @@ def intersection_filter(node1, dimension1, node2, dimension2):
     return True
 
 
-def value_filtering(filtering_node, all_elements_name, limit_range):
+def value_filtering(filtering_node, all_elements_name):
     """Summary
     This function do value filtering by updating all connected tables in filtering_node.link_SQL
     Filter this node if exist on table that has no match for this filtering_node
     Update filtering_node.link_SQL for table nodes that is not a match
+    Update the range of linking nodes
+    Each node should be value filtered once
     Args:
         filtering_node (RTree_XML Node): node to be checked for value filtering 
     """
-    print("#######################")
-    print('value_filtering', filtering_node.name, filtering_node.boundary)
-    print('limit_range', limit_range)
+    # print("#######################")
+    # print('value_filtering', filtering_node.name, filtering_node.boundary)
 
+    filtering_node.value_filtering_visited = True
 
-    updating_limit_range = copy.deepcopy(limit_range)
+    link_SQL_range = {}
+    for element in all_elements_name:
+        link_SQL_range[element] = []
 
-    # Check if this node satisfied limit range
-    print("Value filtering: Going through limit_range")
-    filtering_node_limit_range = updating_limit_range[all_elements_name.index(filtering_node.name)]
-    if (filtering_node.boundary[1][1] < filtering_node_limit_range[0]) or (filtering_node.boundary[1][0] > filtering_node_limit_range[1]):
-        # print('Filtered by limit range')
-        filtering_node.filtered = True
-        return []
 
     # Go through each connected table
-    print("Value filtering: Going through tables")
+    # print("Value filtering: Going through tables")
     for table_name in filtering_node.link_SQL.keys():
-        print('\t' + 'table_name', table_name)
+        # print('\t' + 'table_name', table_name)
         table_nodes = filtering_node.link_SQL[table_name]                   # list of nodes in a connected table to be chedk
         has_one_satisfied_node = False
         link_nodes_removed = np.zeros(len(table_nodes))                     # array to store if a node in table_nodes should be removed
         table_dimension = table_name.split('_').index(filtering_node.name)
-        # for condition_node in table_nodes:
-        print('\t' + 'len(table_nodes) ', len(table_nodes))
+        table_elements = table_name.split('_')
+
+        combined_range = {}
+        for element in all_elements_name:
+            combined_range[element] = []
+
+        # print('\t' + 'len(table_nodes) ', len(table_nodes))
 
         for i in range(len(table_nodes)):
             if intersection_filter(filtering_node, 1, table_nodes[i], table_dimension):
                 has_one_satisfied_node = True
+
+                boundary = table_nodes[i].boundary
+
+                for element in table_elements:
+                    if not combined_range[element]:
+                        combined_range[element] = list(boundary[table_elements.index(element)])
+                    else: 
+                        if (boundary[table_elements.index(element)][0] < combined_range[element][0]):
+                            combined_range[element][0] = boundary[table_elements.index(element)][0]
+                        if (boundary[table_elements.index(element)][1] > combined_range[element][1]):
+                            combined_range[element][1] = boundary[table_elements.index(element)][1]
+
                 # print('\t' * 2, 'table_node', table_nodes[i].boundary, ' satisfied')
             else:
                 # print('\t' * 2, 'table_node', table_nodes[i].boundary, ' unsatisfied')
@@ -214,55 +143,29 @@ def value_filtering(filtering_node, all_elements_name, limit_range):
         
         # If found no satisfied node -> filter current_node
         if not has_one_satisfied_node:
-            print('\t'+'not has_one_satisfied_node')
-            print('\t'+'link_nodes_removed', link_nodes_removed)
+            # print('\t'+'not has_one_satisfied_node')
+            # print('\t'+'link_nodes_removed', link_nodes_removed)
             filtering_node.filtered = True
-            return []
+            return
 
-        # Update link
+        # Update link_SQL
         new_link_nodes = []
         for i in range(len(table_nodes)):
             if link_nodes_removed[i] == 0:
                 new_link_nodes.append(table_nodes[i])
         filtering_node.link_SQL[table_name] = new_link_nodes
 
-    # Update limit range
-    print("Update limit_range")
-    for table_name in filtering_node.link_SQL.keys():
-        print("Table :", table_name)
-        table_nodes = filtering_node.link_SQL[table_name]
-        table_elements = table_name.split('_')
-
-        if not table_nodes:
-            continue
-        combined_limit_range = {}
+        # Update link_SQL_range
         for element in table_elements:
-            combined_limit_range[element] = table_nodes[0].boundary[table_elements.index(element)]
+            if not link_SQL_range[element]:
+                link_SQL_range[element] = list(combined_range[element])
+            else:
+                if (link_SQL_range[element][0] < combined_range[element][0]):
+                    link_SQL_range[element][0] = combined_range[element][0]
+                if (link_SQL_range[element][1] > combined_range[element][1]):
+                    link_SQL_range[element][1] = combined_range[element][1]
 
-        # print("table_nodes")
-        for table_node in table_nodes:
-            # print(table_node.boundary)
-            for element in combined_limit_range.keys():
-                # update limit range of this element
-                if (table_node.boundary[table_elements.index(element)][0] < combined_limit_range[element][0]):
-                    combined_limit_range[element][0] = table_node.boundary[table_elements.index(element)][0]
-                if (table_node.boundary[table_elements.index(element)][1] > combined_limit_range[element][1]):
-                    combined_limit_range[element][1] = table_node.boundary[table_elements.index(element)][1]
-
-        # print("combining_limit_range")
-        for element in combined_limit_range.keys():
-            # print(element, combined_limit_range[element])
-            if (updating_limit_range[all_elements_name.index(element)][0] < combined_limit_range[element][0]):
-                updating_limit_range[all_elements_name.index(element)][0] = combined_limit_range[element][0]
-            if (updating_limit_range[all_elements_name.index(element)][1] > combined_limit_range[element][1]):
-                updating_limit_range[all_elements_name.index(element)][1] = combined_limit_range[element][1]
-
-
-    print("Updated limit_range")
-    print(updating_limit_range)
-    print("#######################")
-
-    return updating_limit_range
+    filtering_node.link_SQL_range = link_SQL_range
 
 
 
@@ -291,87 +194,177 @@ def pair_value_filter(filtering_node, connected_element_node):
                 return False
     return True
 
-def connected_element_filtering(filtering_node, connected_element_name, limit_range, all_elements_name):
+def connected_element_filtering(filtering_node, limit_range, all_elements_name):
     """Summary
     This function filter this filtering_node by checking all of its connected element and do pair structure filtering and pair value filtering
     Filter this filtering_node if there exists a connected element that has no suitable pair
     Update this filtering_node.link_XML for each connected element if not filtered
+    
     Args:
-        filtering_node (RTree_XML Node)
+        filtering_node (RTree_XML Node): Description
+        limit_range (dict): passed from full_filtering
+        all_elements_name (list): list of all element names in XML query
     """
+    # print("Connected element filtering")
+    for connected_element_name in filtering_node.link_XML.keys():
+        # print("Checking: ", connected_element_name)
 
-
-    print('connected_element_filtering', connected_element_name, ' of ', filtering_node.name, filtering_node.boundary)
-    print('limit_range', limit_range)
-
-    connected_element_nodes = filtering_node.link_XML[connected_element_name]              # list of nodes in the connected element to be checked
-    link_nodes_removed = np.zeros(len(connected_element_nodes))                            # array to store if a node in connected_element_nodes should be removed
-    has_one_satisfied_node = False
-    # Checking each node of this connected element
-    connected_element_nodes_limit_range = []
-    for i in range(len(connected_element_nodes)):
-        # print('\t' * 2, filtering_node.name, '<-', connected_element_name, ':', connected_element_nodes[i].boundary)
-        # Do full_filtering if has not been full filtered before
-        connected_element_nodes_limit_range.append([])
-        if not connected_element_nodes[i].filter_visited:
-            full_filtering(connected_element_nodes[i], all_elements_name, limit_range)
-        connected_element_nodes_limit_range[i] = connected_element_nodes[i].limit_range
-        # If after full_filtering this connected node is still not filtered
-        if not connected_element_nodes[i].filtered:
-            # print("connected_element_nodes_limit_range[i]", connected_element_nodes_limit_range[i])
-            # if this filtering node can be ancestor of connected node (Structure filtering of this pair)
-            if not ancestor_descendant_filter(filtering_node, connected_element_nodes[i]):
+        connected_element_nodes = filtering_node.link_XML[connected_element_name]              # list of nodes in the connected element to be checked
+        link_nodes_removed = np.zeros(len(connected_element_nodes))                            # array to store if a node in connected_element_nodes should be removed
+        has_one_satisfied_node = False
+        # Checking each node of this connected element
+        connected_element_nodes_limit_range = []
+        for i in range(len(connected_element_nodes)):
+            if connected_element_nodes[i].filtered:
                 link_nodes_removed[i] = 1
-                # print('\t' * 2, filtering_node.name, filtering_node.boundary, connected_element_name, connected_element_nodes[i].boundary, 'ancestor_descendant_filter unsatisfied')
-            else:
-                # Value filtering of this pair
-                # if not pair_value_filter(filtering_node, connected_element_nodes[i]):
-                #     link_nodes_removed[i] = 1
-                #     # print('\t' * 2, filtering_node.name, filtering_node.boundary, connected_element_name, connected_element_nodes[i].boundary, 'pair_value_filter unsatisfied')
-                # else:
-                #     # This pair is good
-                #     has_one_satisfied_node = True
+                continue
 
-                if ((connected_element_nodes[i].boundary[1][0] > limit_range[all_elements_name.index(connected_element_name)][1]) or
-                    (connected_element_nodes[i].boundary[1][1] < limit_range[all_elements_name.index(connected_element_name)][0])):
-                    link_nodes_removed[i] = 1
-                    # print('\t' * 2, filtering_node.name, filtering_node.boundary, connected_element_name, connected_element_nodes[i].boundary, 'pair_value_filter unsatisfied')
-                else:
-                    # This pair is good
-                    has_one_satisfied_node = True
-        else:
-            link_nodes_removed[i] = 1
+            # If this filtering node cannot be ancestor of connected node
+            if ancestor_descendant_filtering(filtering_node, connected_element_nodes[i]):
+                link_nodes_removed[i] = 1
+                continue
 
-    if not has_one_satisfied_node:
-        # print("No satisfied node")
-        filtering_node.filtered = True
-        return []
+            # Check limit range
+            if ((connected_element_nodes[i].boundary[1][0] > limit_range[connected_element_name][1]) or
+                (connected_element_nodes[i].boundary[1][1] < limit_range[connected_element_name][0])):
+                link_nodes_removed[i] = 1
+                continue
 
-    # Update link
-    updated_limit_range = []
-    for i in range(len(connected_element_nodes)):
-        if link_nodes_removed[i] == 0:
-            updated_limit_range = connected_element_nodes_limit_range[i]
-            break
-
-    new_link_nodes = []
-    for i in range(len(connected_element_nodes)):
-        if link_nodes_removed[i] == 0:
-            new_link_nodes.append(connected_element_nodes[i])
-            # update limit_range
-            for j in range(len(updated_limit_range)):
-                if connected_element_nodes_limit_range[i][j][0] < updated_limit_range[j][0]:
-                    updated_limit_range[j][0] = connected_element_nodes_limit_range[i][j][0] 
-                if connected_element_nodes_limit_range[i][j][1] > updated_limit_range[j][1]:
-                    updated_limit_range[j][1] = connected_element_nodes_limit_range[i][j][1] 
-
-    filtering_node.link_XML[connected_element_name] = new_link_nodes
-
-    return updated_limit_range
+            # This pair is good
+            has_one_satisfied_node = True
 
 
+        if not has_one_satisfied_node:
+            # print("No satisfied node")
+            filtering_node.filtered = True
+            return
 
-def initialize_children_link(filtering_node, all_elements_name):
+        # Update link_XML
+
+        new_link_nodes = []
+        for i in range(len(connected_element_nodes)):
+            if link_nodes_removed[i] == 0:
+                new_link_nodes.append(connected_element_nodes[i])
+                # # update limit_range
+                # for j in range(len(updated_limit_range)):
+                #     if connected_element_nodes_limit_range[i][j][0] < updated_limit_range[j][0]:
+                #         updated_limit_range[j][0] = connected_element_nodes_limit_range[i][j][0] 
+                #     if connected_element_nodes_limit_range[i][j][1] > updated_limit_range[j][1]:
+                #         updated_limit_range[j][1] = connected_element_nodes_limit_range[i][j][1] 
+
+        filtering_node.link_XML[connected_element_name] = new_link_nodes
+
+def check_lower_level(filtering_node, limit_range, all_elements_name):
+    # print("Checking lower level")
+    for connected_element_name in filtering_node.link_XML.keys():
+        # print("Value filtering on: ", connected_element_name)
+        connected_element_nodes = filtering_node.link_XML[connected_element_name]              # list of nodes in the connected element to be checked
+
+        link_nodes_removed = np.zeros(len(connected_element_nodes))                            # array to store if a node in connected_element_nodes should be removed
+
+        has_one_satisfied_node = False
+
+        combined_range = {}
+        for element in all_elements_name:
+            combined_range[element] = []
+
+        for i in range(len(connected_element_nodes)):
+            if not connected_element_nodes[i].value_filtering_visited:
+                value_filtering(connected_element_nodes[i], all_elements_name)
+
+            if filtering_node.filtered:
+                link_nodes_removed[i] = 1
+                continue
+
+            link_SQL_range = connected_element_nodes[i].link_SQL_range
+            for element in all_elements_name:
+                if link_SQL_range[element]:
+                    if not combined_range[element]:
+                        combined_range[element] = list(link_SQL_range[element])
+                    else:
+                        if (link_SQL_range[element][0] < combined_range[element][0]):
+                            combined_range[element][0] = link_SQL_range[element][0]
+                        if (link_SQL_range[element][1] < combined_range[element][1]):
+                            combined_range[element][1] = link_SQL_range[element][1]
+
+            has_one_satisfied_node = True
+
+        if not has_one_satisfied_node: 
+            filtering_node.filtered = True
+            return
+
+        # Update link_XML
+        new_link_nodes = []
+        for i in range(len(connected_element_nodes)):
+            if link_nodes_removed[i] == 0:
+                new_link_nodes.append(connected_element_nodes[i])
+        filtering_node.link_XML[connected_element_name] = new_link_nodes
+
+        # Update limit range of this connected element
+        for element in all_elements_name:
+            if combined_range[element]:
+                if (limit_range[element][0] < combined_range[element][0]):
+                    limit_range[element][0] = combined_range[element][0]
+                if (limit_range[element][1] > combined_range[element][1]):
+                    limit_range[element][1] = combined_range[element][1]
+
+
+    for connected_element_name in filtering_node.link_XML.keys():
+        # print("Actually going deeper: ", connected_element_name)
+        connected_element_nodes = filtering_node.link_XML[connected_element_name]              # list of nodes in the connected element to be checked
+
+        link_nodes_removed = np.zeros(len(connected_element_nodes))                            # array to store if a node in connected_element_nodes should be removed
+
+        has_one_satisfied_node = False
+
+        combined_range = {}
+        for element in all_elements_name:
+            combined_range[element] = []
+
+        for i in range(len(connected_element_nodes)):
+            children_limit_range = full_filtering(connected_element_nodes[i], all_elements_name, limit_range)
+            # print("Children limit range")
+            # print(children_limit_range)
+
+            if connected_element_nodes[i].filtered:
+                link_nodes_removed[i] = 1
+
+            else: 
+                has_one_satisfied_node = True
+
+                for element in all_elements_name:
+                    if not combined_range[element]:
+                        combined_range[element] = list(children_limit_range[element])
+                    else: 
+                        if (children_limit_range[element][0] < combined_range[element][0]):
+                            combined_range[element][0] = children_limit_range[element][0]
+                        if (children_limit_range[element][1] < combined_range[element][1]):
+                            combined_range[element][1] = children_limit_range[element][1]
+
+        if not has_one_satisfied_node:
+            filtering_node.filtered = True
+            return
+
+        # Update link_XML
+        new_link_nodes = []
+        for i in range(len(connected_element_nodes)):
+            if link_nodes_removed[i] == 0:
+                new_link_nodes.append(connected_element_nodes[i])
+        filtering_node.link_XML[connected_element_name] = new_link_nodes
+
+        # Update limit range
+        for element in all_elements_name:
+            if combined_range[element]:
+                if (limit_range[element][0] < combined_range[element][0]):
+                    limit_range[element][0] = combined_range[element][0]
+                if (limit_range[element][1] > combined_range[element][1]):
+                    limit_range[element][1] = combined_range[element][1]
+
+    return limit_range
+
+    
+
+def initialize_children_link(filtering_node, all_elements_name, limit_range):
     """Summary
     This function intialize children link_XML and link_SQL of a filtered node
     Args:
@@ -382,7 +375,6 @@ def initialize_children_link(filtering_node, all_elements_name):
     # print('initialize_children_link', filtering_node.name, filtering_node.boundary)
     link_XML = {}
     link_SQL = {}
-    limit_range = filtering_node.limit_range
     for connected_element_name in filtering_node.link_XML.keys():
         # print("connected_element_name ", connected_element_name)
         link_XML[connected_element_name] = []
@@ -392,8 +384,9 @@ def initialize_children_link(filtering_node, all_elements_name):
                 link_XML[connected_element_name].append(connected_element_node)
             else:
                 for connected_element_node_child in connected_element_node.children:
-                    if ((connected_element_node_child.boundary[1][1] < limit_range[all_elements_name.index(connected_element_name)][0]) 
-                    or (connected_element_node_child.boundary[1][0] > limit_range[all_elements_name.index(connected_element_name)][1])):
+                    if ((connected_element_node_child.boundary[1][1] < limit_range[connected_element_name][0]) 
+                    or (connected_element_node_child.boundary[1][0] > limit_range[connected_element_name][1])):
+                        # print("ANOTHER VAMPIRE")
                         continue
                     else:
                         link_XML[connected_element_name].append(connected_element_node_child)
@@ -446,57 +439,218 @@ def full_filtering(filtering_node, all_elements_name, limit_range):
         filtering_node (RTree_XML Node)
     """
     
-    print('##########################')
-    print('Full Filtering ', filtering_node.name, filtering_node.boundary)
-    print('limit_range', limit_range)
+    # print('##########################')
+    # print('Full Filtering ', filtering_node.name, filtering_node.boundary)
+    # print('limit_range', limit_range)
 
-    # Mark this node has been visited
-    filtering_node.filter_visited = True
-    if not filtering_node.filtered:
-        print("############")
-        print("value filtering")
-        updated_limit_range = value_filtering(filtering_node, all_elements_name, limit_range)
-    # if filtering_node.filtered:
-    print("After value filtering, updated_limit_range: ", updated_limit_range)
-    print("After value filtering ", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
-    print("############")
+    # Go through limit range and check if this node satisfy the limit range
+    # print("############")
+    # print("Going through limit range")
+    filtering_node_limit_range = limit_range[filtering_node.name]
+    if (filtering_node.boundary[1][1] < filtering_node_limit_range[0]) or (filtering_node.boundary[1][0] > filtering_node_limit_range[1]):
+        # print('Filtered by limit range')
+        filtering_node.filtered = True
+        return []
+    # print("After going through limit range", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
+    # print("############")
+    # If not value filtered before => Perform value filtering by checking all connected table and return limit ranges based on these tables
+    if not filtering_node.value_filtering_visited:
+        value_filtering(filtering_node, all_elements_name)
+    # print("After value filtering ", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
+    # print("############")
+
+    if filtering_node.filtered:
+        return []
     
-    if not filtering_node.filtered:
-        print("############")
-        print("Checking connected elements")
-        for connected_element_name in filtering_node.link_XML.keys():
-            print("$$$$")
-            print("Connected filtering: ", connected_element_name)
-            # print("updated limit range", updated_limit_range)
-            connected_filtered_limit_range = connected_element_filtering(filtering_node, connected_element_name, updated_limit_range, all_elements_name)
-            # print("connected_filtered_limit_range ", connected_filtered_limit_range)
-            # print("filtering_node.filtered", filtering_node.filtered)
-            if filtering_node.filtered:
-                break
-            # Update the limit range for this element_name
-            for i in range(len(updated_limit_range)):
-                if (updated_limit_range[i][0] < connected_filtered_limit_range[i][0]):
-                    updated_limit_range[i][0] = connected_filtered_limit_range[i][0]
-                if (updated_limit_range[i][1] > connected_filtered_limit_range[i][1]):
-                    updated_limit_range[i][1] = connected_filtered_limit_range[i][1]
-            print("updated limit range ", updated_limit_range)
-            print("$$$$")
+    # If not filtered after value filtering => update limit range
+    link_SQL_range = filtering_node.link_SQL_range
+    for element in all_elements_name:
+        if link_SQL_range[element]:
+            if (limit_range[element][0] < link_SQL_range[element][0]):
+                limit_range[element][0] = link_SQL_range[element][0]
+            if (limit_range[element][1] > link_SQL_range[element][1]):
+                limit_range[element][1] = link_SQL_range[element][1]
 
-    print("After connected_element_filtering, updated_limit_range", updated_limit_range)
-    print("After connected element filtering ", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
-    print("############")
+    # print("Limit range updated based on value filtering")
+    # print(limit_range)
+    
 
-    filtering_node.limit_range = updated_limit_range
-    # print("limit_range", filtering_node.limit_range)
+    # print("############")
+    # print("Checking connected elements")
+    connected_element_filtering(filtering_node, limit_range, all_elements_name)
+    # print("After connected element filtering ", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
+    # print("############")
+
+    if filtering_node.filtered:
+        return[]
+
+    # print("############")
+    # print("Check lower level")
+    limit_range =  check_lower_level(filtering_node, limit_range, all_elements_name)
+    # print("After checking lower level ", filtering_node.name, filtering_node.boundary, filtering_node.filtered)
+    # print("############")
+
+    if filtering_node.filtered:
+        return[]
 
 
     if not filtering_node.filtered:
         # Update children link
-        initialize_children_link(filtering_node, all_elements_name)
+        initialize_children_link(filtering_node, all_elements_name, limit_range)
+
+    return limit_range
+
+
+def entries_value_validation(validating_node, all_elements_name):
+    print('---------')
+    print("entries_value_validation ", validating_node.name, validating_node.boundary)
+    validating_node.value_validation = True
+
+    validating_node_entries = validating_node.get_entries()
+    validating_node_entries_removed = np.zeros(len(validating_node_entries))
+
+    
+    print("Number of entries in this node: ", len(validating_node_entries))
+    for entry in validating_node_entries:
+        print(entry.coordinates)
+
+    table_names = list(validating_node.link_SQL.keys())
+
+    table_entries = []
+    table_elements = []
+    table_indexes = []
+
+    for i in range(len(table_names)):
+        print('\t', "Table:", table_names[i])
+        start_get_table_entries = timeit.default_timer()
+
+        table_name = table_names[i]
+        entries = []
+
+        for table_node in validating_node.link_SQL[table_name]:
+            print('\t' * 2, 'Table Node:', table_node.boundary)
+            for entry in table_node.get_entries():
+                entries.append(entry)
+        table_entries.append(entries)
+        end_get_table_entries = timeit.default_timer()
+
+        print("\t", "Got:", len(entries), "entries in: ", end_get_table_entries - start_get_table_entries)
+
+        for entry in table_entries[i]:
+            print("\t", entry.coordinates)
+
+        table_elements.append(table_name.split('_'))
+        table_indexes.append(0)
+
+    print('Going through each entry of validating_entries')
+
+    possible_combinations = []
+
+    for i in range(len(validating_node_entries)):
+        validating_entry = validating_node_entries[i]
+
+        print('\t', "Entry: ", validating_entry.coordinates)
+
+        this_entry_combinations = []
+
+        for j in range(len(table_names)):
+
+            print('\t' * 2, 'Going thru table:', table_names[j])
+            print('\t' * 2, 'Initial this_entry_combinations:')
+            for combination in this_entry_combinations:
+                print('\t' * 3, combination)
+
+            this_table_combinations = []
+
+            dimension = table_elements[j].index(validating_node.name)
+
+            # Increasing the index of this table until it is = or > current checking entry coordinate of validating_node.name (since entries is sorted)
+            while ((table_indexes[j] < len(table_entries[j]) - 1) and (table_entries[j][table_indexes[j]].coordinates[dimension] < validating_entry.coordinates[1])):
+                table_indexes[j] += 1
+            if table_entries[j][table_indexes[j]].coordinates[dimension] != validating_entry.coordinates[1]:
+                # Filter if no matching entry between table and validating entries
+                validating_node_entries_removed[i] = 1
+                break
+            else: 
+                # Create combinations as long as there are matching entry
+                while (table_indexes[j] < len(table_entries[j]) - 1) and (table_entries[j][table_indexes[j]].coordinates[dimension] == validating_entry.coordinates[1]):
+                    combination = [None] * len(all_elements_name)
+
+                    for element in table_elements[j]:
+                        combination[all_elements_name.index(element)] = table_entries[j][table_indexes[j]].coordinates[table_elements[j].index(element)]
+                    this_table_combinations.append(combination)
+
+                    table_indexes[j] += 1
+
+            print('\t' * 2, 'this_table_combinations')
+            for combination in this_table_combinations:
+                print('\t' * 3, combination)
+
+            # Either appends to possible combinations (if empty) or check match and upate
+            if not this_entry_combinations:
+                for combination in this_table_combinations:
+                    this_entry_combinations.append(combination)
+            else:
+                this_entry_combinations_removed = np.zeros(len(this_entry_combinations))
+
+                for k in range(len(this_entry_combinations)):
+                    has_one_match_combination = False
+                    merge_combination = this_entry_combinations[k][:]
+
+                    for this_table_combination in this_table_combinations:
+                        this_pair_of_combination_match = True
+                        for element_index in range(len(all_elements_name)):
+                            if ((this_table_combination[element_index] is not None) and 
+                                (merge_combination[element_index] is not None) and 
+                                (this_table_combination[element_index] != merge_combination[element_index])):
+                                this_pair_of_combination_match = False
+                                break
+                            if (merge_combination[element_index] is None):
+                                merge_combination[element_index] = this_table_combination[element_index]
+
+                        if this_pair_of_combination_match:
+                            this_entry_combinations[k] = merge_combination
+                            has_one_match_combination = True
+                    if not has_one_match_combination:
+                        this_entry_combinations_removed[k] = 1
+
+                # if all combinations in this_entry_combinations is removed => no match between 2 tables => remove this entry
+                new_entry_combinations = []
+                for k in range(len(this_entry_combinations)):
+                    if this_entry_combinations_removed[k] == 0:
+                        new_entry_combinations.append(this_entry_combinations[k])
+
+                if not new_entry_combinations:
+                    validating_node_entries_removed[i] = 1
+                    break
+
+                this_entry_combinations = new_entry_combinations
+
+            print('\t' * 2, 'Updated this_entry_combinations')
+            for combination in this_entry_combinations:
+                print('\t' * 3, combination)
+            print('\t' * 2 + '#####')
+
+        if not this_entry_combinations:
+            validating_node_entries_removed[i] = 1
+        else:
+            validating_entry.possible_combinations = this_entry_combinations
+    
+    if sum(validating_node_entries_removed) == len(validating_node_entries):
+        validating_node.filtered = True
+        return
+
+    remaining_entries = []
+
+    for i in range(len(validating_node_entriesg)):
+        if validating_node_entries_removed[i] == 1:
+            remaining_entries.append(validating_node_entries[i])
+
+    validating_node.entries = remaining_entries
 
 
 
-def entries_value_validation(validating_node):
+def entries_value_validation_2(validating_node):
     """Summary
     This function checks entries in this validating node and match with entries in linked table node. Matched entries of validating_node entries are stored in link SQL
     If no match found for any validating_node_entry -> filter this validating_node
@@ -507,12 +661,13 @@ def entries_value_validation(validating_node):
 
 
     # print("##################################")
+    print('---------')
     print("entries_value_validation ", validating_node.name, validating_node.boundary)
 
     validating_node_entries = validating_node.validated_entries
     validating_node_entries_removed = np.zeros(len(validating_node_entries))
 
-    print("Number of entries: ", len(validating_node_entries))
+    print("Number of entries in this node: ", len(validating_node_entries))
 
     # print("Entries: ")
     # for entry in validating_node_entries:
@@ -531,7 +686,7 @@ def entries_value_validation(validating_node):
                 table_entries.append(entry)
 
         end_get_table_entries = timeit.default_timer()
-        # print("Get table entries took: ", end_get_table_entries - start_get_table_entries)
+        print("\t", "Got:", len(table_entries), "table", table_name ,"entries in: ", end_get_table_entries - start_get_table_entries)
 
         table_dimension = table_name.split('_').index(validating_node.name)
 
@@ -557,6 +712,7 @@ def entries_value_validation(validating_node):
 
                 else:
                     has_one_matched_entry = True
+        print("\t", "Remaining table entries:", len(validating_node_entries_removed) - sum(validating_node_entries_removed))
 
         if not has_one_matched_entry:
             validating_node.filtered = True
@@ -568,7 +724,8 @@ def entries_value_validation(validating_node):
     for i in range(len(validating_node_entries)):
         if validating_node_entries_removed[i] == 0:
             validating_node.validated_entries.append(validating_node_entries[i])
-    print("Remaining entries: ", len(validating_node.validated_entries))
+    print("Remaining entries in this node: ", len(validating_node.validated_entries))
+    print('---------')
 
 def pair_value_validation(validating_node_entry, connected_element_entry, validating_node_name, connected_element_name):
     """Summary
@@ -615,7 +772,7 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
 
     # print("##################################")
     print("entries_connected_element_validation ", validating_node.name, validating_node.boundary)
-    print("Number of entries", validating_node.name, validating_node.boundary, len(validating_node.validated_entries))
+    print("Number of entries", len(validating_node.validated_entries))
 
     validating_node_entries = validating_node.validated_entries
     validating_node_entries_removed = np.zeros(len(validating_node_entries))
@@ -631,16 +788,16 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
         start_connected_element_validation = timeit.default_timer()
         connected_element_nodes = validating_node.link_XML[connected_element_name]
 
-        print("Number of connected_element_node:", len(connected_element_nodes))
-        for connected_element_node in connected_element_nodes:
-            print(connected_element_node.boundary, sep='\t')
+        print("        Number of connected_element_node:", len(connected_element_nodes))
+        # for connected_element_node in connected_element_nodes:
+            # print(connected_element_node.boundary, sep='\t')
 
         for connected_element_node in connected_element_nodes:
             # Do validation if not been validated
             if (not connected_element_node.filtered) and (not connected_element_node.validation_visited):
                 node_validation(connected_element_node, all_elements_name, relationship_matrix)
         end_connected_element_validation = timeit.default_timer()
-        print("Do validation on children" , connected_element_name,"took: ", end_connected_element_validation - start_connected_element_validation)
+        print("        Do validation on children" , connected_element_name,"took: ", end_connected_element_validation - start_connected_element_validation)
 
         # get all entries in unfiltered connected_element_nodes
         connected_element_entries = []
@@ -649,8 +806,8 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
                 for entry in connected_element_node.validated_entries:
                     connected_element_entries.append(entry)
 
-        print("Parent entries: ", len(validating_node_entries))
-        print("Children entries: ", len(connected_element_entries))
+        print("        Parent entries: ", len(validating_node_entries))
+        print("        Children entries: ", len(connected_element_entries))
 
         # print("## remaining entries: ")
         # for entry in connected_element_entries:
@@ -700,10 +857,10 @@ def entries_connected_element_validation(validating_node, all_elements_name, rel
                     has_one_matched_entry = True
 
         end_actual_validation = timeit.default_timer()
-        print("Actual validation took: ", end_actual_validation - start_actual_validation)
+        print("        Actual validation took: ", end_actual_validation - start_actual_validation)
 
-        print("Parent remaining entries: ", len(validating_node_entries))
-        print("Children remaining entries: ", len(connected_element_entries))
+        print("        Parent remaining entries: ", len(validating_node_entries))
+        print("        Children remaining entries: ", len(connected_element_entries))
 
         if not has_one_matched_entry:
             validating_node.filtered = True
@@ -763,7 +920,7 @@ def node_validation(validating_node, all_elements_name, relationship_matrix):
 def validation_XML_SQL(all_elements_name, relationship_matrix, XML_query_root_node):
     """Summary
     Perform validation after filtering
-    Args:
+    Args
         all_elements_name (list of String): list of all elements' name in XML_query ordered by level order
         relationship_matrix ([][]): 2 dimension array store relationship between element. Relation[parent, children] = 1, relation[ancestor, descendant] = 2, other = 0
         all_elements_root (Node): RTree_XML root Node of XML_query root
@@ -776,29 +933,31 @@ def validation_XML_SQL(all_elements_name, relationship_matrix, XML_query_root_no
     for node in XML_query_root_leaf_nodes:
         # print(node.boundary)
         print("#######################")
-        node_validation(node, all_elements_name, relationship_matrix)
+        # node_validation(node, all_elements_name, relationship_matrix)
+        print(node.boundary)
+        entries_value_validation(node, all_elements_name)
         print("#######################")
 
     print("#######################")
     print("Number of remaining leaf nodes of root after validation:", len(XML_query_root_node.get_leaf_node_not_filtered()))
     print("#######################")
 
-    print('###############################')
-    for node in XML_query_root_leaf_nodes:
-        print('Node ', node.boundary)
-        if not node.filtered:
-            for entry in node.validated_entries:
-                print('\t', entry.coordinates)
-                print('\t', 'Entry link_XML')
-                for connected_element in entry.link_XML.keys():
-                    print('\t', connected_element)
-                    for entry_XML in entry.link_XML[connected_element]:
-                        print('\t' * 2, entry_XML.coordinates)
-                print('\t', 'Entry link_SQL')
-                for table_name in entry.link_SQL.keys():
-                    print('\t', table_name)
-                    for entry_SQL in entry.link_SQL[table_name]:
-                        print('\t' * 2, entry_SQL.coordinates)
+    # print('###############################')
+    # for node in XML_query_root_leaf_nodes:
+    #     print('Node ', node.boundary)
+    #     if not node.filtered:
+    #         for entry in node.validated_entries:
+    #             print('\t', entry.coordinates)
+    #             print('\t', 'Entry link_XML')
+    #             for connected_element in entry.link_XML.keys():
+    #                 print('\t', connected_element)
+    #                 for entry_XML in entry.link_XML[connected_element]:
+    #                     print('\t' * 2, entry_XML.coordinates)
+    #             print('\t', 'Entry link_SQL')
+    #             for table_name in entry.link_SQL.keys():
+    #                 print('\t', table_name)
+    #                 for entry_SQL in entry.link_SQL[table_name]:
+    #                     print('\t' * 2, entry_SQL.coordinates)
 
 
 
@@ -822,7 +981,7 @@ def validation_XML_SQL(all_elements_name, relationship_matrix, XML_query_root_no
 
 
 
-def join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_children):
+def join_XML_SQL(all_elements_name, all_elements_root, all_tables_root, relationship_matrix, max_n_children):
     """Summary
     This function join XML DB and SQL DB given a XML query
     Args:
@@ -832,12 +991,12 @@ def join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_chil
         max_n_children (int): maximum of number of children in RTree Node
     """
     # Loading XML and SQL database into R_Tree
-    start_loading = timeit.default_timer()
-    all_elements_root = load_elements(folder_name, all_elements_name, max_n_children)
-    all_tables_root = load_tables(folder_name, all_elements_name, max_n_children)
-    end_loading = timeit.default_timer()
-    print('loading time', end_loading - start_loading)
-    print("######################################")
+    # start_loading = timeit.default_timer()
+    # all_elements_root = load_elements(folder_name, all_elements_name, max_n_children)
+    # all_tables_root = load_tables(folder_name, all_elements_name, max_n_children)
+    # end_loading = timeit.default_timer()
+    # print('loading time', end_loading - start_loading)
+    # print("######################################")
 
     ######################################
     # Print Tree
@@ -856,12 +1015,12 @@ def join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_chil
     # Start from root, link XML root of an element with root of its connected element in XML query
     start_initializing_link = timeit.default_timer()
 
-    limit_range = []
+    limit_range = {}
 
     for i in range(len(all_elements_name)):
         element_name = all_elements_name[i]
         element_root = all_elements_root[element_name]
-        limit_range.append(element_root.boundary[1])
+        limit_range[element_name] = element_root.boundary[1]
         for j in range(i + 1, len(all_elements_name)):
             if (relationship_matrix[i, j] != 0):
                 connected_element = all_elements_name[j]
@@ -920,18 +1079,17 @@ def join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_chil
 
         start_one_node_filtering = timeit.default_timer()
 
-        full_filtering(XML_query_root_node, all_elements_name, limit_range)
+        updated_limit_range = full_filtering(XML_query_root_node, all_elements_name, limit_range)
 
         end_one_node_filtering = timeit.default_timer()
 
         n_root_node_full_filtered += 1
         print("One root node filter time:", end_one_node_filtering - start_one_node_filtering)
-
-        updated_limit_range = XML_query_root_node.limit_range
+        
         if not XML_query_root_node.filtered:
             for XML_query_root_node_child in XML_query_root_node.children:
                 queue_XML_query_root.put(XML_query_root_node_child)
-                queue_limit_range.put(updated_limit_range)
+                queue_limit_range.put(copy.deepcopy(updated_limit_range))
 
     end_filtering = timeit.default_timer()
     print('Filtering time', end_filtering - start_filtering)
@@ -955,6 +1113,16 @@ def join_XML_SQL(folder_name, all_elements_name, relationship_matrix, max_n_chil
     # get_final_results(all_elements_name, relationship_matrix, all_elements_root[XML_query_root_element])
 
 
+
+def main():
+    if len(sys.argv) < 3:
+        raise ValueError('Missing arguments. Requires 2 arguments in the following order: folder_name, max_n_children')
+    folder_name = sys.argv[1]
+    max_n_children = int(sys.argv[2])
+    sys.stdout = open("../io/" + folder_name + "_max_children_" + str(max_n_children) + ".txt", 'w')
+    loader = Loader(folder_name, max_n_children)
+    print("Loading time: ", loader.time)
+    join_XML_SQL(loader.all_elements_name, loader.all_elements_root, loader.all_tables_root, loader.relationship_matrix, loader.max_n_children)
 
 
 
@@ -1001,8 +1169,11 @@ def invoice_complex(max_n_children):
 # output_file_path = 'output_testcase1_max_children_200'
 # sys.stdout = open(output_file_path, 'w')
 
-simple_small(2)
+# simple_small(2)
 # invoice_complex(500)
+
+# sys.stdout = open("../io/" + "simple_small" + "_max_children_2" + "_try_2" + ".txt", 'w')
+main()
 
 
 
