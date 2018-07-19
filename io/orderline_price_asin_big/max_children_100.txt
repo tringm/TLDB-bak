@@ -1,0 +1,4654 @@
+Loading element:  Orderline
+Loaded  229166 entries
+Orderline
+sorting took:  1.9605282619995705
+Loading element:  price
+Loaded  229166 entries
+price
+sorting took:  1.925571283998579
+Loading element:  asin
+Loaded  229166 entries
+asin
+sorting took:  1.945317295998393
+Loading table:  price_asin
+Loading table:  Orderline_asin
+Loading time:  33.492447987999185
+Initialize link took:  6.706000203848816e-05
+######################################
+One root node filter time: 0.00023714299823041074
+###############
+One root node filter time: 0.006876946998090716
+###############
+One root node filter time: 0.005732941997848684
+###############
+One root node filter time: 0.0059525440010474995
+###############
+One root node filter time: 0.0059454549991642125
+###############
+One root node filter time: 0.005278806002024794
+###############
+One root node filter time: 0.005337359001714503
+###############
+One root node filter time: 0.005332893000741024
+###############
+One root node filter time: 0.005421253998065367
+###############
+One root node filter time: 0.005546303997107316
+###############
+One root node filter time: 0.005500508999830345
+###############
+One root node filter time: 0.005616757000098005
+###############
+One root node filter time: 0.005512327999895206
+###############
+One root node filter time: 0.00563227600287064
+###############
+One root node filter time: 0.005614702000457328
+###############
+One root node filter time: 0.005627410002489341
+###############
+One root node filter time: 0.005622058000881225
+###############
+One root node filter time: 0.005532995000976371
+###############
+One root node filter time: 0.005578806998528307
+###############
+One root node filter time: 0.005630609000945697
+###############
+One root node filter time: 0.0055884849971334916
+###############
+One root node filter time: 0.005684447998646647
+###############
+One root node filter time: 0.006137183001555968
+###############
+One root node filter time: 0.0059371770003053825
+###############
+One root node filter time: 0.4400475660004304
+###############
+One root node filter time: 0.11198247599895694
+###############
+One root node filter time: 0.11272477899910882
+###############
+One root node filter time: 0.1124110010023287
+###############
+One root node filter time: 0.11490194399812026
+###############
+One root node filter time: 0.11360946900094859
+###############
+One root node filter time: 0.11061861800044426
+###############
+One root node filter time: 0.10965023699827725
+###############
+One root node filter time: 0.11018015700028627
+###############
+One root node filter time: 0.11234727700139047
+###############
+One root node filter time: 0.11299769299876061
+###############
+One root node filter time: 0.11353314700318151
+###############
+One root node filter time: 0.11162592599794152
+###############
+One root node filter time: 0.11255018999872846
+###############
+One root node filter time: 0.11327142699883552
+###############
+One root node filter time: 0.1129399530000228
+###############
+One root node filter time: 0.11189969300176017
+###############
+One root node filter time: 0.1093068839982152
+###############
+One root node filter time: 0.11022081400005845
+###############
+One root node filter time: 0.10983511999802431
+###############
+One root node filter time: 0.11161712899775011
+###############
+One root node filter time: 0.11276890100270975
+###############
+One root node filter time: 0.11238539199985098
+###############
+One root node filter time: 0.11338184399937745
+###############
+One root node filter time: 0.11307194799883291
+###############
+One root node filter time: 0.11276381499919808
+###############
+One root node filter time: 0.11358801299866172
+###############
+One root node filter time: 0.10917789100130904
+###############
+One root node filter time: 0.11037945999851217
+###############
+One root node filter time: 0.11018616000001202
+###############
+One root node filter time: 0.11048560199924395
+###############
+One root node filter time: 0.11258288099998026
+###############
+One root node filter time: 0.11299042899918277
+###############
+One root node filter time: 0.1124622730021656
+###############
+One root node filter time: 0.11253035700065084
+###############
+One root node filter time: 0.11276261799866916
+###############
+One root node filter time: 0.1139359209992108
+###############
+One root node filter time: 0.1132308380001632
+###############
+One root node filter time: 0.11168125599942869
+###############
+One root node filter time: 0.11075741600143374
+###############
+One root node filter time: 0.11011064000194892
+###############
+One root node filter time: 0.10999311799969291
+###############
+One root node filter time: 0.11278146999757155
+###############
+One root node filter time: 0.11280769700169913
+###############
+One root node filter time: 0.11142657399977907
+###############
+One root node filter time: 0.11274615599904791
+###############
+One root node filter time: 0.11126487799992901
+###############
+One root node filter time: 0.11272832199756522
+###############
+One root node filter time: 0.11255870400054846
+###############
+One root node filter time: 0.1116485439997632
+###############
+One root node filter time: 0.11142667499734671
+###############
+One root node filter time: 0.11244127300233231
+###############
+One root node filter time: 0.1123153580010694
+###############
+One root node filter time: 0.11296776500239503
+###############
+One root node filter time: 0.11300509200009401
+###############
+One root node filter time: 0.11175169399939477
+###############
+One root node filter time: 0.11231650500121759
+###############
+One root node filter time: 0.11309633900236804
+###############
+One root node filter time: 0.11313371999858646
+###############
+One root node filter time: 0.1116900019987952
+###############
+One root node filter time: 0.10984057499808841
+###############
+One root node filter time: 0.11018545100159827
+###############
+One root node filter time: 0.10801377700045123
+###############
+One root node filter time: 0.1104326829990896
+###############
+One root node filter time: 0.11899954800173873
+###############
+One root node filter time: 0.11738439100008691
+###############
+One root node filter time: 0.11207791099877795
+###############
+One root node filter time: 0.11118223999801558
+###############
+One root node filter time: 0.11711909899895545
+###############
+One root node filter time: 0.14413791299739387
+###############
+One root node filter time: 0.1183132400001341
+###############
+One root node filter time: 0.11474735400042846
+###############
+One root node filter time: 0.11271695799950976
+###############
+One root node filter time: 0.12583283500134712
+###############
+One root node filter time: 0.12346160900051473
+###############
+One root node filter time: 0.1272129329991003
+###############
+One root node filter time: 0.1196967930009123
+###############
+One root node filter time: 0.11451667499932228
+###############
+One root node filter time: 0.11088478000237956
+###############
+One root node filter time: 0.11151761800283566
+###############
+One root node filter time: 0.12632562200087705
+###############
+One root node filter time: 0.13293164800052182
+###############
+One root node filter time: 0.12431877299968619
+###############
+One root node filter time: 0.12154852599996957
+###############
+One root node filter time: 0.12988795499768457
+###############
+One root node filter time: 0.12638069099921267
+###############
+One root node filter time: 0.11771431799934362
+###############
+One root node filter time: 0.1174052690003009
+###############
+One root node filter time: 0.13067423799657263
+###############
+One root node filter time: 0.11584395799945923
+###############
+One root node filter time: 0.1193383010031539
+###############
+One root node filter time: 0.11982146700029261
+###############
+One root node filter time: 0.120282526997471
+###############
+One root node filter time: 0.14844673400148167
+###############
+One root node filter time: 0.1877681450023374
+###############
+One root node filter time: 0.18714484399970388
+###############
+One root node filter time: 0.2063875489984639
+###############
+One root node filter time: 0.15778639400014072
+###############
+One root node filter time: 0.17153659099858487
+###############
+One root node filter time: 0.14013854799850378
+###############
+One root node filter time: 0.1629796150009497
+###############
+One root node filter time: 0.1581242749998637
+###############
+One root node filter time: 0.1652132069975778
+###############
+One root node filter time: 0.16438395500154002
+###############
+One root node filter time: 0.16067520700016757
+###############
+One root node filter time: 0.170315170998947
+###############
+One root node filter time: 0.14125388500178815
+###############
+One root node filter time: 0.12958032499955152
+###############
+One root node filter time: 0.1284059690005961
+###############
+One root node filter time: 0.13115466499948525
+###############
+One root node filter time: 0.1499532489979174
+###############
+One root node filter time: 0.14096654199965997
+###############
+One root node filter time: 0.12710896200223942
+###############
+One root node filter time: 0.14271593500234303
+###############
+One root node filter time: 0.1306763550019241
+###############
+One root node filter time: 0.1355634799983818
+###############
+One root node filter time: 0.13354126600097516
+###############
+One root node filter time: 0.13511735299834982
+###############
+One root node filter time: 0.16786703600155306
+###############
+One root node filter time: 0.1406579890026478
+###############
+One root node filter time: 0.15876086999924155
+###############
+One root node filter time: 0.13222630100062815
+###############
+One root node filter time: 0.1225948530009191
+###############
+One root node filter time: 0.12459726800079807
+###############
+One root node filter time: 0.11958257700098329
+###############
+One root node filter time: 0.11679181400177185
+###############
+One root node filter time: 0.1712916579999728
+###############
+One root node filter time: 0.12016986600065138
+###############
+One root node filter time: 0.12208169199948316
+###############
+One root node filter time: 0.1290430520020891
+###############
+One root node filter time: 0.12060552299953997
+###############
+One root node filter time: 0.12848041199686122
+###############
+One root node filter time: 0.13861787800124148
+###############
+One root node filter time: 0.1356284940011392
+###############
+One root node filter time: 0.17087707099926774
+###############
+One root node filter time: 0.12471022799945786
+###############
+One root node filter time: 0.14141002799806301
+###############
+One root node filter time: 0.12594108700068318
+###############
+One root node filter time: 0.14036032899821294
+###############
+One root node filter time: 0.13950048300102935
+###############
+One root node filter time: 0.12057328200171469
+###############
+One root node filter time: 0.18153388300197548
+###############
+One root node filter time: 0.12804839999807882
+###############
+One root node filter time: 0.11625477599955047
+###############
+One root node filter time: 0.11366760700184386
+###############
+One root node filter time: 0.11228563800250413
+###############
+One root node filter time: 0.11478341600013664
+###############
+One root node filter time: 0.12401535599929048
+###############
+One root node filter time: 0.11950367400277173
+###############
+One root node filter time: 0.11792073999822605
+###############
+One root node filter time: 0.12874305300283595
+###############
+One root node filter time: 0.13176792800004478
+###############
+One root node filter time: 0.12268638800014742
+###############
+One root node filter time: 0.11952484100038419
+###############
+One root node filter time: 0.11753314399902592
+###############
+One root node filter time: 0.11712052000075346
+###############
+One root node filter time: 0.11277517300186446
+###############
+One root node filter time: 0.11066758599918103
+###############
+One root node filter time: 0.11181925300115836
+###############
+One root node filter time: 0.11079273399809608
+###############
+One root node filter time: 0.11745879700174555
+###############
+One root node filter time: 0.11905886000022292
+###############
+One root node filter time: 0.11967675800042343
+###############
+One root node filter time: 0.1185588230000576
+###############
+One root node filter time: 0.11375553300240426
+###############
+One root node filter time: 0.1144288340001367
+###############
+One root node filter time: 0.11780821999855107
+###############
+One root node filter time: 0.11354780299734557
+###############
+One root node filter time: 0.13767073800045182
+###############
+One root node filter time: 0.12203268099983688
+###############
+One root node filter time: 0.12013993399887113
+###############
+One root node filter time: 0.11893783300183713
+###############
+One root node filter time: 0.1204800579980656
+###############
+One root node filter time: 0.1185615130016231
+###############
+One root node filter time: 0.11743104799825232
+###############
+One root node filter time: 0.11528347000057693
+###############
+One root node filter time: 0.11639201500292984
+###############
+One root node filter time: 0.11899639400144224
+###############
+One root node filter time: 0.11762022400216665
+###############
+One root node filter time: 0.1185025439990568
+###############
+One root node filter time: 0.11785753699950874
+###############
+One root node filter time: 0.12005554699862842
+###############
+One root node filter time: 0.12269049900351092
+###############
+One root node filter time: 0.12483394199807663
+###############
+One root node filter time: 0.12270136799998
+###############
+One root node filter time: 0.1173441200007801
+###############
+One root node filter time: 0.12117048900108784
+###############
+One root node filter time: 0.12230944200200611
+###############
+One root node filter time: 0.12258130299960612
+###############
+One root node filter time: 0.12228263699944364
+###############
+One root node filter time: 0.1220201520009141
+###############
+One root node filter time: 0.11916509499860695
+###############
+One root node filter time: 0.136084273999586
+###############
+One root node filter time: 0.12030977200265625
+###############
+One root node filter time: 0.12130273699949612
+###############
+One root node filter time: 0.11943150200022501
+###############
+One root node filter time: 0.1205066699985764
+###############
+One root node filter time: 0.13806381599715678
+###############
+One root node filter time: 0.1241185620019678
+###############
+One root node filter time: 0.12500907000139705
+###############
+One root node filter time: 0.127022451000812
+###############
+One root node filter time: 0.12216988900036085
+###############
+One root node filter time: 0.1368112950003706
+###############
+One root node filter time: 0.17101678399922093
+###############
+One root node filter time: 0.15047386299920618
+###############
+One root node filter time: 0.18934874099795707
+###############
+One root node filter time: 0.17136436000146205
+###############
+One root node filter time: 0.16536104400074692
+###############
+One root node filter time: 0.14745992600001046
+###############
+One root node filter time: 0.12490197900115163
+###############
+One root node filter time: 0.13282354300099541
+###############
+One root node filter time: 0.13550140400184318
+###############
+One root node filter time: 0.1302184539999871
+###############
+One root node filter time: 0.15085445300064748
+###############
+One root node filter time: 0.12737255500178435
+###############
+One root node filter time: 0.14352907799911918
+###############
+One root node filter time: 0.1418284200008202
+###############
+One root node filter time: 0.12543083199852845
+###############
+One root node filter time: 0.12454662199888844
+###############
+One root node filter time: 0.15417362299922388
+###############
+One root node filter time: 0.1338718789993436
+###############
+One root node filter time: 0.14571512100155815
+###############
+One root node filter time: 0.13953218900132924
+###############
+One root node filter time: 0.14666396500251722
+###############
+One root node filter time: 0.15467523299957975
+###############
+One root node filter time: 0.15022784200118622
+###############
+One root node filter time: 0.14813396600220585
+###############
+One root node filter time: 0.15381281699956162
+###############
+One root node filter time: 0.14431243500075652
+###############
+One root node filter time: 0.13948697999876458
+###############
+One root node filter time: 0.13726301700080512
+###############
+One root node filter time: 0.1282955469978333
+###############
+One root node filter time: 0.14406741700076964
+###############
+One root node filter time: 0.1485379380028462
+###############
+One root node filter time: 0.14977436299886904
+###############
+One root node filter time: 0.12687796099999105
+###############
+One root node filter time: 0.14981895899836672
+###############
+One root node filter time: 0.1363465959984751
+###############
+One root node filter time: 0.13539215700075147
+###############
+One root node filter time: 0.1468911890005984
+###############
+One root node filter time: 0.13232792700000573
+###############
+One root node filter time: 0.13422536399957608
+###############
+One root node filter time: 0.14634363799996208
+###############
+One root node filter time: 0.13217928399899392
+###############
+One root node filter time: 0.12702296899806242
+###############
+One root node filter time: 0.1212368750020687
+###############
+One root node filter time: 0.11625472100058687
+###############
+One root node filter time: 0.11489442300080555
+###############
+One root node filter time: 0.11654717900091782
+###############
+One root node filter time: 0.11531681600172305
+###############
+One root node filter time: 0.11611072300001979
+###############
+One root node filter time: 0.11638193700127886
+###############
+One root node filter time: 0.13066827199872932
+###############
+One root node filter time: 0.11747029999969527
+###############
+One root node filter time: 0.11664093999934266
+###############
+One root node filter time: 0.11476079400017625
+###############
+One root node filter time: 0.11511370500011253
+###############
+One root node filter time: 0.11538342399944668
+###############
+One root node filter time: 0.11753331100044306
+###############
+One root node filter time: 0.11550195099698612
+###############
+One root node filter time: 0.12060090299928561
+###############
+One root node filter time: 0.1223242729975027
+###############
+One root node filter time: 0.11668700899826945
+###############
+One root node filter time: 0.11530336699797772
+###############
+One root node filter time: 0.11504664099993533
+###############
+One root node filter time: 0.11761856199882459
+###############
+One root node filter time: 0.11652399199738284
+###############
+One root node filter time: 0.11582420999911847
+###############
+One root node filter time: 0.11904805800077156
+###############
+One root node filter time: 0.12313057199935429
+###############
+One root node filter time: 0.1326173369998287
+###############
+One root node filter time: 0.123279139999795
+###############
+One root node filter time: 0.13259748900236445
+###############
+One root node filter time: 0.1288756120011385
+###############
+One root node filter time: 0.12307419200078584
+###############
+One root node filter time: 0.13350844599699485
+###############
+One root node filter time: 0.13258489999861922
+###############
+One root node filter time: 0.13351218900061212
+###############
+One root node filter time: 0.1264689380004711
+###############
+One root node filter time: 0.137150031998317
+###############
+One root node filter time: 0.13102326399894082
+###############
+One root node filter time: 0.12132060900330544
+###############
+One root node filter time: 0.11766508700020495
+###############
+One root node filter time: 0.12835078400166822
+###############
+One root node filter time: 0.12156111899821553
+###############
+One root node filter time: 0.12315529300030903
+###############
+One root node filter time: 0.1348506219983392
+###############
+One root node filter time: 0.14834403500208282
+###############
+One root node filter time: 0.13768980099848704
+###############
+One root node filter time: 0.13108083900078782
+###############
+One root node filter time: 0.1420214499994472
+###############
+One root node filter time: 0.12993098899823963
+###############
+One root node filter time: 0.12881208500039065
+###############
+One root node filter time: 0.14796034899700317
+###############
+One root node filter time: 0.1404056829996989
+###############
+One root node filter time: 0.12010435100091854
+###############
+One root node filter time: 0.11943658900054288
+###############
+One root node filter time: 0.12155981000250904
+###############
+One root node filter time: 0.11887997199664824
+###############
+One root node filter time: 0.12089715899855946
+###############
+One root node filter time: 0.12625036800091038
+###############
+One root node filter time: 0.11819958299747668
+###############
+One root node filter time: 0.11873921299775247
+###############
+One root node filter time: 0.1160891219988116
+###############
+One root node filter time: 0.11763136200170266
+###############
+One root node filter time: 0.11682447899875115
+###############
+One root node filter time: 0.11874091000208864
+###############
+One root node filter time: 0.13443725400065887
+###############
+One root node filter time: 0.1407464820003952
+###############
+One root node filter time: 0.11952128499979153
+###############
+One root node filter time: 0.11692164100168156
+###############
+One root node filter time: 0.1187341410004592
+###############
+One root node filter time: 0.12033878899819683
+###############
+One root node filter time: 0.11832830399725935
+###############
+One root node filter time: 0.11756642299951636
+###############
+One root node filter time: 0.11807441299970378
+###############
+One root node filter time: 0.12691675699898042
+###############
+One root node filter time: 0.12051885099936044
+###############
+One root node filter time: 0.11518532699847128
+###############
+One root node filter time: 0.11932922100095311
+###############
+One root node filter time: 0.11519774599946686
+###############
+One root node filter time: 0.1166041110009246
+###############
+One root node filter time: 0.11745852199965157
+###############
+One root node filter time: 0.14636946999962674
+###############
+One root node filter time: 0.14250497199827805
+###############
+One root node filter time: 0.12045879200013587
+###############
+One root node filter time: 0.12752278200059664
+###############
+One root node filter time: 0.128925180000806
+###############
+One root node filter time: 0.11551736900219112
+###############
+One root node filter time: 0.1142866980007966
+###############
+One root node filter time: 0.1218006310009514
+###############
+One root node filter time: 0.126001835000352
+###############
+One root node filter time: 0.12630799099861179
+###############
+One root node filter time: 0.12290760500036413
+###############
+One root node filter time: 0.12354917100310558
+###############
+One root node filter time: 0.12889441900188103
+###############
+One root node filter time: 0.12749897899993812
+###############
+One root node filter time: 0.12222249300248222
+###############
+One root node filter time: 0.12134103000062169
+###############
+One root node filter time: 0.12192826099999365
+###############
+One root node filter time: 0.12217341499854228
+###############
+One root node filter time: 0.12501445099769626
+###############
+One root node filter time: 0.1432977939984994
+###############
+One root node filter time: 0.1352039720004541
+###############
+One root node filter time: 0.12238124400028028
+###############
+One root node filter time: 0.12651776100028655
+###############
+One root node filter time: 0.12640205999923637
+###############
+One root node filter time: 0.14012241900127265
+###############
+One root node filter time: 0.12321357100154273
+###############
+One root node filter time: 0.11726030699719558
+###############
+One root node filter time: 0.11695920800048043
+###############
+One root node filter time: 0.11848121200091555
+###############
+One root node filter time: 0.11607455700141145
+###############
+One root node filter time: 0.11629856199942878
+###############
+One root node filter time: 0.11798461400030646
+###############
+One root node filter time: 0.13067250099993544
+###############
+One root node filter time: 0.13987178100069286
+###############
+One root node filter time: 0.1240570830013894
+###############
+One root node filter time: 0.11894517900145729
+###############
+One root node filter time: 0.12189725700227427
+###############
+One root node filter time: 0.11675158799698693
+###############
+One root node filter time: 0.1310723530004907
+###############
+One root node filter time: 0.12829125699863653
+###############
+One root node filter time: 0.12213681599678239
+###############
+One root node filter time: 0.12321706299917423
+###############
+One root node filter time: 0.12372833599874866
+###############
+One root node filter time: 0.11898220399962156
+###############
+One root node filter time: 0.12446476500190329
+###############
+One root node filter time: 0.12370427299902076
+###############
+One root node filter time: 0.12258316199950059
+###############
+One root node filter time: 0.14796189199842047
+###############
+One root node filter time: 0.12908915699881618
+###############
+One root node filter time: 0.12124397500156192
+###############
+One root node filter time: 0.12733928200032096
+###############
+One root node filter time: 0.13497974699930637
+###############
+One root node filter time: 0.13475601699974504
+###############
+One root node filter time: 0.13643291699918336
+###############
+One root node filter time: 0.12288609299866948
+###############
+One root node filter time: 0.1307763380027609
+###############
+One root node filter time: 0.12820966999788652
+###############
+One root node filter time: 0.12533653200080153
+###############
+One root node filter time: 0.11891437399754068
+###############
+One root node filter time: 0.11380004800230381
+###############
+One root node filter time: 0.1225700989998586
+###############
+One root node filter time: 0.12935045599806472
+###############
+One root node filter time: 0.12820538300002227
+###############
+One root node filter time: 0.12474987200039322
+###############
+One root node filter time: 0.1237130959998467
+###############
+One root node filter time: 0.1259038270000019
+###############
+One root node filter time: 0.12510714200107032
+###############
+One root node filter time: 0.1269829849989037
+###############
+One root node filter time: 0.133924403002311
+###############
+One root node filter time: 0.12410713000281248
+###############
+One root node filter time: 0.1303499700006796
+###############
+One root node filter time: 0.12597929500043392
+###############
+One root node filter time: 0.12579943300079321
+###############
+One root node filter time: 0.13010192300134804
+###############
+One root node filter time: 0.1244634370013955
+###############
+One root node filter time: 0.12526500500098336
+###############
+One root node filter time: 0.1253685650008265
+###############
+One root node filter time: 0.12454856800104608
+###############
+One root node filter time: 0.12434140100231161
+###############
+One root node filter time: 0.1298219810014416
+###############
+One root node filter time: 0.12924560800092877
+###############
+One root node filter time: 0.13229997999951593
+###############
+One root node filter time: 0.1310403649986256
+###############
+One root node filter time: 0.12913235099767917
+###############
+One root node filter time: 0.1303844959984417
+###############
+One root node filter time: 0.12612070400064113
+###############
+One root node filter time: 0.12695995199828758
+###############
+One root node filter time: 0.12298088900206494
+###############
+One root node filter time: 0.13232042399977217
+###############
+One root node filter time: 0.1287696010003856
+###############
+One root node filter time: 0.12922542999876896
+###############
+One root node filter time: 0.13820555900019826
+###############
+One root node filter time: 0.1292063330001838
+###############
+One root node filter time: 0.12929649299985613
+###############
+One root node filter time: 0.13532777500222437
+###############
+One root node filter time: 0.1313211599990609
+###############
+One root node filter time: 0.12787413999831188
+###############
+One root node filter time: 0.15424034199895686
+###############
+One root node filter time: 0.13715633299943875
+###############
+One root node filter time: 0.13724989999900572
+###############
+One root node filter time: 0.1399428339973383
+###############
+One root node filter time: 0.15783663600086584
+###############
+One root node filter time: 0.14923059599823318
+###############
+One root node filter time: 0.12803256299957866
+###############
+One root node filter time: 0.1322219360008603
+###############
+One root node filter time: 0.12833306200263905
+###############
+One root node filter time: 0.12790218299778644
+###############
+One root node filter time: 0.1307167919985659
+###############
+One root node filter time: 0.12992133900115732
+###############
+One root node filter time: 0.1341567240015138
+###############
+One root node filter time: 0.13977063900165376
+###############
+One root node filter time: 0.14228988900140394
+###############
+One root node filter time: 0.12969647999852896
+###############
+One root node filter time: 0.1304534959999728
+###############
+One root node filter time: 0.1262345529976301
+###############
+One root node filter time: 0.12282098900323035
+###############
+One root node filter time: 0.12925500699930126
+###############
+One root node filter time: 0.13039718399886624
+###############
+One root node filter time: 0.12936435000301572
+###############
+One root node filter time: 0.12796743500075536
+###############
+One root node filter time: 0.12557883000044967
+###############
+One root node filter time: 0.12926287400114234
+###############
+One root node filter time: 0.12924458899942692
+###############
+One root node filter time: 0.1266082779984572
+###############
+One root node filter time: 0.1264546069978678
+###############
+One root node filter time: 0.12867983899923274
+###############
+One root node filter time: 0.13841524199960986
+###############
+One root node filter time: 0.1267049269990821
+###############
+One root node filter time: 0.12601002099836478
+###############
+One root node filter time: 0.1274786360008875
+###############
+One root node filter time: 0.12659901799997897
+###############
+One root node filter time: 0.1300567090002005
+###############
+One root node filter time: 0.12892644699968514
+###############
+One root node filter time: 0.12631206600053702
+###############
+One root node filter time: 0.1254008559990325
+###############
+One root node filter time: 0.12792143299884629
+###############
+One root node filter time: 0.13329487800001516
+###############
+One root node filter time: 0.12859786899934988
+###############
+One root node filter time: 0.13182797800254775
+###############
+One root node filter time: 0.1286449779981922
+###############
+One root node filter time: 0.13064997699984815
+###############
+One root node filter time: 0.12715943299917853
+###############
+One root node filter time: 0.14119469599972945
+###############
+One root node filter time: 0.13687060500160442
+###############
+One root node filter time: 0.14535608499863883
+###############
+One root node filter time: 0.14362145199993392
+###############
+One root node filter time: 0.14569838700117543
+###############
+One root node filter time: 0.12720298400017782
+###############
+One root node filter time: 0.1277548719990591
+###############
+One root node filter time: 0.1254818460001843
+###############
+One root node filter time: 0.12970908299757866
+###############
+One root node filter time: 0.13834353299898794
+###############
+One root node filter time: 0.1346600059987395
+###############
+One root node filter time: 0.12857624100070097
+###############
+One root node filter time: 0.13329775300007896
+###############
+One root node filter time: 0.13756463899699156
+###############
+One root node filter time: 0.13268058699759422
+###############
+One root node filter time: 0.1449614900011511
+###############
+One root node filter time: 0.13084227200306486
+###############
+One root node filter time: 0.13691229399773874
+###############
+One root node filter time: 0.13490293200084125
+###############
+One root node filter time: 0.13693839100233163
+###############
+One root node filter time: 0.13194430799921975
+###############
+One root node filter time: 0.14159924700288684
+###############
+One root node filter time: 0.13333126599900424
+###############
+One root node filter time: 0.13202715100123896
+###############
+One root node filter time: 0.13002549500015448
+###############
+One root node filter time: 0.1280630809997092
+###############
+One root node filter time: 0.12835141400137218
+###############
+One root node filter time: 0.13059754799905932
+###############
+One root node filter time: 0.12702046100093867
+###############
+One root node filter time: 0.12997660300243297
+###############
+One root node filter time: 0.128589287000068
+###############
+One root node filter time: 0.13068456000110018
+###############
+One root node filter time: 0.12892760100294254
+###############
+One root node filter time: 0.14193964500009315
+###############
+One root node filter time: 0.1368012670027383
+###############
+One root node filter time: 0.13783917599721462
+###############
+One root node filter time: 0.13687416999891866
+###############
+One root node filter time: 0.13666090499827988
+###############
+One root node filter time: 0.13223247600035393
+###############
+One root node filter time: 0.1296593090009992
+###############
+One root node filter time: 0.13056022100136033
+###############
+One root node filter time: 0.12825094800064107
+###############
+One root node filter time: 0.12774000599893043
+###############
+One root node filter time: 0.13087770900165197
+###############
+One root node filter time: 0.13124467899979209
+###############
+One root node filter time: 0.12986792599986074
+###############
+One root node filter time: 0.12522486799934995
+###############
+One root node filter time: 0.1257448079995811
+###############
+One root node filter time: 0.1287261520010361
+###############
+One root node filter time: 0.12926216300184024
+###############
+One root node filter time: 0.13195628700123052
+###############
+One root node filter time: 0.1278517950013338
+###############
+One root node filter time: 0.12800232799781952
+###############
+One root node filter time: 0.12830429099994944
+###############
+One root node filter time: 0.12770692999765743
+###############
+One root node filter time: 0.13831963700067718
+###############
+One root node filter time: 0.13840401099878363
+###############
+One root node filter time: 0.12802704899877426
+###############
+One root node filter time: 0.129163375000644
+###############
+One root node filter time: 0.12725175300147384
+###############
+One root node filter time: 0.12848901599863893
+###############
+One root node filter time: 0.1280752200000279
+###############
+One root node filter time: 0.13738676699722419
+###############
+One root node filter time: 0.13196396499915863
+###############
+One root node filter time: 0.13592917699861573
+###############
+One root node filter time: 0.13476977199752582
+###############
+One root node filter time: 0.13574019899897394
+###############
+One root node filter time: 0.13109735399848432
+###############
+One root node filter time: 0.12958451099984813
+###############
+One root node filter time: 0.12937345700265723
+###############
+One root node filter time: 0.1266336910011887
+###############
+One root node filter time: 0.1286148740000499
+###############
+One root node filter time: 0.1286491790015134
+###############
+One root node filter time: 0.1268379940011073
+###############
+One root node filter time: 0.12956955099798506
+###############
+One root node filter time: 0.12803751100000227
+###############
+One root node filter time: 0.15513133800050127
+###############
+One root node filter time: 0.13966540600085864
+###############
+One root node filter time: 0.12673462599923369
+###############
+One root node filter time: 0.12541457200131845
+###############
+One root node filter time: 0.14558984099858208
+###############
+One root node filter time: 0.14083169500008808
+###############
+One root node filter time: 0.12012547500125947
+###############
+One root node filter time: 0.11994754300030763
+###############
+One root node filter time: 0.12778874399737106
+###############
+One root node filter time: 0.12151638499926776
+###############
+One root node filter time: 0.12298074800128234
+###############
+One root node filter time: 0.12234123699818156
+###############
+One root node filter time: 0.12054826700114063
+###############
+One root node filter time: 0.15998133700122708
+###############
+One root node filter time: 0.1340424609988986
+###############
+One root node filter time: 0.1274840049991326
+###############
+One root node filter time: 0.12213641600101255
+###############
+One root node filter time: 0.11987042500186362
+###############
+One root node filter time: 0.12287170000126935
+###############
+One root node filter time: 0.11915637700076331
+###############
+One root node filter time: 0.11754474400004256
+###############
+One root node filter time: 0.11722738100070274
+###############
+One root node filter time: 0.11921187899861252
+###############
+One root node filter time: 0.1160383999995247
+###############
+One root node filter time: 0.11616225299803773
+###############
+One root node filter time: 0.11759716999949887
+###############
+One root node filter time: 0.12114659500002745
+###############
+One root node filter time: 0.1389911599981133
+###############
+One root node filter time: 0.14146634899952915
+###############
+One root node filter time: 0.13699833899954683
+###############
+One root node filter time: 0.12177242899997509
+###############
+One root node filter time: 0.11719285399885848
+###############
+One root node filter time: 0.1222596279985737
+###############
+One root node filter time: 0.1228223899997829
+###############
+One root node filter time: 0.13472329399883165
+###############
+One root node filter time: 0.13560862699887366
+###############
+One root node filter time: 0.134933119003108
+###############
+One root node filter time: 0.13426527900082874
+###############
+One root node filter time: 0.13561489399944548
+###############
+One root node filter time: 0.14544579600260477
+###############
+One root node filter time: 0.13170987800185685
+###############
+One root node filter time: 0.1272818930010544
+###############
+One root node filter time: 0.12079783800072619
+###############
+One root node filter time: 0.12261031199886929
+###############
+One root node filter time: 0.1201010220029275
+###############
+One root node filter time: 0.12321984700247413
+###############
+One root node filter time: 0.12166476100173895
+###############
+One root node filter time: 0.11986513199735782
+###############
+One root node filter time: 0.12064052400091896
+###############
+One root node filter time: 0.12209025300035137
+###############
+One root node filter time: 0.12076959100159002
+###############
+One root node filter time: 0.1227551140000287
+###############
+One root node filter time: 0.12062555599914049
+###############
+One root node filter time: 0.12098466899988125
+###############
+One root node filter time: 0.12138643199796206
+###############
+One root node filter time: 0.12484727499759174
+###############
+One root node filter time: 0.120482099999208
+###############
+One root node filter time: 0.12098270400019828
+###############
+One root node filter time: 0.12469047799822874
+###############
+One root node filter time: 0.12098847800007206
+###############
+One root node filter time: 0.1367223630004446
+###############
+One root node filter time: 0.1409585049987072
+###############
+One root node filter time: 0.12525026900038938
+###############
+One root node filter time: 0.12549151799976244
+###############
+One root node filter time: 0.12263884599815356
+###############
+One root node filter time: 0.12374641200221959
+###############
+One root node filter time: 0.12208912599817268
+###############
+One root node filter time: 0.12740779999876395
+###############
+One root node filter time: 0.1290546460004407
+###############
+One root node filter time: 0.12499288999970304
+###############
+One root node filter time: 0.1272134790015116
+###############
+One root node filter time: 0.13367955299690948
+###############
+One root node filter time: 0.12459013199986657
+###############
+One root node filter time: 0.13009337000039523
+###############
+One root node filter time: 0.1316468180011725
+###############
+One root node filter time: 0.13290359000166063
+###############
+One root node filter time: 0.13634667000224
+###############
+One root node filter time: 0.1300961639972229
+###############
+One root node filter time: 0.12535767699955613
+###############
+One root node filter time: 0.1216348440029833
+###############
+One root node filter time: 0.12329659499664558
+###############
+One root node filter time: 0.12442652600293513
+###############
+One root node filter time: 0.12308887699691695
+###############
+One root node filter time: 0.13583075599672156
+###############
+One root node filter time: 0.14463367799908156
+###############
+One root node filter time: 0.14184385200132965
+###############
+One root node filter time: 0.12865179700020235
+###############
+One root node filter time: 0.12886236600024858
+###############
+One root node filter time: 0.13068120400203043
+###############
+One root node filter time: 0.13412500399863347
+###############
+One root node filter time: 0.13615600199773326
+###############
+One root node filter time: 0.12945410600150353
+###############
+One root node filter time: 0.14083201000175904
+###############
+One root node filter time: 0.1367574899995816
+###############
+One root node filter time: 0.14077516099860077
+###############
+One root node filter time: 0.14427771600094275
+###############
+One root node filter time: 0.1322113909991458
+###############
+One root node filter time: 0.12153103899981943
+###############
+One root node filter time: 0.12684522600102355
+###############
+One root node filter time: 0.12238648499987903
+###############
+One root node filter time: 0.12799146200268297
+###############
+One root node filter time: 0.14403124599994044
+###############
+One root node filter time: 0.14240915600021253
+###############
+One root node filter time: 0.12265706200196291
+###############
+One root node filter time: 0.13370202200167114
+###############
+One root node filter time: 0.14254351400086307
+###############
+One root node filter time: 0.12937313899965375
+###############
+One root node filter time: 0.13915337000071304
+###############
+One root node filter time: 0.13788831899728393
+###############
+One root node filter time: 0.13881169899832457
+###############
+One root node filter time: 0.14931039400107693
+###############
+One root node filter time: 0.13633013800063054
+###############
+One root node filter time: 0.11650646399721154
+###############
+One root node filter time: 0.12195636800242937
+###############
+One root node filter time: 0.12022212900046725
+###############
+One root node filter time: 0.11991339199812501
+###############
+One root node filter time: 0.11729308299982222
+###############
+One root node filter time: 0.11893225600215374
+###############
+One root node filter time: 0.11580741099896841
+###############
+One root node filter time: 0.118540898001811
+###############
+One root node filter time: 0.11545198100066045
+###############
+One root node filter time: 0.11728803499863716
+###############
+One root node filter time: 0.11628300000302261
+###############
+One root node filter time: 0.1281561319992761
+###############
+One root node filter time: 0.13933016500232043
+###############
+One root node filter time: 0.14480149199880543
+###############
+One root node filter time: 0.12000268300107564
+###############
+One root node filter time: 0.12064101999931154
+###############
+One root node filter time: 0.11889652399986517
+###############
+One root node filter time: 0.12269539300177712
+###############
+One root node filter time: 0.12275745800070581
+###############
+One root node filter time: 0.13638080800228636
+###############
+One root node filter time: 0.16975204699701862
+###############
+One root node filter time: 0.1407470869999088
+###############
+One root node filter time: 0.13249987900053384
+###############
+One root node filter time: 0.13696432699725847
+###############
+One root node filter time: 0.1476587990000553
+###############
+One root node filter time: 0.14913479999813717
+###############
+One root node filter time: 0.15587347700056853
+###############
+One root node filter time: 0.13094288600041182
+###############
+One root node filter time: 0.12906095200014533
+###############
+One root node filter time: 0.1647737950006558
+###############
+One root node filter time: 0.1306059140006255
+###############
+One root node filter time: 0.12459667299845023
+###############
+One root node filter time: 0.12104173099942273
+###############
+One root node filter time: 0.12470596300045145
+###############
+One root node filter time: 0.12084292299914523
+###############
+One root node filter time: 0.12434440900324262
+###############
+One root node filter time: 0.1231959819997428
+###############
+One root node filter time: 0.1238061000003654
+###############
+One root node filter time: 0.12091982100173482
+###############
+One root node filter time: 0.12243316999956733
+###############
+One root node filter time: 0.124419792999106
+###############
+One root node filter time: 0.12567121499887435
+###############
+One root node filter time: 0.12017239700071514
+###############
+One root node filter time: 0.12054015500325477
+###############
+One root node filter time: 0.12425045100098941
+###############
+One root node filter time: 0.11693476000073133
+###############
+One root node filter time: 0.12079696699947817
+###############
+One root node filter time: 0.12061292400176171
+###############
+One root node filter time: 0.1279620539971802
+###############
+One root node filter time: 0.12471819699931075
+###############
+One root node filter time: 0.14343540700065205
+###############
+One root node filter time: 0.14311032999830786
+###############
+One root node filter time: 0.14390511700185016
+###############
+One root node filter time: 0.14259755000239238
+###############
+One root node filter time: 0.13998158299727947
+###############
+One root node filter time: 0.14169822600160842
+###############
+One root node filter time: 0.1467602930024441
+###############
+One root node filter time: 0.15121405399986543
+###############
+One root node filter time: 0.13526108899895917
+###############
+One root node filter time: 0.12811814899760066
+###############
+One root node filter time: 0.15158728000096744
+###############
+One root node filter time: 0.13567039600093267
+###############
+One root node filter time: 0.12975045900020632
+###############
+One root node filter time: 0.13381085899891332
+###############
+One root node filter time: 0.12783995799691183
+###############
+One root node filter time: 0.15346160899935057
+###############
+One root node filter time: 0.14306721499815467
+###############
+One root node filter time: 0.13905634899856523
+###############
+One root node filter time: 0.14489881999907084
+###############
+One root node filter time: 0.13219802499952493
+###############
+One root node filter time: 0.12868289299876778
+###############
+One root node filter time: 0.13185535299999174
+###############
+One root node filter time: 0.12967204400047194
+###############
+One root node filter time: 0.12285672200232511
+###############
+One root node filter time: 0.12332850200255052
+###############
+One root node filter time: 0.13303519100008998
+###############
+One root node filter time: 0.13782028300192906
+###############
+One root node filter time: 0.13770617399859475
+###############
+One root node filter time: 0.13545637399874977
+###############
+One root node filter time: 0.1417219959985232
+###############
+One root node filter time: 0.1420651779990294
+###############
+One root node filter time: 0.13006735100134392
+###############
+One root node filter time: 0.16136212900164537
+###############
+One root node filter time: 0.13485754200155498
+###############
+One root node filter time: 0.131191136999405
+###############
+One root node filter time: 0.13428082999962498
+###############
+One root node filter time: 0.14454724700044608
+###############
+One root node filter time: 0.13955458800046472
+###############
+One root node filter time: 0.13390719100061688
+###############
+One root node filter time: 0.13832182699843543
+###############
+One root node filter time: 0.14551016200130107
+###############
+One root node filter time: 0.1302250680018915
+###############
+One root node filter time: 0.1427644989998953
+###############
+One root node filter time: 0.1313469470005657
+###############
+One root node filter time: 0.13301279599909321
+###############
+One root node filter time: 0.1473680989984132
+###############
+One root node filter time: 0.13792257900058758
+###############
+One root node filter time: 0.14083664099962334
+###############
+One root node filter time: 0.12549680300071486
+###############
+One root node filter time: 0.14008693499999936
+###############
+One root node filter time: 0.12851032900289283
+###############
+One root node filter time: 0.1411699870004668
+###############
+One root node filter time: 0.1349108989998058
+###############
+One root node filter time: 0.13049879699974554
+###############
+One root node filter time: 0.13772461299959105
+###############
+One root node filter time: 0.14592770999661298
+###############
+One root node filter time: 0.1385456019997946
+###############
+One root node filter time: 0.14873380800054292
+###############
+One root node filter time: 0.14299905600273632
+###############
+One root node filter time: 0.14294989699919824
+###############
+One root node filter time: 0.13439098600065336
+###############
+One root node filter time: 0.13889505900078802
+###############
+One root node filter time: 0.14923907999764197
+###############
+One root node filter time: 0.140642595000827
+###############
+One root node filter time: 0.15388549699855503
+###############
+One root node filter time: 0.14568002099986188
+###############
+One root node filter time: 0.14314394199755043
+###############
+One root node filter time: 0.13665517499975977
+###############
+One root node filter time: 0.13317412600008538
+###############
+One root node filter time: 0.16364162499667145
+###############
+One root node filter time: 0.15324018100000103
+###############
+One root node filter time: 0.15365441600079066
+###############
+One root node filter time: 0.14991489500243915
+###############
+One root node filter time: 0.14889167299770634
+###############
+One root node filter time: 0.13712529799886397
+###############
+One root node filter time: 0.14133919099913328
+###############
+One root node filter time: 0.14215230300033
+###############
+One root node filter time: 0.1344125420000637
+###############
+One root node filter time: 0.13980239599914057
+###############
+One root node filter time: 0.13793318000170984
+###############
+One root node filter time: 0.14124629200159688
+###############
+One root node filter time: 0.13382716300111497
+###############
+One root node filter time: 0.14257224800167023
+###############
+One root node filter time: 0.13364346600064891
+###############
+One root node filter time: 0.14158390399825294
+###############
+One root node filter time: 0.13942017899898929
+###############
+One root node filter time: 0.131462533998274
+###############
+One root node filter time: 0.13219102199946065
+###############
+One root node filter time: 0.1362938700003724
+###############
+One root node filter time: 0.14887828499922762
+###############
+One root node filter time: 0.12701738200121326
+###############
+One root node filter time: 0.12877146700338926
+###############
+One root node filter time: 0.1336008940015745
+###############
+One root node filter time: 0.13522806800028775
+###############
+One root node filter time: 0.1411776969980565
+###############
+One root node filter time: 0.14687666800091392
+###############
+One root node filter time: 0.1531240730000718
+###############
+One root node filter time: 0.13821877000009408
+###############
+One root node filter time: 0.1414396130021487
+###############
+One root node filter time: 0.14749261800170643
+###############
+One root node filter time: 0.1380410870006017
+###############
+One root node filter time: 0.13710019599966472
+###############
+One root node filter time: 0.13910298400151078
+###############
+One root node filter time: 0.1377413449990854
+###############
+One root node filter time: 0.1424503519992868
+###############
+One root node filter time: 0.1372455410019029
+###############
+One root node filter time: 0.137827346999984
+###############
+One root node filter time: 0.1494500020016858
+###############
+One root node filter time: 0.1255856349998794
+###############
+One root node filter time: 0.13250581999818678
+###############
+One root node filter time: 0.1331443000017316
+###############
+One root node filter time: 0.12830295900130295
+###############
+One root node filter time: 0.13634927900056937
+###############
+One root node filter time: 0.12679705800110241
+###############
+One root node filter time: 0.1382074229986756
+###############
+One root node filter time: 0.12720349800292752
+###############
+One root node filter time: 0.13737013499849127
+###############
+One root node filter time: 0.13444359399727546
+###############
+One root node filter time: 0.1430214399988472
+###############
+One root node filter time: 0.14307139499942423
+###############
+One root node filter time: 0.14469322500008275
+###############
+One root node filter time: 0.13692671399985556
+###############
+One root node filter time: 0.14334005300042918
+###############
+One root node filter time: 0.14345642500120448
+###############
+One root node filter time: 0.1334957580002083
+###############
+One root node filter time: 0.14220685600230354
+###############
+One root node filter time: 0.13799379099873477
+###############
+One root node filter time: 0.13742648199695395
+###############
+One root node filter time: 0.13544559499860043
+###############
+One root node filter time: 0.1233337500016205
+###############
+One root node filter time: 0.1274670819984749
+###############
+One root node filter time: 0.12623855499987258
+###############
+One root node filter time: 0.13351846300065517
+###############
+One root node filter time: 0.12629264200222678
+###############
+One root node filter time: 0.1265106239989109
+###############
+One root node filter time: 0.14332224899771973
+###############
+One root node filter time: 0.13325189799797954
+###############
+One root node filter time: 0.13736552100090194
+###############
+One root node filter time: 0.13958220499989693
+###############
+One root node filter time: 0.13000738299888326
+###############
+One root node filter time: 0.1389367499978107
+###############
+One root node filter time: 0.14436255100008566
+###############
+One root node filter time: 0.14094084699900122
+###############
+One root node filter time: 0.14421045899871388
+###############
+One root node filter time: 0.13763589600057458
+###############
+One root node filter time: 0.14057715500166523
+###############
+One root node filter time: 0.14137089299765648
+###############
+One root node filter time: 0.1463858019997133
+###############
+One root node filter time: 0.15822347599896602
+###############
+One root node filter time: 0.1355896329987445
+###############
+One root node filter time: 0.1270789619993593
+###############
+One root node filter time: 0.12725986200166517
+###############
+One root node filter time: 0.12352961999931722
+###############
+One root node filter time: 0.13167999999859603
+###############
+One root node filter time: 0.12782528399839066
+###############
+One root node filter time: 0.12506026299888617
+###############
+One root node filter time: 0.12244108900267747
+###############
+One root node filter time: 0.1243721889986773
+###############
+One root node filter time: 0.12948942599905422
+###############
+One root node filter time: 0.12317510100183426
+###############
+One root node filter time: 0.1272701980014972
+###############
+One root node filter time: 0.14071968999996898
+###############
+One root node filter time: 0.14217859900236363
+###############
+One root node filter time: 0.13481594199765823
+###############
+One root node filter time: 0.15244439399975818
+###############
+One root node filter time: 0.14549427299789386
+###############
+One root node filter time: 0.14556342200012296
+###############
+One root node filter time: 0.14195779700094135
+###############
+One root node filter time: 0.13995038299981388
+###############
+One root node filter time: 0.1399221870015026
+###############
+One root node filter time: 0.1410049740006798
+###############
+One root node filter time: 0.137307425000472
+###############
+One root node filter time: 0.14242486399962218
+###############
+One root node filter time: 0.13007239700164064
+###############
+One root node filter time: 0.1284433490000083
+###############
+One root node filter time: 0.12742500000240398
+###############
+One root node filter time: 0.13098948700280744
+###############
+One root node filter time: 0.12489395599914133
+###############
+One root node filter time: 0.12580639899897506
+###############
+One root node filter time: 0.13148442600140697
+###############
+One root node filter time: 0.12457818999973824
+###############
+One root node filter time: 0.1350283239989949
+###############
+One root node filter time: 0.12845228900187067
+###############
+One root node filter time: 0.13174351599809597
+###############
+One root node filter time: 0.13160992299890495
+###############
+One root node filter time: 0.14093578299798537
+###############
+One root node filter time: 0.13772626200079685
+###############
+One root node filter time: 0.1431403649985441
+###############
+One root node filter time: 0.14322698500109254
+###############
+One root node filter time: 0.13774322899917024
+###############
+One root node filter time: 0.14553545200033113
+###############
+One root node filter time: 0.14583151999977417
+###############
+One root node filter time: 0.13510722200226155
+###############
+One root node filter time: 0.14475778900305158
+###############
+One root node filter time: 0.1314713079991634
+###############
+One root node filter time: 0.14000528800170287
+###############
+One root node filter time: 0.13847917599923676
+###############
+One root node filter time: 0.148489506002079
+###############
+One root node filter time: 0.13083478200132959
+###############
+One root node filter time: 0.13484824199986178
+###############
+One root node filter time: 0.1305802240021876
+###############
+One root node filter time: 0.13369577200137428
+###############
+One root node filter time: 0.1357544179991237
+###############
+One root node filter time: 0.13133078900136752
+###############
+One root node filter time: 0.12992742500136956
+###############
+One root node filter time: 0.1276900500015472
+###############
+One root node filter time: 0.12403532000098494
+###############
+One root node filter time: 0.14201329199931934
+###############
+One root node filter time: 0.13414298399948166
+###############
+One root node filter time: 0.12698123600057443
+###############
+One root node filter time: 0.1318488039978547
+###############
+One root node filter time: 0.12472554099804256
+###############
+One root node filter time: 0.1328190230015025
+###############
+One root node filter time: 0.13025992800248787
+###############
+One root node filter time: 0.13365353700282867
+###############
+One root node filter time: 0.14148015799946734
+###############
+One root node filter time: 0.1340583429991966
+###############
+One root node filter time: 0.13966681300007622
+###############
+One root node filter time: 0.150280556998041
+###############
+One root node filter time: 0.14354844800254796
+###############
+One root node filter time: 0.15698806400178
+###############
+One root node filter time: 0.14660920000096667
+###############
+One root node filter time: 0.1427649190009106
+###############
+One root node filter time: 0.13025684999956866
+###############
+One root node filter time: 0.14189119799993932
+###############
+One root node filter time: 0.13821924600051716
+###############
+One root node filter time: 0.14415529899997637
+###############
+One root node filter time: 0.1456460369990964
+###############
+One root node filter time: 0.13535811299880152
+###############
+One root node filter time: 0.13097338100124034
+###############
+One root node filter time: 0.13284111000029952
+###############
+One root node filter time: 0.14254160700147622
+###############
+One root node filter time: 0.13143372400008957
+###############
+One root node filter time: 0.1296148150031513
+###############
+One root node filter time: 0.12648482599979616
+###############
+One root node filter time: 0.13005099799920572
+###############
+One root node filter time: 0.125626048000413
+###############
+One root node filter time: 0.1267526320007164
+###############
+One root node filter time: 0.1341102510014025
+###############
+One root node filter time: 0.13348953199965763
+###############
+One root node filter time: 0.13263005800035899
+###############
+One root node filter time: 0.1390881139996054
+###############
+One root node filter time: 0.1354038799981936
+###############
+One root node filter time: 0.13732767900000908
+###############
+One root node filter time: 0.12532294199991156
+###############
+One root node filter time: 0.12502771800063783
+###############
+One root node filter time: 0.13653080099902581
+###############
+One root node filter time: 0.1280669179977849
+###############
+One root node filter time: 0.13142943099956028
+###############
+One root node filter time: 0.14210559799903422
+###############
+One root node filter time: 0.1381395540010999
+###############
+One root node filter time: 0.14260410999850137
+###############
+One root node filter time: 0.1359449589981523
+###############
+One root node filter time: 0.13233593600307358
+###############
+One root node filter time: 0.1314402730022266
+###############
+One root node filter time: 0.12646282599962433
+###############
+One root node filter time: 0.14495727399844327
+###############
+One root node filter time: 0.14237918099752278
+###############
+One root node filter time: 0.13991418099976727
+###############
+One root node filter time: 0.13997680200191098
+###############
+One root node filter time: 0.1376324939992628
+###############
+One root node filter time: 0.14775013300095452
+###############
+One root node filter time: 0.14742210899930797
+###############
+One root node filter time: 0.14062021900099353
+###############
+One root node filter time: 0.14383624299807707
+###############
+One root node filter time: 0.16191361900200718
+###############
+One root node filter time: 0.13476712600095198
+###############
+One root node filter time: 0.1374136099984753
+###############
+One root node filter time: 0.14108425499944133
+###############
+One root node filter time: 0.13370013699750416
+###############
+One root node filter time: 0.13299185399955604
+###############
+One root node filter time: 0.12959385399881285
+###############
+One root node filter time: 0.1281007209981908
+###############
+One root node filter time: 0.12938082099935855
+###############
+One root node filter time: 0.13649062900003628
+###############
+One root node filter time: 0.13538749600047595
+###############
+One root node filter time: 0.1345609330019215
+###############
+One root node filter time: 0.14253852600086248
+###############
+One root node filter time: 0.13689070899999933
+###############
+One root node filter time: 0.14305549599885126
+###############
+One root node filter time: 0.13770229699730407
+###############
+One root node filter time: 0.14238994699917384
+###############
+One root node filter time: 0.13911989299958805
+###############
+One root node filter time: 0.13796767100211582
+###############
+One root node filter time: 0.15177169399976265
+###############
+One root node filter time: 0.13198915800239774
+###############
+One root node filter time: 0.14278151499820524
+###############
+One root node filter time: 0.13040022399945883
+###############
+One root node filter time: 0.13500352800110704
+###############
+One root node filter time: 0.14004893899982562
+###############
+One root node filter time: 0.1422580780017597
+###############
+One root node filter time: 0.14000638100333163
+###############
+One root node filter time: 0.14451403599741752
+###############
+One root node filter time: 0.12837113000205136
+###############
+One root node filter time: 0.13670480100336135
+###############
+One root node filter time: 0.13169158900200273
+###############
+One root node filter time: 0.13338628999918
+###############
+One root node filter time: 0.1392333449985017
+###############
+One root node filter time: 0.12816354999813484
+###############
+One root node filter time: 0.12752938400080893
+###############
+One root node filter time: 0.13250113899994176
+###############
+One root node filter time: 0.12617373600005521
+###############
+One root node filter time: 0.12441914200098836
+###############
+One root node filter time: 0.13416295600109152
+###############
+One root node filter time: 0.13528541499908897
+###############
+One root node filter time: 0.13223888900029124
+###############
+One root node filter time: 0.1280451210004685
+###############
+One root node filter time: 0.12646449300154927
+###############
+One root node filter time: 0.13469756400081678
+###############
+One root node filter time: 0.13218753399996785
+###############
+One root node filter time: 0.1265150889994402
+###############
+One root node filter time: 0.12460350699984701
+###############
+One root node filter time: 0.1254721650002466
+###############
+One root node filter time: 0.1449169539991999
+###############
+One root node filter time: 0.1657430330014904
+###############
+One root node filter time: 0.1474491199987824
+###############
+One root node filter time: 0.1501298660004977
+###############
+One root node filter time: 0.16445974599992041
+###############
+One root node filter time: 0.14973293399816612
+###############
+One root node filter time: 0.13622028000099817
+###############
+One root node filter time: 0.13917381599821965
+###############
+One root node filter time: 0.1402448459994048
+###############
+One root node filter time: 0.12983443399934913
+###############
+One root node filter time: 0.1420110660001228
+###############
+One root node filter time: 0.13100615599978482
+###############
+One root node filter time: 0.13564310999936424
+###############
+One root node filter time: 0.1324194480002916
+###############
+One root node filter time: 0.13498157700087177
+###############
+One root node filter time: 0.14505566400112002
+###############
+One root node filter time: 0.13700249300018186
+###############
+One root node filter time: 0.13786913100193487
+###############
+One root node filter time: 0.1344510180024372
+###############
+One root node filter time: 0.13933000099859782
+###############
+One root node filter time: 0.13765115000205697
+###############
+One root node filter time: 0.1328889629985497
+###############
+One root node filter time: 0.1365175070022815
+###############
+One root node filter time: 0.1340713709978445
+###############
+One root node filter time: 0.14574478899885435
+###############
+One root node filter time: 0.13280231500175432
+###############
+One root node filter time: 0.13618699599828687
+###############
+One root node filter time: 0.13347794400033308
+###############
+One root node filter time: 0.1266750789982325
+###############
+One root node filter time: 0.13590169600138324
+###############
+One root node filter time: 0.1433142099995166
+###############
+One root node filter time: 0.14038649899885058
+###############
+One root node filter time: 0.13486934600223321
+###############
+One root node filter time: 0.13276189399766736
+###############
+One root node filter time: 0.13810235600249143
+###############
+One root node filter time: 0.13335397399714566
+###############
+One root node filter time: 0.1351337189989863
+###############
+One root node filter time: 0.14449483699718257
+###############
+One root node filter time: 0.13756652799929725
+###############
+One root node filter time: 0.13980313499996555
+###############
+One root node filter time: 0.13835386099890457
+###############
+One root node filter time: 0.13532876899989787
+###############
+One root node filter time: 0.13497137800004566
+###############
+One root node filter time: 0.1382673270018131
+###############
+One root node filter time: 0.13177977400118834
+###############
+One root node filter time: 0.14500009799667168
+###############
+One root node filter time: 0.1420266819986864
+###############
+One root node filter time: 0.14991158100019675
+###############
+One root node filter time: 0.1578538430003391
+###############
+One root node filter time: 0.13933204199929605
+###############
+One root node filter time: 0.13044260300011956
+###############
+One root node filter time: 0.13597118600227986
+###############
+One root node filter time: 0.1332358949985064
+###############
+One root node filter time: 0.13816537999809952
+###############
+One root node filter time: 0.1363385440017737
+###############
+One root node filter time: 0.1382301230005396
+###############
+One root node filter time: 0.13363099600246642
+###############
+One root node filter time: 0.12977018700257759
+###############
+One root node filter time: 0.13695023100081016
+###############
+One root node filter time: 0.1330353080011264
+###############
+One root node filter time: 0.13874271999884513
+###############
+One root node filter time: 0.139492391001113
+###############
+One root node filter time: 0.13673783000194817
+###############
+One root node filter time: 0.13986311500048032
+###############
+One root node filter time: 0.13760701399951358
+###############
+One root node filter time: 0.13609443899986218
+###############
+One root node filter time: 0.13006395699994755
+###############
+One root node filter time: 0.1363415099986014
+###############
+One root node filter time: 0.13644182500138413
+###############
+One root node filter time: 0.14527259500027867
+###############
+One root node filter time: 0.13868136100063566
+###############
+One root node filter time: 0.1372679900014191
+###############
+One root node filter time: 0.13562937899769167
+###############
+One root node filter time: 0.136926728002436
+###############
+One root node filter time: 0.1334430240021902
+###############
+One root node filter time: 0.13947797999935574
+###############
+One root node filter time: 0.13641838200055645
+###############
+One root node filter time: 0.1398471979991882
+###############
+One root node filter time: 0.14050362600028166
+###############
+One root node filter time: 0.1324550499994075
+###############
+One root node filter time: 0.13354189799792948
+###############
+One root node filter time: 0.13485753200075123
+###############
+One root node filter time: 0.14277037200008635
+###############
+One root node filter time: 0.14875128800122184
+###############
+One root node filter time: 0.1350632889989356
+###############
+One root node filter time: 0.131863605001854
+###############
+One root node filter time: 0.141465568998683
+###############
+One root node filter time: 0.135269539001456
+###############
+One root node filter time: 0.14856714800043846
+###############
+One root node filter time: 0.12613047800186905
+###############
+One root node filter time: 0.12223277299926849
+###############
+One root node filter time: 0.1277286680015095
+###############
+One root node filter time: 0.12559418200180517
+###############
+One root node filter time: 0.13123675899987575
+###############
+One root node filter time: 0.12129257899869117
+###############
+One root node filter time: 0.13222414699703222
+###############
+One root node filter time: 0.13958777800144162
+###############
+One root node filter time: 0.13966188699851045
+###############
+One root node filter time: 0.154649664000317
+###############
+One root node filter time: 0.15946209100002307
+###############
+One root node filter time: 0.16335642299964093
+###############
+One root node filter time: 0.15354989299885347
+###############
+One root node filter time: 0.13162366599863162
+###############
+One root node filter time: 0.13351815699934377
+###############
+One root node filter time: 0.13211587499972666
+###############
+One root node filter time: 0.12858009100091294
+###############
+One root node filter time: 0.14352290999886463
+###############
+One root node filter time: 0.124685597998905
+###############
+One root node filter time: 0.12724496000009822
+###############
+One root node filter time: 0.12638880099984817
+###############
+One root node filter time: 0.12515778099987074
+###############
+One root node filter time: 0.13056943799892906
+###############
+One root node filter time: 0.1414625130018976
+###############
+One root node filter time: 0.135460197001521
+###############
+One root node filter time: 0.14327718999993522
+###############
+One root node filter time: 0.13820375700015575
+###############
+One root node filter time: 0.1477926640000078
+###############
+One root node filter time: 0.14494963800098049
+###############
+One root node filter time: 0.14330119300211663
+###############
+One root node filter time: 0.15572210699974676
+###############
+One root node filter time: 0.1413093819974165
+###############
+One root node filter time: 0.14565903699985938
+###############
+One root node filter time: 0.14026076700247359
+###############
+One root node filter time: 0.14334118699844112
+###############
+One root node filter time: 0.14264984200053732
+###############
+One root node filter time: 0.1423691370000597
+###############
+One root node filter time: 0.14017762200091965
+###############
+One root node filter time: 0.14192142699903343
+###############
+One root node filter time: 0.13806237599783344
+###############
+One root node filter time: 0.12894838400097797
+###############
+One root node filter time: 0.1328378979997069
+###############
+One root node filter time: 0.13367878300050506
+###############
+One root node filter time: 0.1341823660004593
+###############
+One root node filter time: 0.12845127500258968
+###############
+One root node filter time: 0.1311566069998662
+###############
+One root node filter time: 0.12654648999887286
+###############
+One root node filter time: 0.1278648070001509
+###############
+One root node filter time: 0.13503508199937642
+###############
+One root node filter time: 0.1384122829986154
+###############
+One root node filter time: 0.1447970740009623
+###############
+One root node filter time: 0.15172558999984176
+###############
+One root node filter time: 0.1520221020000463
+###############
+One root node filter time: 0.15446378699925845
+###############
+One root node filter time: 0.1703611560005811
+###############
+One root node filter time: 0.153961995998543
+###############
+One root node filter time: 0.16337457099871244
+###############
+One root node filter time: 0.14128464399982477
+###############
+One root node filter time: 0.14970972800074378
+###############
+One root node filter time: 0.14721937300055288
+###############
+One root node filter time: 0.1409840289998101
+###############
+One root node filter time: 0.1434925240027951
+###############
+One root node filter time: 0.1415504639990104
+###############
+One root node filter time: 0.14167339399864431
+###############
+One root node filter time: 0.1493039469969517
+###############
+One root node filter time: 0.1313535099980072
+###############
+One root node filter time: 0.12338266600272618
+###############
+One root node filter time: 0.13112542100134306
+###############
+One root node filter time: 0.13331686099991202
+###############
+One root node filter time: 0.13617854999756673
+###############
+One root node filter time: 0.1272436649996962
+###############
+One root node filter time: 0.12273948800066137
+###############
+One root node filter time: 0.131584793998627
+###############
+One root node filter time: 0.12376796500029741
+###############
+One root node filter time: 0.1323213579998992
+###############
+One root node filter time: 0.13064231099997414
+###############
+One root node filter time: 0.13196261300254264
+###############
+One root node filter time: 0.13799710099920048
+###############
+One root node filter time: 0.13971978699919418
+###############
+One root node filter time: 0.13754767900172737
+###############
+One root node filter time: 0.14863550700101769
+###############
+One root node filter time: 0.13925602800009074
+###############
+One root node filter time: 0.14736279899807414
+###############
+One root node filter time: 0.1434314500002074
+###############
+One root node filter time: 0.13670261100196512
+###############
+One root node filter time: 0.14087794599981862
+###############
+One root node filter time: 0.14452698100285488
+###############
+One root node filter time: 0.14151762499750475
+###############
+One root node filter time: 0.12885282699789968
+###############
+One root node filter time: 0.12232441599917365
+###############
+One root node filter time: 0.13525554100124282
+###############
+One root node filter time: 0.12430712100103847
+###############
+One root node filter time: 0.1251470099996368
+###############
+One root node filter time: 0.12646032499833382
+###############
+One root node filter time: 0.12607877999835182
+###############
+One root node filter time: 0.13441994299864746
+###############
+One root node filter time: 0.12837023200336262
+###############
+One root node filter time: 0.1280474300001515
+###############
+One root node filter time: 0.1301265370020701
+###############
+One root node filter time: 0.13050581399875227
+###############
+One root node filter time: 0.1467078310015495
+###############
+One root node filter time: 0.16761605300052906
+###############
+One root node filter time: 0.16766934900078923
+###############
+One root node filter time: 0.16245546900245245
+###############
+One root node filter time: 0.16627070699905744
+###############
+One root node filter time: 0.16341438100062078
+###############
+One root node filter time: 0.16683398700115504
+###############
+One root node filter time: 0.1530607599997893
+###############
+One root node filter time: 0.15722262499912176
+###############
+One root node filter time: 0.14649397299945122
+###############
+One root node filter time: 0.15126360400245176
+###############
+One root node filter time: 0.1511504030022479
+###############
+One root node filter time: 0.14084348899996257
+###############
+One root node filter time: 0.1461820410004293
+###############
+One root node filter time: 0.14469543499944848
+###############
+One root node filter time: 0.14247468100074911
+###############
+One root node filter time: 0.1388445029988361
+###############
+One root node filter time: 0.14173415799814393
+###############
+One root node filter time: 0.13828837300025043
+###############
+One root node filter time: 0.1488158520005527
+###############
+One root node filter time: 0.14444066400028532
+###############
+One root node filter time: 0.15488246599852573
+###############
+One root node filter time: 0.1366420519989333
+###############
+One root node filter time: 0.14229284899920458
+###############
+One root node filter time: 0.14039641999988817
+###############
+One root node filter time: 0.1425542859979032
+###############
+One root node filter time: 0.14006670099843177
+###############
+One root node filter time: 0.14594370900158538
+###############
+One root node filter time: 0.1487381639999512
+###############
+One root node filter time: 0.14062953300162917
+###############
+One root node filter time: 0.14482856799804722
+###############
+One root node filter time: 0.13065468499917188
+###############
+One root node filter time: 0.1395142039982602
+###############
+One root node filter time: 0.1383714189978491
+###############
+One root node filter time: 0.14615017699907185
+###############
+One root node filter time: 0.133136366999679
+###############
+One root node filter time: 0.1414053349981259
+###############
+One root node filter time: 0.13904660499974852
+###############
+One root node filter time: 0.14891028000056394
+###############
+One root node filter time: 0.1414944239986653
+###############
+One root node filter time: 0.14229544499903568
+###############
+One root node filter time: 0.1442913970022346
+###############
+One root node filter time: 0.15205046300252434
+###############
+One root node filter time: 0.1695874039978662
+###############
+One root node filter time: 0.16977870399932726
+###############
+One root node filter time: 0.16908780099765863
+###############
+One root node filter time: 0.16463398300038534
+###############
+One root node filter time: 0.16439484800139326
+###############
+One root node filter time: 0.1550909479992697
+###############
+One root node filter time: 0.14156730700051412
+###############
+One root node filter time: 0.13808228400012013
+###############
+One root node filter time: 0.1456126100019901
+###############
+One root node filter time: 0.13830234299894073
+###############
+One root node filter time: 0.14338846699683927
+###############
+One root node filter time: 0.14266255600159639
+###############
+One root node filter time: 0.1374863999990339
+###############
+One root node filter time: 0.13744237900027656
+###############
+One root node filter time: 0.13904385199930402
+###############
+One root node filter time: 0.1346598099989933
+###############
+One root node filter time: 0.14640298599988455
+###############
+One root node filter time: 0.13340772899755393
+###############
+One root node filter time: 0.14676381400204264
+###############
+One root node filter time: 0.13668001199766877
+###############
+One root node filter time: 0.14070232700032648
+###############
+One root node filter time: 0.14066215400089277
+###############
+One root node filter time: 0.13322321400119108
+###############
+One root node filter time: 0.13587374800044927
+###############
+One root node filter time: 0.13857004400051665
+###############
+One root node filter time: 0.14597066399801406
+###############
+One root node filter time: 0.14473027900021407
+###############
+One root node filter time: 0.14007398200192256
+###############
+One root node filter time: 0.141548358998989
+###############
+One root node filter time: 0.13680228700104635
+###############
+One root node filter time: 0.16516154299824848
+###############
+One root node filter time: 0.13057445400045253
+###############
+One root node filter time: 0.12510316900079488
+###############
+One root node filter time: 0.12593693399685435
+###############
+One root node filter time: 0.12639325599957374
+###############
+One root node filter time: 0.12468902799810166
+###############
+One root node filter time: 0.12446435799938627
+###############
+One root node filter time: 0.1258805379984551
+###############
+One root node filter time: 0.13138453599822242
+###############
+One root node filter time: 0.1287629209982697
+###############
+One root node filter time: 0.13573677200110978
+###############
+One root node filter time: 0.12842766099856817
+###############
+One root node filter time: 0.13037181700201472
+###############
+One root node filter time: 0.1282565710025665
+###############
+One root node filter time: 0.1265323419975175
+###############
+One root node filter time: 0.12240562700026203
+###############
+One root node filter time: 0.12560048100203858
+###############
+One root node filter time: 0.12607478000063566
+###############
+One root node filter time: 0.12569967599847587
+###############
+One root node filter time: 0.13281724500120617
+###############
+One root node filter time: 0.14305227800286957
+###############
+One root node filter time: 0.14087647500127787
+###############
+One root node filter time: 0.13193207099902793
+###############
+One root node filter time: 0.13204909900014172
+###############
+One root node filter time: 0.13754151000102866
+###############
+One root node filter time: 0.1310627189996012
+###############
+One root node filter time: 0.12903876499694888
+###############
+One root node filter time: 0.13267162299962365
+###############
+One root node filter time: 0.12861360899842111
+###############
+One root node filter time: 0.13916507699832437
+###############
+One root node filter time: 0.12253403499926208
+###############
+One root node filter time: 0.12438916899918695
+###############
+One root node filter time: 0.12448049900194746
+###############
+One root node filter time: 0.1258754830014368
+###############
+One root node filter time: 0.12442731699775322
+###############
+One root node filter time: 0.13826594700003625
+###############
+One root node filter time: 0.14194335600041086
+###############
+One root node filter time: 0.13249850300053367
+###############
+One root node filter time: 0.1281024720010464
+###############
+One root node filter time: 0.12773969800036866
+###############
+One root node filter time: 0.12947659299970837
+###############
+One root node filter time: 0.14188476199706201
+###############
+One root node filter time: 0.14845579599932535
+###############
+One root node filter time: 0.13309917299920926
+###############
+One root node filter time: 0.14297036199786817
+###############
+One root node filter time: 0.1348127929995826
+###############
+One root node filter time: 0.13212730300074327
+###############
+One root node filter time: 0.12725223899906268
+###############
+One root node filter time: 0.12889805000304477
+###############
+One root node filter time: 0.12594797700148774
+###############
+One root node filter time: 0.1257606359977217
+###############
+One root node filter time: 0.12508088699905784
+###############
+One root node filter time: 0.1284108549989469
+###############
+One root node filter time: 0.12541205399975297
+###############
+One root node filter time: 0.1287291369990271
+###############
+One root node filter time: 0.1264633539976785
+###############
+One root node filter time: 0.129811337999854
+###############
+One root node filter time: 0.13259798300350667
+###############
+One root node filter time: 0.12749351900129113
+###############
+One root node filter time: 0.12403412300045602
+###############
+One root node filter time: 0.12412440199841512
+###############
+One root node filter time: 0.12267162700300105
+###############
+One root node filter time: 0.1250358210018021
+###############
+One root node filter time: 0.13707179100310896
+###############
+One root node filter time: 0.1256649999995716
+###############
+One root node filter time: 0.12823483100146404
+###############
+One root node filter time: 0.1303370610003185
+###############
+One root node filter time: 0.1437248809997982
+###############
+One root node filter time: 0.16426903499814216
+###############
+One root node filter time: 0.13401380100185634
+###############
+One root node filter time: 0.1300506840016169
+###############
+One root node filter time: 0.14442579400201794
+###############
+One root node filter time: 0.13210214500213624
+###############
+One root node filter time: 0.126377072003379
+###############
+One root node filter time: 0.12448501600010786
+###############
+One root node filter time: 0.12344241499886266
+###############
+One root node filter time: 0.12315563399897655
+###############
+One root node filter time: 0.12369045600280515
+###############
+One root node filter time: 0.12365310299719567
+###############
+One root node filter time: 0.1234795189993747
+###############
+One root node filter time: 0.12227226700269966
+###############
+One root node filter time: 0.12739609200070845
+###############
+One root node filter time: 0.12234722499852069
+###############
+One root node filter time: 0.12433843100006925
+###############
+One root node filter time: 0.1225842179992469
+###############
+One root node filter time: 0.12402356000166037
+###############
+One root node filter time: 0.12394681799924001
+###############
+One root node filter time: 0.12621189199853688
+###############
+One root node filter time: 0.12501922900264617
+###############
+One root node filter time: 0.12550512300003902
+###############
+One root node filter time: 0.12159668900130782
+###############
+One root node filter time: 0.14272830699701444
+###############
+One root node filter time: 0.133920633001253
+###############
+One root node filter time: 0.12481413600107771
+###############
+One root node filter time: 0.1294193419998919
+###############
+One root node filter time: 0.12714583900014986
+###############
+One root node filter time: 0.16176369599997997
+###############
+One root node filter time: 0.12721158800195553
+###############
+One root node filter time: 0.11500913200143259
+###############
+One root node filter time: 0.11104522599998745
+###############
+One root node filter time: 0.11021235799853457
+###############
+One root node filter time: 0.1112757299997611
+###############
+One root node filter time: 0.11028043500118656
+###############
+One root node filter time: 0.11028737200103933
+###############
+One root node filter time: 0.10942287000216311
+###############
+One root node filter time: 0.1117015480012924
+###############
+One root node filter time: 0.11142214099891135
+###############
+One root node filter time: 0.11111193200122216
+###############
+One root node filter time: 0.10939944800338708
+###############
+One root node filter time: 0.1093166350001411
+###############
+One root node filter time: 0.1108443150005769
+###############
+One root node filter time: 0.11024172699762858
+###############
+One root node filter time: 0.11156183000275632
+###############
+One root node filter time: 0.11079849299858324
+###############
+One root node filter time: 0.11141397499886807
+###############
+One root node filter time: 0.11048934399877908
+###############
+One root node filter time: 0.10990889700042317
+###############
+One root node filter time: 0.11100292699848069
+###############
+One root node filter time: 0.11114002400063328
+###############
+One root node filter time: 0.10865983799885726
+###############
+One root node filter time: 0.11022017199866241
+###############
+One root node filter time: 0.11064458299733815
+###############
+One root node filter time: 0.11130630000116071
+###############
+One root node filter time: 0.11129471900130739
+###############
+One root node filter time: 0.1101625100018282
+###############
+One root node filter time: 0.11027816700152471
+###############
+One root node filter time: 0.10963458700280171
+###############
+One root node filter time: 0.11024891700071748
+###############
+One root node filter time: 0.11152044799746363
+###############
+One root node filter time: 0.11153513799945358
+###############
+One root node filter time: 0.11120115900121164
+###############
+One root node filter time: 0.11116132399911294
+###############
+One root node filter time: 0.11227937799776555
+###############
+One root node filter time: 0.11143808800261468
+###############
+One root node filter time: 0.11176447000252665
+###############
+One root node filter time: 0.10987611399832531
+###############
+One root node filter time: 0.11094968900215463
+###############
+One root node filter time: 0.11076230600156123
+###############
+One root node filter time: 0.11059873599879211
+###############
+One root node filter time: 0.11236460099826218
+###############
+One root node filter time: 0.1107327779973275
+###############
+One root node filter time: 0.11025292699923739
+###############
+One root node filter time: 0.11242919500000426
+###############
+One root node filter time: 0.11153695200118818
+###############
+One root node filter time: 0.11213040100119542
+###############
+One root node filter time: 0.11194702599823358
+###############
+One root node filter time: 0.1116059870000754
+###############
+One root node filter time: 0.11093662699931883
+###############
+One root node filter time: 0.11072325999703025
+###############
+One root node filter time: 0.1102960530006385
+###############
+One root node filter time: 0.11235373500312562
+###############
+One root node filter time: 0.1111911659972975
+###############
+One root node filter time: 0.11131907799790497
+###############
+One root node filter time: 0.10930565300077433
+###############
+One root node filter time: 0.11007063100259984
+###############
+One root node filter time: 0.11207190499771968
+###############
+One root node filter time: 0.11105784200117341
+###############
+One root node filter time: 0.11082645499845967
+###############
+One root node filter time: 0.11049334400013322
+###############
+One root node filter time: 0.1103047639990109
+###############
+One root node filter time: 0.11125538100168342
+###############
+One root node filter time: 0.11189930299951811
+###############
+One root node filter time: 0.11048714500066126
+###############
+One root node filter time: 0.10989866599993547
+###############
+One root node filter time: 0.10962984299840173
+###############
+One root node filter time: 0.11017718700168189
+###############
+One root node filter time: 0.11108426700229757
+###############
+One root node filter time: 0.11066064799888409
+###############
+One root node filter time: 0.1109683340000629
+###############
+One root node filter time: 0.10958342300000368
+###############
+One root node filter time: 0.10949516699838568
+###############
+One root node filter time: 0.11128440199900069
+###############
+One root node filter time: 0.11242987700097729
+###############
+One root node filter time: 0.11142591899988474
+###############
+One root node filter time: 0.11140931000045384
+###############
+One root node filter time: 0.11110181800177088
+###############
+One root node filter time: 0.10990362799930153
+###############
+One root node filter time: 0.11138742399998591
+###############
+One root node filter time: 0.11050126199916122
+###############
+One root node filter time: 0.11048216999915894
+###############
+One root node filter time: 0.11066266399939195
+###############
+One root node filter time: 0.11015494999810471
+###############
+One root node filter time: 0.11241387100017164
+###############
+One root node filter time: 0.11127613999997266
+###############
+One root node filter time: 0.11088540600030683
+###############
+One root node filter time: 0.1100688699989405
+###############
+One root node filter time: 0.11211800900127855
+###############
+One root node filter time: 0.11094742200293695
+###############
+One root node filter time: 0.11159131699969294
+###############
+One root node filter time: 0.11059251299957396
+###############
+One root node filter time: 0.1106524629976775
+###############
+One root node filter time: 0.10919693200048641
+###############
+One root node filter time: 0.12161368199667777
+###############
+One root node filter time: 0.11364333800156601
+###############
+One root node filter time: 0.11073912900246796
+###############
+One root node filter time: 0.11135953800112475
+###############
+One root node filter time: 0.11046121500112349
+###############
+One root node filter time: 0.1109581380005693
+###############
+One root node filter time: 0.11052020300121512
+###############
+One root node filter time: 0.1114418149991252
+###############
+One root node filter time: 0.11043518299993593
+###############
+One root node filter time: 0.11055579999811016
+###############
+One root node filter time: 0.11017005599933327
+###############
+One root node filter time: 0.11038183400160051
+###############
+One root node filter time: 0.11123014999975567
+###############
+One root node filter time: 0.11046537299989723
+###############
+One root node filter time: 0.10998551499869791
+###############
+One root node filter time: 0.11052948699943954
+###############
+One root node filter time: 0.10974404599983245
+###############
+One root node filter time: 0.11046223100129282
+###############
+One root node filter time: 0.11038738899878808
+###############
+One root node filter time: 0.11034571200070786
+###############
+One root node filter time: 0.12374034799722722
+###############
+One root node filter time: 0.1102965440004482
+###############
+One root node filter time: 0.10950382400187664
+###############
+One root node filter time: 0.11060978200112004
+###############
+One root node filter time: 0.11072215100284666
+###############
+One root node filter time: 0.11034734599888907
+###############
+One root node filter time: 0.11042630399970221
+###############
+One root node filter time: 0.11017152200292912
+###############
+One root node filter time: 0.11052185100197676
+###############
+One root node filter time: 0.11123695700007374
+###############
+One root node filter time: 0.11073158999715815
+###############
+One root node filter time: 0.10997568600214436
+###############
+One root node filter time: 0.11049570600152947
+###############
+One root node filter time: 0.11052422600187128
+###############
+One root node filter time: 0.10973623599784332
+###############
+One root node filter time: 0.1100219219988503
+###############
+One root node filter time: 0.11009541399835143
+###############
+One root node filter time: 0.11001867199956905
+###############
+One root node filter time: 0.10921321800196893
+###############
+One root node filter time: 0.12454599199918448
+###############
+One root node filter time: 0.11058328500075731
+###############
+One root node filter time: 0.10916191800060915
+###############
+One root node filter time: 0.1094638450013008
+###############
+One root node filter time: 0.10970318800173118
+###############
+One root node filter time: 0.1100891349997255
+###############
+One root node filter time: 0.10912588000064716
+###############
+One root node filter time: 0.10909412299952237
+###############
+One root node filter time: 0.10911870100244414
+###############
+One root node filter time: 0.11073338799906196
+###############
+One root node filter time: 0.10933196199766826
+###############
+One root node filter time: 0.11015787300129887
+###############
+One root node filter time: 0.10943352799949935
+###############
+One root node filter time: 0.10995374699996319
+###############
+One root node filter time: 0.11305944999912754
+###############
+One root node filter time: 0.1136495009995997
+###############
+One root node filter time: 0.1139164839987643
+###############
+One root node filter time: 0.11320296800113283
+###############
+One root node filter time: 0.11376496999946539
+###############
+One root node filter time: 0.11369227999966824
+###############
+One root node filter time: 0.11152612800287898
+###############
+One root node filter time: 0.11028757699750713
+###############
+One root node filter time: 0.10984357499910402
+###############
+One root node filter time: 0.10962348000248312
+###############
+One root node filter time: 0.11019636399942101
+###############
+One root node filter time: 0.10811231000116095
+###############
+One root node filter time: 0.1112050369993085
+###############
+One root node filter time: 0.11049341300167725
+###############
+One root node filter time: 0.11040007600240642
+###############
+One root node filter time: 0.1108292339995387
+###############
+One root node filter time: 0.11066026700063958
+###############
+One root node filter time: 0.11076511600185768
+###############
+One root node filter time: 0.1102048470020236
+###############
+One root node filter time: 0.10969044800003758
+###############
+One root node filter time: 0.11017572800119524
+###############
+One root node filter time: 0.10978444700231194
+###############
+One root node filter time: 0.11067898699911893
+###############
+One root node filter time: 0.10974654299934627
+###############
+One root node filter time: 0.10983719299838413
+###############
+One root node filter time: 0.11015622299964889
+###############
+One root node filter time: 0.11129373799849418
+###############
+One root node filter time: 0.11087439000039012
+###############
+One root node filter time: 0.11096459699911065
+###############
+One root node filter time: 0.11076684300132911
+###############
+One root node filter time: 0.11188549800135661
+###############
+One root node filter time: 0.11307677600052557
+###############
+One root node filter time: 0.11072189799961052
+###############
+One root node filter time: 0.11036566500115441
+###############
+One root node filter time: 0.1104969779989915
+###############
+One root node filter time: 0.11101061900262721
+###############
+One root node filter time: 0.10971601500204997
+###############
+One root node filter time: 0.10947720100011793
+###############
+One root node filter time: 0.11040379499900155
+###############
+One root node filter time: 0.11023596700033522
+###############
+One root node filter time: 0.11035939100111136
+###############
+One root node filter time: 0.11034897000354249
+###############
+One root node filter time: 0.11008134199801134
+###############
+One root node filter time: 0.10918833200048539
+###############
+One root node filter time: 0.1101765940002224
+###############
+One root node filter time: 0.10960502400121186
+###############
+One root node filter time: 0.10960823900313699
+###############
+One root node filter time: 0.10973483900306746
+###############
+One root node filter time: 0.10893251300149132
+###############
+One root node filter time: 0.11075934399923426
+###############
+One root node filter time: 0.1099641660002817
+###############
+One root node filter time: 0.10944699600077001
+###############
+One root node filter time: 0.10995914600061951
+###############
+One root node filter time: 0.11026116900029592
+###############
+One root node filter time: 0.10991357300008531
+###############
+One root node filter time: 0.10975482399953762
+###############
+One root node filter time: 0.10999805999745149
+###############
+One root node filter time: 0.11088704700159724
+###############
+One root node filter time: 0.12930961899837712
+###############
+One root node filter time: 0.10853076500279712
+###############
+One root node filter time: 0.1102438420020917
+###############
+One root node filter time: 0.11013256300066132
+###############
+One root node filter time: 0.11021363299732911
+###############
+One root node filter time: 0.11042658899896196
+###############
+One root node filter time: 0.10957975299970713
+###############
+One root node filter time: 0.1097372809999797
+###############
+One root node filter time: 0.11015943399979733
+###############
+One root node filter time: 0.10885642200082657
+###############
+One root node filter time: 0.11046608999822638
+###############
+One root node filter time: 0.10993554299784591
+###############
+One root node filter time: 0.10955581700181938
+###############
+One root node filter time: 0.1105897540001024
+###############
+One root node filter time: 0.11044209600004251
+###############
+One root node filter time: 0.10973474300044472
+###############
+One root node filter time: 0.10905931500019506
+###############
+One root node filter time: 0.11016884999844478
+###############
+One root node filter time: 0.10961416699865367
+###############
+One root node filter time: 0.1111905689976993
+###############
+One root node filter time: 0.11122967699702713
+###############
+One root node filter time: 0.11011276099816314
+###############
+One root node filter time: 0.11036818000138737
+###############
+One root node filter time: 0.11001775800104951
+###############
+One root node filter time: 0.11039407499993104
+###############
+One root node filter time: 0.10937675800232682
+###############
+One root node filter time: 0.11110280200227862
+###############
+One root node filter time: 0.11029519899966544
+###############
+One root node filter time: 0.11014641400106484
+###############
+One root node filter time: 0.10941632500180276
+###############
+One root node filter time: 0.10988690199883422
+###############
+One root node filter time: 0.11061065100147971
+###############
+One root node filter time: 0.10903025699735736
+###############
+One root node filter time: 0.11000734099798137
+###############
+One root node filter time: 0.11056115400060662
+###############
+One root node filter time: 0.11314842800129554
+###############
+One root node filter time: 0.13091631700081052
+###############
+One root node filter time: 0.11578209499930381
+###############
+One root node filter time: 0.1132293499977095
+###############
+One root node filter time: 0.11142869399918709
+###############
+One root node filter time: 0.11081659000046784
+###############
+One root node filter time: 0.11209364699971047
+###############
+One root node filter time: 0.11011990399856586
+###############
+One root node filter time: 0.10997399700136157
+###############
+One root node filter time: 0.1091061980005179
+###############
+One root node filter time: 0.11065334999875631
+###############
+One root node filter time: 0.11034630400172318
+###############
+One root node filter time: 0.11051237600258901
+###############
+One root node filter time: 0.10959612399892649
+###############
+One root node filter time: 0.10966160799944191
+###############
+One root node filter time: 0.10956369999985327
+###############
+One root node filter time: 0.1100980269984575
+###############
+One root node filter time: 0.10943805499846349
+###############
+One root node filter time: 0.10858368499975768
+###############
+One root node filter time: 0.11066901999947731
+###############
+One root node filter time: 0.10982225499901688
+###############
+One root node filter time: 0.11021806099961395
+###############
+One root node filter time: 0.10983711399967433
+###############
+One root node filter time: 0.10993027299991809
+###############
+One root node filter time: 0.10876832299982198
+###############
+One root node filter time: 0.11002728000312345
+###############
+One root node filter time: 0.10941064700091374
+###############
+One root node filter time: 0.10946384199996828
+###############
+One root node filter time: 0.10873675000038929
+###############
+One root node filter time: 0.10910805899766274
+###############
+One root node filter time: 0.10853155299992068
+###############
+One root node filter time: 0.10933434999969904
+###############
+One root node filter time: 0.1094864270016842
+###############
+One root node filter time: 0.10983883000153583
+###############
+One root node filter time: 0.11037438199855387
+###############
+One root node filter time: 0.11053457700108993
+###############
+One root node filter time: 0.11003729799995199
+###############
+One root node filter time: 0.10963724199973512
+###############
+One root node filter time: 0.11029781399702188
+###############
+One root node filter time: 0.110148104999098
+###############
+One root node filter time: 0.10952796499987016
+###############
+One root node filter time: 0.10994134900101926
+###############
+One root node filter time: 0.10934375200304203
+###############
+One root node filter time: 0.10975620200042613
+###############
+One root node filter time: 0.10924021500250092
+###############
+One root node filter time: 0.1105172349998611
+###############
+One root node filter time: 0.11183799499849556
+###############
+One root node filter time: 0.10886502500216011
+###############
+One root node filter time: 0.11039541299760458
+###############
+One root node filter time: 0.11092534100316698
+###############
+One root node filter time: 0.11037213300005533
+###############
+One root node filter time: 0.11068568100017728
+###############
+One root node filter time: 0.11078273800012539
+###############
+One root node filter time: 0.11046594999788795
+###############
+One root node filter time: 0.11024222700143582
+###############
+One root node filter time: 0.11001556500195875
+###############
+One root node filter time: 0.10847573099817964
+###############
+One root node filter time: 0.11059380100050475
+###############
+One root node filter time: 0.11050796700146748
+###############
+One root node filter time: 0.11024521999934223
+###############
+One root node filter time: 0.1093901950007421
+###############
+One root node filter time: 0.11001588699946296
+###############
+One root node filter time: 0.10989017799875
+###############
+One root node filter time: 0.11887783899874194
+###############
+One root node filter time: 0.11230073100159643
+###############
+One root node filter time: 0.1105045739968773
+###############
+One root node filter time: 0.10973356899921782
+###############
+One root node filter time: 0.11043904300095164
+###############
+One root node filter time: 0.11015985799895134
+###############
+One root node filter time: 0.11067085299873725
+###############
+One root node filter time: 0.11079362500095158
+###############
+One root node filter time: 0.11025515800065477
+###############
+One root node filter time: 0.11073004499849048
+###############
+One root node filter time: 0.11025767500177608
+###############
+One root node filter time: 0.1098367149970727
+###############
+One root node filter time: 0.11021009799878811
+###############
+One root node filter time: 0.11016458999802126
+###############
+One root node filter time: 0.11012860399932833
+###############
+One root node filter time: 0.11058061799849384
+###############
+One root node filter time: 0.11064432200146257
+###############
+One root node filter time: 0.11024103499948978
+###############
+One root node filter time: 0.11061159300152212
+###############
+One root node filter time: 0.1098709459984093
+###############
+One root node filter time: 0.11053210599857266
+###############
+One root node filter time: 0.11076910400151974
+###############
+One root node filter time: 0.1103751079972426
+###############
+One root node filter time: 0.10985308800081839
+###############
+One root node filter time: 0.10967791200164356
+###############
+One root node filter time: 0.10972392600160674
+###############
+One root node filter time: 0.11049188099786988
+###############
+One root node filter time: 0.11057040999730816
+###############
+One root node filter time: 0.11035480300051859
+###############
+One root node filter time: 0.11121815099977539
+###############
+One root node filter time: 0.11033693599893013
+###############
+One root node filter time: 0.11029306299678865
+###############
+One root node filter time: 0.11032334699848434
+###############
+One root node filter time: 0.11011371799759218
+###############
+One root node filter time: 0.11042635700141545
+###############
+One root node filter time: 0.10929813500115415
+###############
+One root node filter time: 0.1106354299990926
+###############
+One root node filter time: 0.10987890800242894
+###############
+One root node filter time: 0.11042569100027322
+###############
+One root node filter time: 0.1107953329992597
+###############
+One root node filter time: 0.11007100799906766
+###############
+One root node filter time: 0.11060057099894038
+###############
+One root node filter time: 0.11058262499864213
+###############
+One root node filter time: 0.11014012700252351
+###############
+One root node filter time: 0.10925433699958376
+###############
+One root node filter time: 0.11015006299930974
+###############
+One root node filter time: 0.1091927810011839
+###############
+One root node filter time: 0.11096242400162737
+###############
+One root node filter time: 0.11050265400263015
+###############
+One root node filter time: 0.10974341400287813
+###############
+One root node filter time: 0.10961918799876003
+###############
+One root node filter time: 0.109997026000201
+###############
+One root node filter time: 0.10954879299970344
+###############
+One root node filter time: 0.10962983700301265
+###############
+One root node filter time: 0.11108535200037295
+###############
+One root node filter time: 0.11027056599778007
+###############
+One root node filter time: 0.11068424300174229
+###############
+One root node filter time: 0.1105762320003123
+###############
+One root node filter time: 0.11019194600157789
+###############
+One root node filter time: 0.11098057100025471
+###############
+One root node filter time: 0.11020685500261607
+###############
+One root node filter time: 0.10953560599955381
+###############
+One root node filter time: 0.11004459700052394
+###############
+One root node filter time: 0.10955081399879418
+###############
+One root node filter time: 0.10938659000021289
+###############
+One root node filter time: 0.10918729400145821
+###############
+One root node filter time: 0.10999528300089878
+###############
+One root node filter time: 0.11159152900290792
+###############
+One root node filter time: 0.11057035599878873
+###############
+One root node filter time: 0.11099707799803582
+###############
+One root node filter time: 0.11092569900210947
+###############
+One root node filter time: 0.10976706400106195
+###############
+One root node filter time: 0.1101085750015045
+###############
+One root node filter time: 0.11086547900049482
+###############
+One root node filter time: 0.11132062800243148
+###############
+One root node filter time: 0.11125491999700898
+###############
+One root node filter time: 0.11055759900045814
+###############
+One root node filter time: 0.10904428000139887
+###############
+One root node filter time: 0.10829115299929981
+###############
+One root node filter time: 0.11047532099837554
+###############
+One root node filter time: 0.11085041299884324
+###############
+One root node filter time: 0.10933794399898034
+###############
+One root node filter time: 0.10940370599928428
+###############
+One root node filter time: 0.10969397900043987
+###############
+One root node filter time: 0.10980149299939512
+###############
+One root node filter time: 0.11011213899837458
+###############
+One root node filter time: 0.11069721800231491
+###############
+One root node filter time: 0.11018896699897596
+###############
+One root node filter time: 0.11051685100028408
+###############
+One root node filter time: 0.11123124000005191
+###############
+One root node filter time: 0.11070298499907949
+###############
+One root node filter time: 0.11005168500196305
+###############
+One root node filter time: 0.10996857400095905
+###############
+One root node filter time: 0.1107238740005414
+###############
+One root node filter time: 0.11019907900117687
+###############
+One root node filter time: 0.11168455100050778
+###############
+One root node filter time: 0.1104673299996648
+###############
+One root node filter time: 0.11078012500001932
+###############
+One root node filter time: 0.1095446430008451
+###############
+One root node filter time: 0.1099341130029643
+###############
+One root node filter time: 0.10957035400133464
+###############
+One root node filter time: 0.10962389300038922
+###############
+One root node filter time: 0.11043787199741928
+###############
+One root node filter time: 0.11008676599885803
+###############
+One root node filter time: 0.11002240200105007
+###############
+One root node filter time: 0.1095568570017349
+###############
+One root node filter time: 0.11041601999750128
+###############
+One root node filter time: 0.1090918040026736
+###############
+One root node filter time: 0.1100371520005865
+###############
+One root node filter time: 0.10908282799937297
+###############
+One root node filter time: 0.11143885100318585
+###############
+One root node filter time: 0.11152188100095373
+###############
+One root node filter time: 0.1093568049982423
+###############
+One root node filter time: 0.11047806900023716
+###############
+One root node filter time: 0.11023543199917185
+###############
+One root node filter time: 0.10958312300135731
+###############
+One root node filter time: 0.10992260499915574
+###############
+One root node filter time: 0.10999081100089825
+###############
+One root node filter time: 0.10965380499692401
+###############
+One root node filter time: 0.11382595599934575
+###############
+One root node filter time: 0.13165000500157475
+###############
+One root node filter time: 0.11005721200126573
+###############
+One root node filter time: 0.11040842399961548
+###############
+One root node filter time: 0.11014997099846369
+###############
+One root node filter time: 0.10900716399919474
+###############
+One root node filter time: 0.1092832130016177
+###############
+One root node filter time: 0.10936402399966028
+###############
+One root node filter time: 0.11044693000076222
+###############
+One root node filter time: 0.1098923259996809
+###############
+One root node filter time: 0.11080165800012765
+###############
+One root node filter time: 0.11067151299721445
+###############
+One root node filter time: 0.11063969399765483
+###############
+One root node filter time: 0.11067406299844151
+###############
+One root node filter time: 0.11047073099689442
+###############
+One root node filter time: 0.11031290000028093
+###############
+One root node filter time: 0.11003171000265866
+###############
+One root node filter time: 0.10970142899896018
+###############
+One root node filter time: 0.11036617399804527
+###############
+One root node filter time: 0.1106509150013153
+###############
+One root node filter time: 0.11105925099764136
+###############
+One root node filter time: 0.11079102300209343
+###############
+One root node filter time: 0.12131033499827026
+###############
+One root node filter time: 0.11134712399871205
+###############
+One root node filter time: 0.1104513259997475
+###############
+One root node filter time: 0.10895123699810938
+###############
+One root node filter time: 0.10985659699872485
+###############
+One root node filter time: 0.10957812599735917
+###############
+One root node filter time: 0.1099283910007216
+###############
+One root node filter time: 0.11016787400149042
+###############
+One root node filter time: 0.1102628389999154
+###############
+One root node filter time: 0.11010660900137736
+###############
+One root node filter time: 0.10868566700082738
+###############
+One root node filter time: 0.11124300799929188
+###############
+One root node filter time: 0.1105248109997774
+###############
+One root node filter time: 0.10948516200005542
+###############
+One root node filter time: 0.1104372109984979
+###############
+One root node filter time: 0.11001261399724171
+###############
+One root node filter time: 0.11023673899762798
+###############
+One root node filter time: 0.10875262500121607
+###############
+One root node filter time: 0.10947343799853115
+###############
+One root node filter time: 0.11065657799917972
+###############
+One root node filter time: 0.1102120540017495
+###############
+One root node filter time: 0.1104522640016512
+###############
+One root node filter time: 0.10998400899916305
+###############
+One root node filter time: 0.11005747300077928
+###############
+One root node filter time: 0.11008483900150168
+###############
+One root node filter time: 0.10973701500188326
+###############
+One root node filter time: 0.11048676900099963
+###############
+One root node filter time: 0.11247234500115155
+###############
+One root node filter time: 0.10987974300223868
+###############
+One root node filter time: 0.10979782800131943
+###############
+One root node filter time: 0.11039281600096729
+###############
+One root node filter time: 0.11081884099985473
+###############
+One root node filter time: 0.11001473700162023
+###############
+One root node filter time: 0.11018913899897598
+###############
+One root node filter time: 0.109851705001347
+###############
+One root node filter time: 0.11016631800157484
+###############
+One root node filter time: 0.11002256299980218
+###############
+One root node filter time: 0.10995480500059784
+###############
+One root node filter time: 0.11005599300187896
+###############
+One root node filter time: 0.10912841599929379
+###############
+One root node filter time: 0.1103518969975994
+###############
+One root node filter time: 0.11081404399737949
+###############
+One root node filter time: 0.11060918099974515
+###############
+One root node filter time: 0.11071231100140722
+###############
+One root node filter time: 0.11081255699900794
+###############
+One root node filter time: 0.10991157299940824
+###############
+One root node filter time: 0.11036787499688216
+###############
+One root node filter time: 0.11023574600039865
+###############
+One root node filter time: 0.10972049099655123
+###############
+One root node filter time: 0.11003491899828077
+###############
+One root node filter time: 0.10958445000142092
+###############
+One root node filter time: 0.10939770100230817
+###############
+One root node filter time: 0.11020949000157998
+###############
+One root node filter time: 0.10944508199827396
+###############
+One root node filter time: 0.11028466700008721
+###############
+One root node filter time: 0.11027738900156692
+###############
+One root node filter time: 0.11051747300007264
+###############
+One root node filter time: 0.10958326399850193
+###############
+One root node filter time: 0.10965251100060414
+###############
+One root node filter time: 0.11057359199912753
+###############
+One root node filter time: 0.11021501300274394
+###############
+One root node filter time: 0.10985846900075558
+###############
+One root node filter time: 0.11022088499885285
+###############
+One root node filter time: 0.11046531399915693
+###############
+One root node filter time: 0.11006064400135074
+###############
+One root node filter time: 0.11121186300078989
+###############
+One root node filter time: 0.10899929999868618
+###############
+One root node filter time: 0.10883510600251611
+###############
+One root node filter time: 0.10969807299989043
+###############
+One root node filter time: 0.11046298400106025
+###############
+One root node filter time: 0.11042317700048443
+###############
+One root node filter time: 0.11069739400045364
+###############
+One root node filter time: 0.1100992520005093
+###############
+One root node filter time: 0.11031118000028073
+###############
+One root node filter time: 0.11059559299974353
+###############
+One root node filter time: 0.11007958800109918
+###############
+One root node filter time: 0.11068114899899228
+###############
+One root node filter time: 0.11053332200026489
+###############
+One root node filter time: 0.11017463300231611
+###############
+One root node filter time: 0.11000463299933472
+###############
+One root node filter time: 0.1091556710016448
+###############
+One root node filter time: 0.10919842500152299
+###############
+One root node filter time: 0.11028044200065779
+###############
+One root node filter time: 0.10982365399831906
+###############
+One root node filter time: 0.11011491899989778
+###############
+One root node filter time: 0.1096744869973918
+###############
+One root node filter time: 0.10983973600013996
+###############
+One root node filter time: 0.10953017900101258
+###############
+One root node filter time: 0.10963300299772527
+###############
+One root node filter time: 0.11006625899972278
+###############
+One root node filter time: 0.11018679600238102
+###############
+One root node filter time: 0.11023610399934114
+###############
+One root node filter time: 0.10938510699998005
+###############
+One root node filter time: 0.1104958540017833
+###############
+One root node filter time: 0.11083444299947587
+###############
+One root node filter time: 0.1102916700001515
+###############
+One root node filter time: 0.1106988560022728
+###############
+One root node filter time: 0.11081336099960026
+###############
+One root node filter time: 0.11159845600195695
+###############
+One root node filter time: 0.10951191200001631
+###############
+One root node filter time: 0.10950528000103077
+###############
+One root node filter time: 0.10881297399828327
+###############
+One root node filter time: 0.11028020800222293
+###############
+One root node filter time: 0.11060968200035859
+###############
+One root node filter time: 0.11076960600257735
+###############
+One root node filter time: 0.11039174899997306
+###############
+One root node filter time: 0.11054652299935697
+###############
+One root node filter time: 0.11047747100019478
+###############
+One root node filter time: 0.11027274500156636
+###############
+One root node filter time: 0.11061907399925985
+###############
+One root node filter time: 0.11016298499816912
+###############
+One root node filter time: 0.11108207999859587
+###############
+One root node filter time: 0.1110190759973193
+###############
+One root node filter time: 0.11011059600059525
+###############
+One root node filter time: 0.10936592800135259
+###############
+One root node filter time: 0.11113254500014591
+###############
+One root node filter time: 0.11113614599889843
+###############
+One root node filter time: 0.11169063200213714
+###############
+One root node filter time: 0.1115122520022851
+###############
+One root node filter time: 0.10990391499944963
+###############
+One root node filter time: 0.11002005599948461
+###############
+One root node filter time: 0.11060597699906793
+###############
+One root node filter time: 0.109370428002876
+###############
+One root node filter time: 0.1268933119972644
+###############
+One root node filter time: 0.12714005999805522
+###############
+One root node filter time: 0.11058222399879014
+###############
+One root node filter time: 0.10998891800045385
+###############
+One root node filter time: 0.10914381300244713
+###############
+One root node filter time: 0.10859804299980169
+###############
+One root node filter time: 0.10966032500073197
+###############
+One root node filter time: 0.10938289800105849
+###############
+One root node filter time: 0.10872189300062018
+###############
+One root node filter time: 0.11009692599691334
+###############
+One root node filter time: 0.11031480400197324
+###############
+One root node filter time: 0.11014854599852697
+###############
+One root node filter time: 0.10981441799958702
+###############
+One root node filter time: 0.11023185299927718
+###############
+One root node filter time: 0.11058783899716218
+###############
+One root node filter time: 0.11179792800248833
+###############
+One root node filter time: 0.11087857299935422
+###############
+One root node filter time: 0.11122835800051689
+###############
+One root node filter time: 0.11018461899948306
+###############
+One root node filter time: 0.11009824099892285
+###############
+One root node filter time: 0.10995484299928648
+###############
+One root node filter time: 0.1102320529971621
+###############
+One root node filter time: 0.10943262500222772
+###############
+One root node filter time: 0.10882002899961662
+###############
+One root node filter time: 0.10878260100071202
+###############
+One root node filter time: 0.10969334699984756
+###############
+One root node filter time: 0.10955320400171331
+###############
+One root node filter time: 0.1096214070021233
+###############
+One root node filter time: 0.10913580699707381
+###############
+One root node filter time: 0.10980086000199663
+###############
+One root node filter time: 0.10933929999737302
+###############
+One root node filter time: 0.11042436400020961
+###############
+One root node filter time: 0.11133655199955683
+###############
+One root node filter time: 0.11003440199783654
+###############
+One root node filter time: 0.11012142599793151
+###############
+One root node filter time: 0.11035064800307737
+###############
+One root node filter time: 0.11020601899872418
+###############
+One root node filter time: 0.11025551399870892
+###############
+One root node filter time: 0.11127124700215063
+###############
+One root node filter time: 0.11067075900064083
+###############
+One root node filter time: 0.11097058100131107
+###############
+One root node filter time: 0.11067306200129678
+###############
+One root node filter time: 0.11078714899849729
+###############
+One root node filter time: 0.11040294799749972
+###############
+One root node filter time: 0.1102322090009693
+###############
+One root node filter time: 0.11028412000086973
+###############
+One root node filter time: 0.11063159699915559
+###############
+One root node filter time: 0.10884567500033882
+###############
+One root node filter time: 0.10990826199849835
+###############
+One root node filter time: 0.1100278010017064
+###############
+One root node filter time: 0.10990827600107878
+###############
+One root node filter time: 0.1100061690012808
+###############
+One root node filter time: 0.11016609700163826
+###############
+One root node filter time: 0.11006658499900368
+###############
+One root node filter time: 0.1107233990005625
+###############
+One root node filter time: 0.11008876999767381
+###############
+One root node filter time: 0.11092213300071307
+###############
+One root node filter time: 0.11170738899818389
+###############
+One root node filter time: 0.11046457500196993
+###############
+One root node filter time: 0.11076909999974305
+###############
+One root node filter time: 0.11090147200229694
+###############
+One root node filter time: 0.11021104199971887
+###############
+One root node filter time: 0.10846550399946864
+###############
+One root node filter time: 0.11015805100032594
+###############
+One root node filter time: 0.10943534699981683
+###############
+One root node filter time: 0.10961975999816786
+###############
+One root node filter time: 0.11084349100201507
+###############
+One root node filter time: 0.11096962699957658
+###############
+One root node filter time: 0.10973158699925989
+###############
+One root node filter time: 0.11023676199693
+###############
+One root node filter time: 0.11056355600157985
+###############
+One root node filter time: 0.10897507600020617
+###############
+One root node filter time: 0.10965658499844722
+###############
+One root node filter time: 0.11062730599951465
+###############
+One root node filter time: 0.11074861399902147
+###############
+One root node filter time: 0.11052184499931172
+###############
+One root node filter time: 0.1109264569968218
+###############
+One root node filter time: 0.1100527599992347
+###############
+One root node filter time: 0.1096884479993605
+###############
+One root node filter time: 0.1101213590009138
+###############
+One root node filter time: 0.11059620199739584
+###############
+One root node filter time: 0.10939947999941069
+###############
+One root node filter time: 0.11026499200306716
+###############
+One root node filter time: 0.11028283400082728
+###############
+One root node filter time: 0.10957029599740054
+###############
+One root node filter time: 0.10993550599960145
+###############
+One root node filter time: 0.11003922400050214
+###############
+One root node filter time: 0.10869710399856558
+###############
+One root node filter time: 0.10943525900074746
+###############
+One root node filter time: 0.1102757209991978
+###############
+One root node filter time: 0.10970194699984859
+###############
+One root node filter time: 0.1098401390008803
+###############
+One root node filter time: 0.11058939999929862
+###############
+One root node filter time: 0.11088610500155482
+###############
+One root node filter time: 0.1104644080005528
+###############
+One root node filter time: 0.10949941200306057
+###############
+One root node filter time: 0.10947839800064685
+###############
+One root node filter time: 0.11040733799745794
+###############
+One root node filter time: 0.1103353810030967
+###############
+One root node filter time: 0.10900077400219743
+###############
+One root node filter time: 0.11166076700101257
+###############
+One root node filter time: 0.11110397899756208
+###############
+One root node filter time: 0.11028386000180035
+###############
+One root node filter time: 0.10947143600060372
+###############
+One root node filter time: 0.10964560399952461
+###############
+One root node filter time: 0.11053561099834042
+###############
+One root node filter time: 0.11058799700185773
+###############
+One root node filter time: 0.1104035649987054
+###############
+One root node filter time: 0.11098322700127028
+###############
+One root node filter time: 0.11162409000098705
+###############
+One root node filter time: 0.11082054899816285
+###############
+One root node filter time: 0.11027667300004396
+###############
+One root node filter time: 0.1089432519984257
+###############
+One root node filter time: 0.10884583400184056
+###############
+One root node filter time: 0.10941238899977179
+###############
+One root node filter time: 0.10958331499932683
+###############
+One root node filter time: 0.11068107699975371
+###############
+One root node filter time: 0.1107079959983821
+###############
+One root node filter time: 0.11125440399700892
+###############
+One root node filter time: 0.11148474700166844
+###############
+One root node filter time: 0.11033595600019908
+###############
+One root node filter time: 0.1089727189973928
+###############
+One root node filter time: 0.1095688120003615
+###############
+One root node filter time: 0.10974059000000125
+###############
+One root node filter time: 0.11034199099958641
+###############
+One root node filter time: 0.11041149699667585
+###############
+One root node filter time: 0.11052307800127892
+###############
+One root node filter time: 0.11041331100204843
+###############
+One root node filter time: 0.10965344899886986
+###############
+One root node filter time: 0.11078720399746089
+###############
+One root node filter time: 0.11025102200073889
+###############
+One root node filter time: 0.11042224199991324
+###############
+One root node filter time: 0.109428656000091
+###############
+One root node filter time: 0.11065105499801575
+###############
+One root node filter time: 0.11036924900326994
+###############
+One root node filter time: 0.11059754800226074
+###############
+One root node filter time: 0.11099404299966409
+###############
+One root node filter time: 0.11030922300051316
+###############
+One root node filter time: 0.11027505699894391
+###############
+One root node filter time: 0.10952514200107544
+###############
+One root node filter time: 0.10997612500068499
+###############
+One root node filter time: 0.11199288599891588
+###############
+One root node filter time: 0.11040501100069378
+###############
+One root node filter time: 0.11040835599851562
+###############
+One root node filter time: 0.11172886799977277
+###############
+One root node filter time: 0.11140659499869798
+###############
+One root node filter time: 0.10924286100271274
+###############
+One root node filter time: 0.11017650400026469
+###############
+One root node filter time: 0.10939632099689334
+###############
+One root node filter time: 0.10985096500007785
+###############
+One root node filter time: 0.10994056100025773
+###############
+One root node filter time: 0.10906256199814379
+###############
+One root node filter time: 0.10969970500082127
+###############
+One root node filter time: 0.10926603299958515
+###############
+One root node filter time: 0.11025235000124667
+###############
+One root node filter time: 0.11049881600047229
+###############
+One root node filter time: 0.10947108600157662
+###############
+One root node filter time: 0.10999003499819082
+###############
+One root node filter time: 0.11084112100070342
+###############
+One root node filter time: 0.11033548599880305
+###############
+One root node filter time: 0.10951637000107439
+###############
+One root node filter time: 0.1092878279996512
+###############
+One root node filter time: 0.11020089700105018
+###############
+One root node filter time: 0.11014309299935121
+###############
+One root node filter time: 0.10997068200231297
+###############
+One root node filter time: 0.11039537100077723
+###############
+One root node filter time: 0.11029618400061736
+###############
+One root node filter time: 0.10931909200007794
+###############
+One root node filter time: 0.10820044999854872
+###############
+One root node filter time: 0.10877427300147247
+###############
+One root node filter time: 0.10898059200189891
+###############
+One root node filter time: 0.10951246000331594
+###############
+One root node filter time: 0.11078240999995614
+###############
+One root node filter time: 0.11065060500186519
+###############
+One root node filter time: 0.10939258500002325
+###############
+One root node filter time: 0.10998234799990314
+###############
+One root node filter time: 0.110601897999004
+###############
+One root node filter time: 0.11017313599950285
+###############
+One root node filter time: 0.10965380199922947
+###############
+One root node filter time: 0.10962245199698373
+###############
+One root node filter time: 0.10961885700089624
+###############
+One root node filter time: 0.10968607800168684
+###############
+One root node filter time: 0.10959950300093624
+###############
+One root node filter time: 0.11280146799981594
+###############
+One root node filter time: 0.11394174100132659
+###############
+One root node filter time: 0.11008016200139537
+###############
+One root node filter time: 0.10914926000259584
+###############
+One root node filter time: 0.10986196600060794
+###############
+One root node filter time: 0.10989183399942704
+###############
+One root node filter time: 0.10986736099948757
+###############
+One root node filter time: 0.10905313100010972
+###############
+One root node filter time: 0.11041008499887539
+###############
+One root node filter time: 0.11001277100149309
+###############
+One root node filter time: 0.11013747600009083
+###############
+One root node filter time: 0.11005779599872767
+###############
+One root node filter time: 0.11012991499956115
+###############
+One root node filter time: 0.11068157600311679
+###############
+One root node filter time: 0.11010003999763285
+###############
+One root node filter time: 0.11066413300068234
+###############
+One root node filter time: 0.1105038700006844
+###############
+One root node filter time: 0.11002468400329235
+###############
+One root node filter time: 0.11057136100134812
+###############
+One root node filter time: 0.1108607789974485
+###############
+One root node filter time: 0.11125608200018178
+###############
+One root node filter time: 0.11045900099998107
+###############
+One root node filter time: 0.10978214699935052
+###############
+One root node filter time: 0.10957729800065863
+###############
+One root node filter time: 0.11043183700166992
+###############
+One root node filter time: 0.11056903500139015
+###############
+One root node filter time: 0.10950025099737104
+###############
+One root node filter time: 0.1101132769981632
+###############
+One root node filter time: 0.10960061800142284
+###############
+One root node filter time: 0.10962415799804148
+###############
+One root node filter time: 0.10969489300259738
+###############
+One root node filter time: 0.10990365800171276
+###############
+One root node filter time: 0.10936588999902597
+###############
+One root node filter time: 0.10956660499869031
+###############
+One root node filter time: 0.10935549799978617
+###############
+One root node filter time: 0.15101888199933455
+###############
+One root node filter time: 0.11148344500179519
+###############
+One root node filter time: 0.11079631599932327
+###############
+One root node filter time: 0.11029007400065893
+###############
+One root node filter time: 0.11010030599936727
+###############
+One root node filter time: 0.10986793600022793
+###############
+One root node filter time: 0.11024827800065395
+###############
+One root node filter time: 0.12112344999695779
+###############
+One root node filter time: 0.11246410100284265
+###############
+One root node filter time: 0.11231720399882761
+###############
+One root node filter time: 0.11043262999737635
+###############
+One root node filter time: 0.11099118100173655
+###############
+One root node filter time: 0.1096219930004736
+###############
+One root node filter time: 0.1105885520009906
+###############
+One root node filter time: 0.11038584799825912
+###############
+One root node filter time: 0.11028701499890303
+###############
+One root node filter time: 0.10957488600251963
+###############
+One root node filter time: 0.11014156400051434
+###############
+One root node filter time: 0.11027892399943084
+###############
+One root node filter time: 0.10990435499843443
+###############
+One root node filter time: 0.1102858849990298
+###############
+One root node filter time: 0.11006168599851662
+###############
+One root node filter time: 0.11033154899996589
+###############
+One root node filter time: 0.11020183399887173
+###############
+One root node filter time: 0.11039346899997327
+###############
+One root node filter time: 0.1110831620026147
+###############
+One root node filter time: 0.11075226200046018
+###############
+One root node filter time: 0.10968619599952945
+###############
+One root node filter time: 0.10989715899995645
+###############
+One root node filter time: 0.11058494499957305
+###############
+One root node filter time: 0.11014723500193213
+###############
+One root node filter time: 0.11013908200038713
+###############
+One root node filter time: 0.1112769079991267
+###############
+One root node filter time: 0.10987966600077925
+###############
+One root node filter time: 0.11020742999971844
+###############
+One root node filter time: 0.11098463599773822
+###############
+One root node filter time: 0.11086483399776625
+###############
+One root node filter time: 0.11110605300200405
+###############
+One root node filter time: 0.11107039800117491
+###############
+One root node filter time: 0.11017807499956689
+###############
+One root node filter time: 0.1105173290015955
+###############
+One root node filter time: 0.1105978440027684
+###############
+One root node filter time: 0.11050294100277824
+###############
+One root node filter time: 0.10957832100029918
+###############
+One root node filter time: 0.11012090899748728
+###############
+One root node filter time: 0.11030207799922209
+###############
+One root node filter time: 0.10983924000174738
+###############
+One root node filter time: 0.11120705600114889
+###############
+One root node filter time: 0.10990844600019045
+###############
+One root node filter time: 0.11095849000048474
+###############
+One root node filter time: 0.10937040999851888
+###############
+One root node filter time: 0.11109751899857656
+###############
+One root node filter time: 0.11086087799776578
+###############
+One root node filter time: 0.11081040200224379
+###############
+One root node filter time: 0.11068151199651766
+###############
+One root node filter time: 0.11010883699782426
+###############
+One root node filter time: 0.11116505399695598
+###############
+One root node filter time: 0.11056736300088232
+###############
+One root node filter time: 0.11057782599891652
+###############
+One root node filter time: 0.10957735400006641
+###############
+One root node filter time: 0.10975308299748576
+###############
+One root node filter time: 0.11865881699850434
+###############
+One root node filter time: 0.1116595370003779
+###############
+One root node filter time: 0.10954882399892085
+###############
+One root node filter time: 0.11029431899805786
+###############
+One root node filter time: 0.11029996599972947
+###############
+One root node filter time: 0.10970998600168969
+###############
+One root node filter time: 0.11019067400047788
+###############
+One root node filter time: 0.1100086009973893
+###############
+One root node filter time: 0.10969409300014377
+###############
+One root node filter time: 0.11040738299925579
+###############
+One root node filter time: 0.10979876700002933
+###############
+One root node filter time: 0.11024037500101258
+###############
+One root node filter time: 0.11012424300133716
+###############
+One root node filter time: 0.10995822900076746
+###############
+One root node filter time: 0.10971785200308659
+###############
+One root node filter time: 0.11045669799932512
+###############
+One root node filter time: 0.11028523599816253
+###############
+One root node filter time: 0.109623634001764
+###############
+One root node filter time: 0.10941937200186658
+###############
+One root node filter time: 0.11089594499935629
+###############
+One root node filter time: 0.10971575700023095
+###############
+One root node filter time: 0.11040153600333724
+###############
+One root node filter time: 0.11036720000265632
+###############
+One root node filter time: 0.10909772100058035
+###############
+One root node filter time: 0.10807956500138971
+###############
+One root node filter time: 0.10877074800009723
+###############
+One root node filter time: 0.10926809999727993
+###############
+One root node filter time: 0.11055496699918876
+###############
+One root node filter time: 0.11075992299811332
+###############
+One root node filter time: 0.1105073069993523
+###############
+One root node filter time: 0.11035602699848823
+###############
+One root node filter time: 0.11052512400056003
+###############
+One root node filter time: 0.11189484199712751
+###############
+One root node filter time: 0.10938798699862673
+###############
+One root node filter time: 0.10944978599945898
+###############
+One root node filter time: 0.11116554999898653
+###############
+One root node filter time: 0.1118998140009353
+###############
+One root node filter time: 0.11090020000119694
+###############
+One root node filter time: 0.11086054599945783
+###############
+One root node filter time: 0.11090095100007602
+###############
+One root node filter time: 0.10922810299962293
+###############
+One root node filter time: 0.10901367800033768
+###############
+One root node filter time: 0.10955720499987365
+###############
+One root node filter time: 0.10997473300085403
+###############
+One root node filter time: 0.1098679999995511
+###############
+One root node filter time: 0.10986194400175009
+###############
+One root node filter time: 0.1103751779992308
+###############
+One root node filter time: 0.11007597599746077
+###############
+One root node filter time: 0.10912572999950498
+###############
+One root node filter time: 0.11021768800128484
+###############
+One root node filter time: 0.11047431100087124
+###############
+One root node filter time: 0.11116753199894447
+###############
+One root node filter time: 0.11000457999762148
+###############
+One root node filter time: 0.10996908499873825
+###############
+One root node filter time: 0.1096543269995891
+###############
+One root node filter time: 0.11018444799992722
+###############
+One root node filter time: 0.11026014099843451
+###############
+One root node filter time: 0.11007251200135215
+###############
+One root node filter time: 0.11020640399874537
+###############
+One root node filter time: 0.11019169700011844
+###############
+One root node filter time: 0.10983612800191622
+###############
+One root node filter time: 0.10902915300175664
+###############
+One root node filter time: 0.11019275600119727
+###############
+One root node filter time: 0.11088418299914338
+###############
+One root node filter time: 0.1104392259985616
+###############
+One root node filter time: 0.10993153100207564
+###############
+One root node filter time: 0.10988393699881271
+###############
+One root node filter time: 0.11015832400153158
+###############
+One root node filter time: 0.1098314599985315
+###############
+One root node filter time: 0.10695903400119278
+###############
+Filtering time 284.0029157930003
+Average filtering time for one node: 0.12262647486744399
+######################################
+#######################
+Number of remaining leaf nodes of root after Filtering: 2292
