@@ -96,23 +96,24 @@ def value_filtering(filtering_node, all_elements_name):
     Args:
         filtering_node (RTree_XML Node): node to be checked for value filtering 
     """
-    # print("#######################")
-    # print('value_filtering', filtering_node.name, filtering_node.boundary)
+    filtering_node_index = all_elements_name.index(filtering_node.name)
+    # print('\t' * filtering_node_index,"###")
+    # print('\t' * filtering_node_index,"Value Filtering", filtering_node.name, filtering_node.boundary)
 
     filtering_node.value_filtering_visited = True
 
     link_SQL_range = {}
     for element in all_elements_name:
-        link_SQL_range[element] = []
-
+        if element == filtering_node.name:
+            link_SQL_range[element] = filtering_node.boundary[1]
+        else:
+            link_SQL_range[element] = []
 
     # Go through each connected table
     # print("Value filtering: Going through tables")
     for table_name in filtering_node.link_SQL.keys():
         # print('\t' + 'table_name', table_name)
         table_nodes = filtering_node.link_SQL[table_name]                   # list of nodes in a connected table to be chedk
-        has_one_satisfied_node = False
-        link_nodes_removed = np.zeros(len(table_nodes))                     # array to store if a node in table_nodes should be removed
         table_dimension = table_name.split('_').index(filtering_node.name)
         table_elements = table_name.split('_')
 
@@ -121,40 +122,39 @@ def value_filtering(filtering_node, all_elements_name):
             combined_range[element] = []
 
         # print('\t' + 'len(table_nodes) ', len(table_nodes))
+        i = 0
 
-        for i in range(len(table_nodes)):
-            if intersection_filter(filtering_node, 1, table_nodes[i], table_dimension):
-                has_one_satisfied_node = True
+        remaining_link_nodes = []
 
-                boundary = table_nodes[i].boundary
+        while ((i < len(table_nodes) - 1) and (table_nodes[i].boundary[table_dimension][1] < filtering_node.boundary[1][0])):
+            i += 1
 
-                for element in table_elements:
-                    if not combined_range[element]:
-                        combined_range[element] = list(boundary[table_elements.index(element)])
-                    else: 
-                        if (boundary[table_elements.index(element)][0] < combined_range[element][0]):
-                            combined_range[element][0] = boundary[table_elements.index(element)][0]
-                        if (boundary[table_elements.index(element)][1] > combined_range[element][1]):
-                            combined_range[element][1] = boundary[table_elements.index(element)][1]
+        while table_nodes[i].boundary[table_dimension][0] <= filtering_node.boundary[1][1]:
+            remaining_link_nodes.append(table_nodes[i])
+            boundary = table_nodes[i].boundary
 
-                # print('\t' * 2, 'table_node', table_nodes[i].boundary, ' satisfied')
-            else:
-                # print('\t' * 2, 'table_node', table_nodes[i].boundary, ' unsatisfied')
-                link_nodes_removed[i] = 1
+            for element in table_elements:
+                if not combined_range[element]:
+                    combined_range[element] = list(boundary[table_elements.index(element)])
+                else: 
+                    if (boundary[table_elements.index(element)][0] < combined_range[element][0]):
+                        combined_range[element][0] = boundary[table_elements.index(element)][0]
+                    if (boundary[table_elements.index(element)][1] > combined_range[element][1]):
+                        combined_range[element][1] = boundary[table_elements.index(element)][1]
+
+            if i == len(table_nodes) - 1:
+                break
+
+            i += 1
         
         # If found no satisfied node -> filter current_node
-        if not has_one_satisfied_node:
-            # print('\t'+'not has_one_satisfied_node')
-            # print('\t'+'link_nodes_removed', link_nodes_removed)
+        if not remaining_link_nodes:
+            # print('\t' * filtering_node_index, 'No match in', table_name, '---> FILTERED')
             filtering_node.filtered = True
             return
 
         # Update link_SQL
-        new_link_nodes = []
-        for i in range(len(table_nodes)):
-            if link_nodes_removed[i] == 0:
-                new_link_nodes.append(table_nodes[i])
-        filtering_node.link_SQL[table_name] = new_link_nodes
+        filtering_node.link_SQL[table_name] = remaining_link_nodes
 
         # Update link_SQL_range
         for element in table_elements:
@@ -167,33 +167,7 @@ def value_filtering(filtering_node, all_elements_name):
                     link_SQL_range[element][1] = combined_range[element][1]
 
     filtering_node.link_SQL_range = link_SQL_range
-
-
-
-def pair_value_filter(filtering_node, connected_element_node):
-    """Summary
-    This function do pair value filtering for filtering_node and a node connected to this filtering node
-    by going through all tables in filtering_node.link_SQL that contains both filtering element and connected element
-    and check if this pair value is in all those table
-    Args:
-        filtering_node (RTree_XML Node):
-        connected_element_node (RTree_XML Node)
-    """
-    for table_name in filtering_node.link_SQL.keys():
-        table_elements = table_name.split('_')
-        # if this table contain both filtering element and connected element
-        if ((filtering_node.name in table_elements) and (connected_element_node.name in table_elements)):
-            # Check this table
-            table_nodes = filtering_node.link_SQL[table_name]
-            has_one_satisfied_node = False
-
-            for i in range(len(table_nodes)):
-                if intersection_filter(connected_element_node, 1, table_nodes[i], table_elements.index(connected_element_node.name)):
-                    has_one_satisfied_node = True
-
-            if not has_one_satisfied_node:
-                return False
-    return True
+    # print('\t' * filtering_node_index,"###")
 
 def connected_element_filtering(filtering_node, limit_range, all_elements_name):
     """Summary
@@ -258,7 +232,7 @@ def connected_element_filtering(filtering_node, limit_range, all_elements_name):
 
 def check_lower_level(filtering_node, limit_range, all_elements_name):
     filtering_node_index = all_elements_name.index(filtering_node.name)
-    # print('\t' * filtering_node_index,"check_lower_level")
+    # print('\t' * filtering_node_index,"check_lower_level", filtering_node.name, filtering_node.boundary)
     for connected_element_name in filtering_node.link_XML.keys():
         # print('\t' * (filtering_node_index + 1), "Check: ", connected_element_name)
         connected_element_nodes = filtering_node.link_XML[connected_element_name]              # list of nodes in the connected element to be checked
@@ -276,12 +250,13 @@ def check_lower_level(filtering_node, limit_range, all_elements_name):
             if not connected_element_nodes[i].value_filtering_visited:
                 value_filtering(connected_element_nodes[i], all_elements_name)
 
-            if filtering_node.filtered:
+            if connected_element_nodes[i].filtered:
                 link_nodes_removed[i] = 1
                 # print('\t' * (filtering_node_index + 3), '=> Filtered after value filtering')
                 continue
 
             link_SQL_range = connected_element_nodes[i].link_SQL_range
+            # print('\t' * (filtering_node_index + 2),'link_SQL_range', link_SQL_range)
             for element in all_elements_name:
                 if link_SQL_range[element]:
                     if not combined_range[element]:
