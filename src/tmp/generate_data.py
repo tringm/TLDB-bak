@@ -2,21 +2,21 @@ import numpy
 import random 
 import pickle
 
-n_asin = 10385
-n_Orderline = 10019
-n_price = 10425
+n_asin = 229166
+n_Orderline = 229166
+n_price = 229166
 
-range_asin = [10000, 100000]
-range_Orderline = [5000, 50000]
-range_price = [10000, 200000]
+range_asin = [0, 300000]
+range_Orderline = [100000, 400000]
+range_price = [500000, 900000]
 
-n_matches = 4
+n_matches = 15
 
 asin_v = random.sample(range(range_asin[0], range_asin[1]), n_asin)
 Orderline_v = random.sample(range(range_Orderline[0], range_Orderline[1]), n_Orderline)
 price_v = random.sample(range(range_price[0], range_price[1]), n_price)
 
-n_Orderline_asin_table = 10000
+n_Orderline_asin_table = 200000
 Orderline_asin_table = []
 for i in range(n_Orderline_asin_table - n_matches):
 	orderline = random.randint(range_Orderline[0], range_Orderline[1])
@@ -34,7 +34,7 @@ for i in range(n_Orderline_asin_table - n_matches):
 
 	Orderline_asin_table.append((orderline, asin))
 
-n_price_asin_table = 10000
+n_price_asin_table = 200000
 price_asin_table = []
 for i in range(n_price_asin_table - n_matches):
 	price = random.randint(range_price[0], range_price[1])
