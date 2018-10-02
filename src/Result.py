@@ -1,5 +1,4 @@
 class Result:
-
 	"""Summary
 	Entry
 	
@@ -9,7 +8,7 @@ class Result:
 	    link_XML (dict): a dict contains a list of entries contained in linked elements
 	    link_SQL (dict): a dict contains a list of entries contained in linked tables 
 	"""
-	
+
 	def __init__(self, size):
 		self.index = [None] * size
 		self.value = [None] * size

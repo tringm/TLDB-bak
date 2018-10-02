@@ -4,3 +4,6 @@ data/
 #io
 io/
 
+#idea
+.idea/
+

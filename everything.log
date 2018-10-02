@@ -1,0 +1,19 @@
+INFO:Loader:Loader started
+INFO:Loader:all_element_name A,B,C,D
+INFO:Loader:Loading element: A
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: B
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: C
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: D
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading table: C_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: B_C
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: A_B_D
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: D_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Total loading time: 0
