@@ -7,3 +7,6 @@ io/
 #idea
 .idea/
 
+#env
+venv/
+
