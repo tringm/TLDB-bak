@@ -13,7 +13,7 @@ import numpy as np
 
 from src.Node import Node
 from src.Entry import Entry
-from src.Dewey_Index import *
+from src.DeweyID import *
 import timeit
 
 

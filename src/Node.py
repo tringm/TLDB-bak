@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 from .Entry import Entry
 import math
 
@@ -9,8 +11,9 @@ class Node:
         filtered (bool): True if this node if filtered
         value_filtering_visited(bool): True if this node has been full filtered before
         value_validation_visited (bool): True if this node has been validated before
-        link_XML (dict): a dict contains a list of nodes for each linked element (children)
-        link_SQL (dict): a dict contains a list of nodes for each linked tables (tables that has this element as highest element in XML query)
+        link_xml ({[Node}}): a dict contains a list of nodes for each linked element (children)
+        link_sql ({[Node]}): a dict contains a list of nodes for each linked tables (tables that has this element as highest element in XML query)
+        link_sql_elements_intersection_range (Dict[str, List[List[int]]]):
         max_n_children (int): maximum number of child Node
         parent (Node): parent Node
         boundary [[int, int], [int, int]]: MBR
@@ -20,22 +23,24 @@ class Node:
         validated_entries [Entry]: list of entries contained in this node (including children) to be used in validation
         name (String): name of this node (element name for RTree_XML node and table_name for R_Tree_SQL node)
     """
-
     def __init__(self, max_n_children):
         self.max_n_children = max_n_children
         self.parent = None
         self.children = []
         self.boundary = []
         self.entries = []
-        self.validated_entries = []
+        self.name = ""
+        self.dimension = -1
+
+        # XML node attributes
         self.filtered = False
+        self.reason_of_filtered = ""
         self.value_filtering_visited = False
         self.value_validation_visited = False
-        self.link_XML = {}
-        self.link_SQL = {}
-        self.link_SQL_range = {}
-        self.available_entries = {}
-        self.name = ""
+        self.link_xml = {}
+        self.link_sql = {}
+        self.link_sql_elements_intersection_range = {}
+        self.validated_entries = []
 
     # def update_boundary(self, coordinates):
     # 	n_dimensions = len(coordinates)
@@ -172,3 +177,6 @@ class Node:
                 print('\t' * (level + 1), 'NODE ', self.boundary)
                 for child in self.children:
                     child.print_node_not_filtered(level + 1)
+
+    def to_string(self):
+        return self.name + ':' + str(self.boundary)

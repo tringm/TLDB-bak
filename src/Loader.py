@@ -1,5 +1,5 @@
-from .RTree import RTreeSQL
-from .RTree import RTreeXML
+from .RTree import XMLRTree
+from .RTree import SQLRTree
 from .Entry import Entry
 
 import os
@@ -98,7 +98,7 @@ def load_elements(folder_name: str, all_elements_name: [str], max_n_children: in
         start_loading = timeit.default_timer()
 
         element_entries = load_xml_entries(folder_name, element_name)
-        rtree_xml = RTreeXML()
+        rtree_xml = XMLRTree()
         rtree_xml.load(element_entries, element_name, max_n_children)
         all_elements_root[element_name] = rtree_xml.root
 
@@ -136,7 +136,7 @@ def load_tables(folder_name, all_elements_name, max_n_children):
 
             table_entries = load_sql_entries(folder_name, file_name)
             dimension = get_index_highest_element(all_elements_name, table_name)
-            rtree_sql = RTreeSQL()
+            rtree_sql = SQLRTree()
             rtree_sql.load(table_entries, table_name, max_n_children, dimension)
             all_tables_root[table_name] = rtree_sql.root
 

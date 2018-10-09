@@ -3,10 +3,10 @@ class Result:
 	Entry
 	
 	Attributes:
-	    coordinates [id, value]:  list contains index and value for RTree_XML Node
-	    coordinates [v1, v2, etc.]: list contains value for RTree_SQL Node
-	    link_XML (dict): a dict contains a list of entries contained in linked elements
-	    link_SQL (dict): a dict contains a list of entries contained in linked tables 
+		coordinates [id, value]:  list contains index and value for RTree_XML Node
+		coordinates [v1, v2, etc.]: list contains value for RTree_SQL Node
+		link_XML (dict): a dict contains a list of entries contained in linked elements
+		link_SQL (dict): a dict contains a list of entries contained in linked tables
 	"""
 
 	def __init__(self, size):

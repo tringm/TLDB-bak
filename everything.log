@@ -17,3 +17,115 @@ INFO:Loader:Loading table: 0
 INFO:Loader:Loading table: D_A
 INFO:Loader:Loading table: 0
 INFO:Loader:Total loading time: 0
+INFO:Main:Initialize link took:  0
+INFO:Main:query root node A:[1.1,5.7.4][10.0,94.0] filter time: 0
+INFO:Main:Filtering time 0
+INFO:Main:Average filtering time for one node: 0
+INFO:Main:validation time 0
+INFO:Loader:Loader started
+INFO:Loader:all_element_name A,B,C,D
+INFO:Loader:Loading element: A
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: B
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: C
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: D
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading table: C_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: B_C
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: A_B_D
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: D_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Total loading time: 0
+INFO:Main:Initialize link took:  0
+INFO:Main:query root node A:[1.1,5.7.4][10.0,94.0] filter time: 0
+INFO:Main:Filtering time 0
+INFO:Main:Average filtering time for one node: 0
+INFO:Main:Number of remaining leaf nodes of root after validation: 1
+INFO:Main:All Possible results:
+INFO:Loader:Loader started
+INFO:Loader:all_element_name A,B,C,D
+INFO:Loader:Loading element: A
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: B
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: C
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: D
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading table: C_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: B_C
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: A_B_D
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: D_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Total loading time: 0
+INFO:Main:Initialize link took:  0
+INFO:Main:query root node A:[1.1,5.7.4][10.0,94.0] filter time: 0
+INFO:Main:Filtering time 0
+INFO:Main:Average filtering time for one node: 0
+INFO:Main:Number of remaining leaf nodes of root after validation: 1
+INFO:Main:All Possible results:
+INFO:Main:(2.9, 10.0), (2.9.2, 31.0), (2.9.4, 24.0), (2.9.4.2, 26.0)
+INFO:Main:validation time 0
+INFO:Loader:Loader started
+INFO:Loader:all_element_name A,B,C,D
+INFO:Loader:Loading element: A
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: B
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: C
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: D
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading table: C_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: B_C
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: A_B_D
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: D_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Total loading time: 0
+INFO:Main:Initialize link took:  0
+INFO:Main:query root node A:[1.1,5.7.4][10.0,94.0] filter time: 0
+INFO:Main:Filtering time 0
+INFO:Main:Average filtering time for one node: 0
+INFO:Main:Number of remaining leaf nodes of root after validation: 1
+INFO:Main:All Possible results:
+INFO:Main:(2.9, 10.0), (2.9.2, 31.0), (2.9.4, 24.0), (2.9.4.2, 26.0)
+INFO:Main:validation time 0
+INFO:Loader:Loader started
+INFO:Loader:all_element_name A,B,C,D
+INFO:Loader:Loading element: A
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: B
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: C
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading element: D
+INFO:Loader:Loading element took: 0
+INFO:Loader:Loading table: C_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: B_C
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: A_B_D
+INFO:Loader:Loading table: 0
+INFO:Loader:Loading table: D_A
+INFO:Loader:Loading table: 0
+INFO:Loader:Total loading time: 0
+INFO:Main:Initialize link took:  0
+INFO:Main:query root node A:[1.1,5.7.4][10.0,94.0] filter time: 0
+INFO:Main:Filtering time 0
+INFO:Main:Average filtering time for one node: 0
+INFO:Main:Number of remaining leaf nodes of root after Filtering: 1
+INFO:Main:Number of remaining leaf nodes of root after validation: 1
+INFO:Main:All Possible results:
+INFO:Main:(2.9, 10.0), (2.9.2, 31.0), (2.9.4, 24.0), (2.9.4.2, 26.0)
+INFO:Main:validation time 0

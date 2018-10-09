@@ -31,7 +31,7 @@ class RTree(ABC):
             raise ValueError('Maximum number of children nodes must be > 1')
 
         logger.debug("Start bulk loading")
-        logger.debug('%s %s',"Tree name:", name)
+        logger.debug('%s %s', "Tree name:", name)
 
         start_sorting = timeit.default_timer()
         # sort entries based on value
@@ -50,6 +50,7 @@ class RTree(ABC):
         root = Node(max_n_children)
         root.boundary = get_boundaries(entries)
         root.name = name
+        root.dimension = dimension
 
         queue_node.put(root)
         queue_range.put([0, n_entries])
@@ -74,8 +75,8 @@ class RTree(ABC):
 
             else:
                 logger.debug('Not a leaf => add new nodes')
-                n_entries_subtree = max_n_children ** (
-                        height - 1)  # Number of entries contained in the subtree of this node
+                # Number of entries contained in the subtree of this node
+                n_entries_subtree = max_n_children ** (height - 1)
                 # n_slices = math.floor(math.sqrt(math.ceil(current_n_entries / n_entries_subtree)))
                 #  Number of slices according to the formula of OMT
                 n_slices = math.ceil(current_n_entries / n_entries_subtree)
@@ -93,7 +94,7 @@ class RTree(ABC):
                     range_high = range_low + n_entries_subtree
 
                     # last group might have more than max_n_children
-                    if (i == n_slices - 1):
+                    if i == n_slices - 1:
                         range_high = current_range[1]
 
                     logger.debug('%s %d %s %d %d', "Child node index:", i, "range", range_low, range_high)
@@ -104,8 +105,9 @@ class RTree(ABC):
                     subtree_node = Node(max_n_children)
                     subtree_node.parent = current_node
                     subtree_node.boundary = get_boundaries(entries[range_low:range_high])
-                    logger.debug('%s %s', "Child node boundary:", ','.join(str(number) for number in subtree_node.boundary))
+                    subtree_node.dimension = dimension
                     subtree_node.name = name
+                    logger.debug('%s %s', "Child node", subtree_node.to_string())
                     current_node.children.append(subtree_node)
                     queue_node.put(subtree_node)
                     queue_range.put([range_low, range_high])
@@ -113,18 +115,18 @@ class RTree(ABC):
         return root
 
 
-class RTreeXML(RTree):
+class XMLRTree(RTree):
     def __init__(self):
         self.root = None
 
     def load(self, entries: [Entry], name: str, max_n_children: int):
-        dimension = 1 # This is based on the current version that Entry of XMLRTree Node is: index, value
-        self.root = super(RTreeXML, self).bulk_loading(entries, name, max_n_children, dimension)
+        dimension = 1  # This is based on the current version that Entry of XMLRTree Node is: index, value
+        self.root = super(XMLRTree, self).bulk_loading(entries, name, max_n_children, dimension)
 
 
-class RTreeSQL(RTree):
+class SQLRTree(RTree):
     def __init__(self):
         self.root = None
 
     def load(self, entries: [Entry], name: str, max_n_children: int, dimension: int):
-        self.root = super(RTreeSQL, self).bulk_loading(entries, name, max_n_children, dimension)
+        self.root = super(SQLRTree, self).bulk_loading(entries, name, max_n_children, dimension)
