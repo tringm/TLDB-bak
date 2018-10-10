@@ -77,22 +77,22 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
         table_cursor = 0
         updated_intersected_value_boundary = []
 
-        while True:
+        while table_cursor < len(table_nodes) and value_boundary_cursor < len(intersected_value_boundary):
             current_table_node = table_nodes[table_cursor]  # type: Node
             current_value_boundary = intersected_value_boundary[value_boundary_cursor]  # type: {str, List[int]}
 
             if current_table_node.boundary[current_table_node.dimension][0] > \
                     current_value_boundary[filtering_node.name][1]:
-                if value_boundary_cursor < len(intersected_value_boundary) - 1:
+                if value_boundary_cursor < len(intersected_value_boundary):
                     value_boundary_cursor += 1
                 else:
-                    table_cursor = len(table_nodes) - 1
+                    table_cursor = len(table_nodes)
             elif current_table_node.boundary[current_table_node.dimension][1] < \
                     current_value_boundary[filtering_node.name][0]:
-                if table_cursor < len(table_nodes) - 1:
+                if table_cursor < len(table_nodes):
                     table_cursor += 1
                 else:
-                    value_boundary_cursor = len(intersected_value_boundary) - 1
+                    value_boundary_cursor = len(intersected_value_boundary)
             else:
                 # if has intersection -> check other element
                 all_elements_checked_ok = True
@@ -112,7 +112,7 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
                             all_elements_checked_ok = False
                             break
 
-                # If all element satistfied -> add the intersected boundary, add current_table_node
+                # If all element check are satisfied -> add the intersected boundary, add current_table_node
                 if all_elements_checked_ok:
                     # add element in current_value_boundary that not in current_node
                     for element in current_value_boundary:
@@ -127,18 +127,13 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
                 #     eliminated
                 if current_table_node.boundary[current_table_node.dimension][1] > \
                         current_value_boundary[filtering_node.name][1]:
-                    if value_boundary_cursor < len(intersected_value_boundary) - 1:
+                    if value_boundary_cursor < len(intersected_value_boundary):
                         value_boundary_cursor += 1
                     else:
-                        table_cursor = len(table_nodes) - 1
+                        table_cursor = len(table_nodes)
                 else:
-                    if table_cursor < len(table_nodes) - 1:
+                    if table_cursor < len(table_nodes):
                         table_cursor += 1
-
-            # if both cursor reach the end -> stop
-            if (table_cursor == len(table_nodes) - 1) and (
-                    value_boundary_cursor == len(intersected_value_boundary) - 1):
-                break
 
         logger.debug('\t' * filtering_node_index + 'remaining_nodes: ' + str([node.boundary for node in remaining_nodes]))
         logger.debug('\t' * filtering_node_index + 'Updated intersected value boundary: ' + str(updated_intersected_value_boundary))
@@ -289,6 +284,11 @@ def initialize_children_link(filtering_node, all_elements_name, limit_range):
     """
     filtering_node_index = all_elements_name.index(filtering_node.name)
     logger = logging.getLogger("Init Children")
+
+    if not filtering_node.children:
+        logger.debug('\t' + ' This is a leaf node ')
+        return
+
     logger.debug('\t' * filtering_node_index + 'Start initialize children link ' + filtering_node.to_string())
     logger.debug('\t' * filtering_node_index + 'limit_range ' + str(limit_range))
 
@@ -358,36 +358,47 @@ def initialize_children_link(filtering_node, all_elements_name, limit_range):
         children_cursor = 0
         value_boundary_cursor = 0
         remaining_children = []
+        logger.debug('\t' + 'filtering_node children: ' + str([node.to_string() for node in filtering_node.children]))
+        logger.debug('\t' + 'allowed_value_boundary: ' + str(allowed_value_boundary))
 
-        while True:
+        while children_cursor < len(filtering_node.children) and value_boundary_cursor < len(allowed_value_boundary):
             current_children_node = filtering_node.children[children_cursor]  # type: Node
             current_value_boundary = allowed_value_boundary[value_boundary_cursor]  # type: List[int]
 
+            logger.debug('\t' + 'current_children: ' + current_children_node.to_string())
+            logger.debug('\t' + 'current_allowed_value_boundary: ' + str(current_value_boundary))
+
             if current_children_node.boundary[1][0] > current_value_boundary[1]:
-                if value_boundary_cursor < len(allowed_value_boundary) - 1:
+                if value_boundary_cursor < len(allowed_value_boundary):
+                    # Check next boundary
                     value_boundary_cursor += 1
+                    logger.debug('\t' * 2 + 'case 1.1')
                 else:
-                    children_cursor = len(filtering_node.children) - 1
+                    # skip
+                    children_cursor = len(filtering_node.children)
+                    logger.debug('\t' * 2 + 'case 1.2')
             elif current_children_node.boundary[1][1] < current_value_boundary[0]:
-                if children_cursor < len(filtering_node.children) - 1:
+                if children_cursor < len(filtering_node.children):
+                    # Check next children
                     children_cursor += 1
+                    logger.debug('\t' * 2 + 'case 2.1')
                 else:
-                    value_boundary_cursor = len(allowed_value_boundary) - 1
+                    # skip
+                    value_boundary_cursor = len(allowed_value_boundary)
+                    logger.debug('\t' * 2 + 'case 2.2')
             else:
                 remaining_children.append(current_children_node)
+                logger.debug('\t' * 2 + 'SATISFY')
                 if current_children_node.boundary[1][1] > current_value_boundary[1]:
-                    if value_boundary_cursor < len(allowed_value_boundary) - 1:
+                    if value_boundary_cursor < len(allowed_value_boundary):
                         value_boundary_cursor += 1
                     else:
-                        children_cursor = len(filtering_node.children) - 1
+                        children_cursor = len(filtering_node.children)
                 else:
-                    if children_cursor < len(filtering_node.children) - 1:
+                    if children_cursor < len(filtering_node.children):
                         children_cursor += 1
 
-            # if both cursor reach the end -> stop
-            if (children_cursor == len(filtering_node.children) - 1) and (
-                    value_boundary_cursor == len(allowed_value_boundary) - 1):
-                break
+        logger.debug('\t' + 'remaining children nodes: ' + str([node.to_string() for node in remaining_children]))
 
         filtering_node.children = remaining_children
         if not remaining_children:
