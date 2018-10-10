@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 from .Entry import Entry
 import math
@@ -8,21 +8,27 @@ class Node:
     """RTree Node
 
     Attributes:
-        filtered (bool): True if this node if filtered
-        value_filtering_visited(bool): True if this node has been full filtered before
-        value_validation_visited (bool): True if this node has been validated before
-        link_xml ({[Node}}): a dict contains a list of nodes for each linked element (children)
-        link_sql ({[Node]}): a dict contains a list of nodes for each linked tables (tables that has this element as highest element in XML query)
-        link_sql_elements_intersection_range (Dict[str, List[List[int]]]):
         max_n_children (int): maximum number of child Node
-        parent (Node): parent Node
-        boundary [[int, int], [int, int]]: MBR
-                                  Each tuple contains list of 2 ints [lower_bound, upper_bound] of a dimension
-        children [Node]: list of children nodes
-        entries [Entry]: list of entries (if this node is a leaf node)
-        validated_entries [Entry]: list of entries contained in this node (including children) to be used in validation
-        name (String): name of this node (element name for RTree_XML node and table_name for R_Tree_SQL node)
+        parent (Node)               : None if is root
+        children ([Node))           : list of children node
+        boundary ([])               : MBR Each tuple contains list of 2 ints [lower_bound, upper_bound] of a dimension
+                                      XML Node: [str, str], [int, int]
+                                      SQL NOde: [int, int], [int, int], ...
+        entries ([Entry])           : list of entries if this node is a leaf node, empty if not leaf node
+        name (str)                  : name of element for XML node, name of table for SQL Node
+        dimension (int)             : 1 for XML Node, index of highest element in SQL Node
+
+        filtered (bool)             : True if this node is filtered
+        reason_of_filtered (str)    : reason for being filtered
+        value_filtering_visited (bool)  : True if this node has been value filtered
+        value_validation_visited (bool) : True if this node has been value validated
+
+        link_xml {[str, [Node]}         : key is element name, value is list of Node connected
+        link_sql {[str, [Node]}         : key is table name, value is list of Node connected
+        link_sql_elements_intersection_range ({str, [boundary]}): key is element, value is multiple boundary constraint
+                                                                  for the element. It is initiated in value filtering
     """
+
     def __init__(self, max_n_children):
         self.max_n_children = max_n_children
         self.parent = None
@@ -36,11 +42,12 @@ class Node:
         self.filtered = False
         self.reason_of_filtered = ""
         self.value_filtering_visited = False
-        self.value_validation_visited = False
+        # self.value_validation_visited = False
         self.link_xml = {}
         self.link_sql = {}
         self.link_sql_elements_intersection_range = {}
-        self.validated_entries = []
+        # self.validated_entries = []
+        self.validated = False
 
     # def update_boundary(self, coordinates):
     # 	n_dimensions = len(coordinates)
@@ -67,16 +74,15 @@ class Node:
     # 			self.split
 
     def get_entries(self):
-        """Summary
+        """
         This function return all entries contained in this node (included children's entries)
-        Returns:
-            list of Entry:
+        :return: [Entry]
         """
         # if this node is a leaf node
         if len(self.entries) > 0:
             return self.entries
-        entries = []
         # else get all child entry
+        entries = []
         for child in self.children:
             child_entries = child.get_entries()
             for child_entry in child_entries:
@@ -84,22 +90,20 @@ class Node:
         self.entries = entries
         return entries
 
-    def get_leaf_node_not_filtered(self):
-        """Summary
-        This function return a list of nodes which are the unfiltered leaves of this node
-
-        Returns:
-            list of Node:
+    def get_unfiltered_leaf_node(self):
         """
-        # if this node is leaf
+        This function return a list of nodes which are the unfiltered leaves of this node
+        :return: (List[Node]) leaf node of this not which are not filtered
+        """
         leaf_nodes = []
 
         if not self.filtered:
+            # if this node is leaf
             if len(self.entries) > 0:
                 return [self]
 
             for child in self.children:
-                leaf_nodes_child = child.get_leaf_node_not_filtered()
+                leaf_nodes_child = child.get_unfiltered_leaf_node()
                 for node in leaf_nodes_child:
                     leaf_nodes.append(node)
         return leaf_nodes

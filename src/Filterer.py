@@ -1,6 +1,6 @@
 import copy
 import logging
-from typing import Dict, List, Any
+from typing import Dict, List
 
 from .Boundary import *
 from .Node import Node

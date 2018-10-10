@@ -16,6 +16,9 @@ class Entry:
         self.link_SQL = {}
         self.possible_combinations = []
 
+    def __str__(self):
+        return str(self.coordinates)
+
     def is_inside(self, boundary: [int]) -> bool:
         """Summary
         Check if this entry is inside a boundary
