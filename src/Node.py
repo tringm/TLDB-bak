@@ -25,8 +25,8 @@ class Node:
 
         link_xml {[str, [Node]}         : key is element name, value is list of Node connected
         link_sql {[str, [Node]}         : key is table name, value is list of Node connected
-        link_sql_elements_intersection_range ({str, [boundary]}): key is element, value is multiple boundary constraint
-                                                                  for the element. It is initiated in value filtering
+        intersection_range ({str, [boundary]}): key is element, value is multiple boundary constraint
+                                                for the element. It is initiated in value filtering
     """
 
     def __init__(self, max_n_children):
@@ -45,9 +45,13 @@ class Node:
         # self.value_validation_visited = False
         self.link_xml = {}
         self.link_sql = {}
-        self.link_sql_elements_intersection_range = {}
+        self.intersection_range = {}
         # self.validated_entries = []
         self.validated = False
+
+    def __str__(self):
+        return self.name + ':' + str(self.boundary)
+
 
     # def update_boundary(self, coordinates):
     # 	n_dimensions = len(coordinates)
@@ -133,13 +137,13 @@ class Node:
             if len(self.entries) > 0:
                 print('\t' * level, 'NODE ', self.boundary, 'is Leaf')
                 print('\t' * (level + 1), 'Linked XML: ')
-                for connected_element_name in self.link_XML.keys():
+                for connected_element_name in self.link_XML:
                     print('\t' * (level + 1), connected_element_name, end=" ")
                     for node in self.link_XML[connected_element_name]:
                         print(node.boundary, end=" ")
                     print()
                 print('\t' * (level + 1), 'Linked SQL: ')
-                for table_name in self.link_SQL.keys():
+                for table_name in self.link_SQL:
                     print('\t' * (level + 1), table_name, end=" ")
                     for node in self.link_SQL[table_name]:
                         print(node.boundary, end=" ")
@@ -157,7 +161,7 @@ class Node:
                         print(node.boundary, end=" ")
                     print()
                 print('\t' * (level + 1), 'Linked SQL: ')
-                for table_name in self.link_SQL.keys():
+                for table_name in self.link_SQL:
                     print('\t' * (level + 1), table_name, end=" ")
                     for node in self.link_SQL[table_name]:
                         print(node.boundary, end=" ")
@@ -182,5 +186,11 @@ class Node:
                 for child in self.children:
                     child.print_node_not_filtered(level + 1)
 
-    def to_string(self):
-        return self.name + ':' + str(self.boundary)
+    def print_link(self, n_prefix_tabl = 1):
+        print('\t' * n_prefix_tabl + 'Child ' + str(self))
+        print('\t' * (n_prefix_tabl + 1) + 'link xml: ')
+        for connected_element in self.link_xml:
+            print('\t' * (n_prefix_tabl + 2) + str([str(node) for node in self.link_xml[connected_element]]))
+        print('\t' * (n_prefix_tabl + 1) + 'link sql: ')
+        for table_name in self.link_sql:
+            print('\t' * (n_prefix_tabl + 2) + str([str(node) for node in self.link_sql[table_name]]))

@@ -107,7 +107,7 @@ class RTree(ABC):
                     subtree_node.boundary = get_boundaries(entries[range_low:range_high])
                     subtree_node.dimension = dimension
                     subtree_node.name = name
-                    logger.debug('%s %s', "Child node", subtree_node.to_string())
+                    logger.debug('%s %s', "Child node", str(subtree_node))
                     current_node.children.append(subtree_node)
                     queue_node.put(subtree_node)
                     queue_range.put([range_low, range_high])

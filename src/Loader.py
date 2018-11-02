@@ -93,7 +93,7 @@ def load_elements(folder_name: str, all_elements_name: [str], max_n_children: in
     logger = logging.getLogger("Loader")
     all_elements_root = {}
     for element_name in all_elements_name:
-        logger.info('Loading element: ' + element_name)
+        logger.debug('Loading element: ' + element_name)
 
         start_loading = timeit.default_timer()
 
@@ -103,7 +103,7 @@ def load_elements(folder_name: str, all_elements_name: [str], max_n_children: in
         all_elements_root[element_name] = rtree_xml.root
 
         end_loading = timeit.default_timer()
-        logger.info('%s %d', 'Loading element took:', end_loading - start_loading)
+        logger.debug('%s %d', 'Loading element took:', end_loading - start_loading)
     return all_elements_root
 
 
@@ -130,7 +130,7 @@ def load_tables(folder_name, all_elements_name, max_n_children):
     for file_name in os.listdir("data/" + folder_name):
         if 'table' in file_name:
             table_name = file_name[:-10]
-            logger.info('%s %s', 'Loading table:', table_name)
+            logger.debug('%s %s', 'Loading table:', table_name)
 
             start_loading = timeit.default_timer()
 
@@ -141,7 +141,7 @@ def load_tables(folder_name, all_elements_name, max_n_children):
             all_tables_root[table_name] = rtree_sql.root
 
             end_loading = timeit.default_timer()
-            logger.info('%s %d', 'Loading table:', end_loading - start_loading)
+            logger.debug('%s %d', 'Loading table:', end_loading - start_loading)
     return all_tables_root
 
 
@@ -193,8 +193,19 @@ class Loader:
         start_loading = timeit.default_timer()
         self.max_n_children = max_n_children
         self.all_elements_name, self.relationship_matrix = load_xml_query(folder_name)
-        logger.info('%s %s', "all_element_name", ",".join(self.all_elements_name))
         self.all_elements_root = load_elements(folder_name, self.all_elements_name, self.max_n_children)
         self.all_tables_root = load_tables(folder_name, self.all_elements_name, self.max_n_children)
         end_loading = timeit.default_timer()
-        logger.info('%s %d', "Total loading time:", end_loading - start_loading)
+        self.total_loading_time = end_loading - start_loading
+        logger.info('%s %d', "Total loading time:", self.total_loading_time)
+
+    def print_tree(self):
+        print('XML')
+        for element in self.all_elements_name:
+            print(element)
+            self.all_elements_root[element].print_node()
+
+        print('SQL')
+        for table_name in self.all_tables_root:
+            print(table_name)
+            self.all_tables_root[table_name].print_node()

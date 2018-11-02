@@ -9,7 +9,8 @@ from .Node import Node
 
 def entries_value_validation(validating_node, all_elements_name):
     logger = logging.getLogger("Entries Value Validator")
-    logger.debug("Start entries value validating " + validating_node.to_string())
+    logger.setLevel(logging.getLogger("Node Validator").level)
+    logger.debug("Start entries value validating " + str(validating_node))
 
     # validating_node.value_validation_visited = True
     validating_node_entries = validating_node.get_entries()
@@ -20,7 +21,11 @@ def entries_value_validation(validating_node, all_elements_name):
     table_entries = {}  # type: Dict[str, List[Entry]]
     table_dimension = {}  # type: Dict[str, int]
     table_elements = {}
-    for table_name in validating_node.link_sql:
+
+    table_names = list(validating_node.link_sql.keys())
+    table_names.sort(key=lambda name: len(name), reverse=True)
+
+    for table_name in table_names:
         cursors[table_name] = 0
         entries = []
         for node in validating_node.link_sql[table_name]:
@@ -41,7 +46,7 @@ def entries_value_validation(validating_node, all_elements_name):
         possible_value_combinations = [init_combination]
 
         # Check for all table if this entry can match with a table entry
-        for table_name in validating_node.link_sql:
+        for table_name in table_names:
             logger.debug('\t' + 'Checking table: ' + table_name)
             # if not entry_satisfy:
             #     break
@@ -50,7 +55,6 @@ def entries_value_validation(validating_node, all_elements_name):
             this_table_combinations = []  # type: List[Combination]
 
             # if entry does not match a table -> ignore this entry
-
             while cursors[table_name] < len(table_entries[table_name]):
                 table_entry = table_entries[table_name][cursors[table_name]]
                 dimension = table_dimension[table_name]
@@ -107,20 +111,23 @@ def entries_value_validation(validating_node, all_elements_name):
         validating_node.reason_of_filtered = "Entries Value Validation: no entry satisfy"
     # else update validating_node entry
     validating_node.entries = remaining_entries
-    logger.debug('End Value Validation: ' + validating_node.to_string())
+    logger.debug('End Value Validation: ' + str(validating_node))
 
 
 def entries_structure_validation(validating_node: Node, all_elements_name: [str], relationship_matrix: [[int]]):
     logger = logging.getLogger("Entries Structure Validator")
-    logger.debug("Start entries structure validating " + validating_node.to_string())
-
+    logger.setLevel(logging.getLogger("Node Validator").level)
+    logger.debug("Start entries structure validating " + str(validating_node))
     validating_node_index = all_elements_name.index(validating_node.name)
     remaining_entries = []
+
+    connected_elements = list(validating_node.link_xml.keys())
+    connected_elements.sort(key=lambda element: all_elements_name.index(element))
 
     for validating_entry in validating_node.entries:  # type: Entry
         logger.debug('Checking entry: ' + str(validating_entry))
         # Check with each connected element, if found no match -> Skip this entry
-        for connected_element in validating_node.link_xml:
+        for connected_element in connected_elements:
             logger.debug('Checking connected element ' + connected_element)
             updated_possible_combination = []  # type: List[Combination]
             connected_index = all_elements_name.index(connected_element)
@@ -130,7 +137,7 @@ def entries_structure_validation(validating_node: Node, all_elements_name: [str]
             # Go through each connected node, perform node value validation and check entry pairwise
             connected_nodes = validating_node.link_xml[connected_element]  # type: List[Node]
             for connected_node in connected_nodes:  # type: Node
-                logger.debug('\t Checking connected node: ' + connected_node.to_string())
+                logger.debug('\t Checking connected node: ' + str(connected_node))
                 node_validation(connected_node, all_elements_name, relationship_matrix)
 
                 if connected_node.entries:
@@ -167,7 +174,7 @@ def entries_structure_validation(validating_node: Node, all_elements_name: [str]
 
 def node_validation(node: Node, all_elements_name: [str], relationship_matrix: [[int]]):
     logger = logging.getLogger("Node Validator")
-    logger.debug('Start validaing node ' + node.to_string())
+    logger.debug('Start validating node ' + str(node))
     if node.validated:
         logger.debug('Node already validated')
         return
@@ -177,51 +184,4 @@ def node_validation(node: Node, all_elements_name: [str], relationship_matrix: [
         logger.debug('Node got filtered by entries value validator')
         return
     entries_structure_validation(node, all_elements_name, relationship_matrix)
-    logger.debug('End validating node' + node.to_string())
-
-
-def validation_xml_sql(all_elements_name: List[str], relationship_matrix: List[List[int]], query_root_node: Node):
-    """
-    Perform validation of filtered Node
-    :param all_elements_name:
-    :param relationship_matrix:
-    :param query_root_node: root node of the root of query
-    :return:
-    """
-
-    logger = logging.getLogger("Validator Main")
-
-    leaf_nodes = query_root_node.get_unfiltered_leaf_node()
-    logger.info('%s %d', "Number of remaining leaf nodes after Filtering:", len(leaf_nodes))
-    logger.debug('Remaining leaf nodes: ' + str([node.boundary for node in leaf_nodes]))
-
-    logger.debug('Start Validating all leaf nodes')
-    for node in leaf_nodes:
-        node_validation(node, all_elements_name, relationship_matrix)
-        logger.debug('\t' + node.to_string() + ' Filtered: ' + str(node.filtered) + node.reason_of_filtered)
-
-    # print("#######################")
-    logger.info('%s %d', "Number of remaining leaf nodes of root after validation:",
-                len(query_root_node.get_unfiltered_leaf_node()))
-    # logger.info("All Possible results:")
-    #
-    # for result in all_results:
-    #     logger.info(result)
-    # print("#######################")
-
-    # print('###############################')
-    # for node in XML_query_root_leaf_nodes:
-    #     print('Node ', node.boundary)
-    #     if not node.filtered:
-    #         for entry in node.validated_entries:
-    #             print('\t', entry.coordinates)
-    #             print('\t', 'Entry link_xml')
-    #             for connected_element in entry.link_xml.keys():
-    #                 print('\t', connected_element)
-    #                 for entry_XML in entry.link_xml[connected_element]:
-    #                     print('\t' * 2, entry_XML.coordinates)
-    #             print('\t', 'Entry link_sql')
-    #             for table_name in entry.link_sql.keys():
-    #                 print('\t', table_name)
-    #                 for entry_SQL in entry.link_sql[table_name]:
-    #                     print('\t' * 2, entry_SQL.coordinates)
+    logger.debug('End validating node' + str(node))

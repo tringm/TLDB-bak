@@ -1,6 +1,34 @@
 from .DeweyID import is_ancestor
 
 
+def compare_value_boundaries(boundary1: [], boundary2: []) -> float:
+    """
+    This function compare 2 boundary and return case number
+    If boundary1 does not intersect with boundary 2:
+        If boundary1 is on the left side of boundary2 -> 1.1
+        If boundary1 is on the right side of boundary2 -> 1.2
+    If boundary1 intersect with boundary 2:
+        If boundary1 is on the left side of boundary2 -> 2.1
+        If boundary1 is on the right side of boundary2 -> 2.2
+    :param boundary1:
+    :param boundary2:
+    :return: case number
+    """
+    # Does not intersect, on the left side
+    if boundary1[1] < boundary2[0]:
+        return 1.1
+    # Does not intersect, on the right side
+    elif boundary1[0] > boundary2[1]:
+        return 1.2
+    # Else: Intersect
+    # On the left side
+    elif boundary1[1] <= boundary2[1]:
+        return 2.1
+    # On the right side
+    else:
+        return 2.2
+    return 0
+
 def value_boundary_has_intersection(boundary1: [], boundary2: []) -> bool:
     """
     This function check if these 2 boundary intersect

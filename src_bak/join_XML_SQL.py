@@ -7,12 +7,12 @@ from typing import List
 
 import numpy as np
 
-from .DeweyID import *
-from .Filterer import full_filtering
-from .Loader import Loader, get_index_highest_element
-from .Node import Node
-from .Result import Result
-from .Validator import validation_xml_sql
+from src.DeweyID import *
+from src.Filterer import full_filtering
+from src.Loader import Loader, get_index_highest_element
+from src.Node import Node
+from src.Result import Result
+from src.Validator import validation_xml_sql
 
 logger = logging.getLogger("Main")
 logger.disabled = False
@@ -43,7 +43,6 @@ def join_xml_sql(all_elements_name: [str], all_elements_root: [Node], all_tables
     #     all_tables_root[table_name].print_node()
 
     ################################################################
-    # Intialization
     # Start from root, link XML root of an element with root of its connected element in XML query
     start_initializing_link = timeit.default_timer()
 
@@ -161,5 +160,6 @@ def main():
     max_n_children = int(sys.argv[2])
     # sys.stdout = open("io/" + folder_name + "/max_children_" + str(max_n_children) + ".txt", 'w')
     loader = Loader(folder_name, max_n_children)
+    logger.info('%s %d', "Total loading time:", loader.total_loading_time)
     join_xml_sql(loader.all_elements_name, loader.all_elements_root, loader.all_tables_root, loader.relationship_matrix)
 
