@@ -17,13 +17,12 @@ from .io.LoggerSupport import *
 def value_filtering(filtering_node: Node, all_elements_name: [str]):
     """
     This function do value filtering by checking all connected tables' nodes in filtering_node.link_SQL
-    Filter this node if exist one table that has no match for this filtering_node
-    Update filtering_node.link_SQL for table nodes that is not a match
-    Update the range of linking nodes
+    Filter this node if exist one table that has no match for this filtering_node or tables doesn't match (matching
+    nodes of A_B does not match with any nodes of A_B_C)
     Each node should be value filtered once
-    :param filtering_node:
-    :param all_elements_name:
-    :return:
+    Result:
+        1. Updated link sql | Filtered
+        2. Init intersection_range | Filtered
     """
     start_value_filtering = timeit.default_timer()
     logger = logging.getLogger("Value Filterer")
@@ -34,6 +33,8 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
 
     if not filtering_node.link_sql:
         logger.debug('\t' * (filtering_node_index + 1) + 'EMPTY LINK_SQL')
+        end_value_filtering = timeit.default_timer
+        filtering_node.value_filtering_time = end_value_filtering - start_value_filtering
         return
 
     filtering_node.value_filtering_visited = True
@@ -52,6 +53,8 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
             filtering_node.reason_of_filtered = 'Value Filter: ' + table_name + ' is empty'
             logger.debug('\t' * (filtering_node_index + 1) + '###')
             logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
+            end_value_filtering = timeit.default_timer
+            filtering_node.value_filtering_time = end_value_filtering - start_value_filtering
             return
         dimension = table_name.split('_').index(filtering_node.name)
         remaining_nodes = []
@@ -70,6 +73,8 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
                                                 ' has no node that intersects with value range'
             logger.debug('\t' * (filtering_node_index + 1))
             logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
+            end_value_filtering = timeit.default_timer
+            filtering_node.value_filtering_time = end_value_filtering - start_value_filtering
             return
         filtering_node.link_sql[table_name] = remaining_nodes
 
@@ -178,6 +183,8 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
                                                     'has no intersection with other tables'
                 logger.debug('\t' * (filtering_node_index + 1) + '###')
                 logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
+                end_value_filtering = timeit.default_timer
+                filtering_node.value_filtering_time = end_value_filtering - start_value_filtering
                 return
 
             intersected_value_boundary = updated_intersected_value_boundary
@@ -197,15 +204,11 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
 
 def connected_element_filtering(filtering_node: Node, all_elements_name: [str], limit_range: Dict[str, List[int]]):
     """
-    This function filter this filtering_node by checking all of its connected element if they can
-    satisfy the limit range and the structure range requirement (ancestor, descendant)
-    If any of the connected_element does not have any satisfying node -> Filter this filtering_node
-    Update this filtering_node.link_XML if found unsatisfied nodes
+    This function check filtering_node connected element nodes if they can statisfy the limit range and structure
+    requirement (ancestor, descendant)
 
-    :param filtering_node:
-    :param all_elements_name: list of all elements based on xml query level order traversal
-    :param limit_range: constraint limit range of each element based on the order of all_elements_name
-    :return:
+    Result:
+        1. Updated link xml | Filtered
     """
     start_ce_filtering = timeit.default_timer()
     logger = logging.getLogger("Connected Element")
@@ -216,6 +219,8 @@ def connected_element_filtering(filtering_node: Node, all_elements_name: [str], 
 
     if not filtering_node.link_xml:
         logger.debug('\t' * (filtering_node_index + 1) + 'EMPTY LINK_XML')
+        end_ce_filtering = timeit.default_timer()
+        filtering_node.connected_element_filtering_time = end_ce_filtering - start_ce_filtering
         return
 
     # Always go by the highest element order
@@ -231,6 +236,8 @@ def connected_element_filtering(filtering_node: Node, all_elements_name: [str], 
             filtering_node.reason_of_filtered = 'Connected Element Filter: ' + connected_element + ' is empty'
             logger.debug('\t' * (filtering_node_index + 1) + '###')
             logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
+            end_ce_filtering = timeit.default_timer()
+            filtering_node.connected_element_filtering_time = end_ce_filtering - start_ce_filtering
             return
 
         remaining_nodes = []
@@ -261,6 +268,8 @@ def connected_element_filtering(filtering_node: Node, all_elements_name: [str], 
                                                 ' has no satisfying node'
             logger.debug('\t' * (filtering_node_index + 1) + '###')
             logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
+            end_ce_filtering = timeit.default_timer()
+            filtering_node.connected_element_filtering_time = end_ce_filtering - start_ce_filtering
             return
 
     logger.debug('\t' * filtering_node_index + 'Connected Element Filter result')
@@ -271,12 +280,11 @@ def connected_element_filtering(filtering_node: Node, all_elements_name: [str], 
 
 def check_lower_level(filtering_node: Node, all_elements_name: [str], limit_range: Dict[str, List[int]]) -> [] or None:
     """
-    This function perform full filtering of the query children of this filtering_node
-    :param filtering_node:
-    :param all_elements_name:
-    :param limit_range:
-    :return: updated limit range based on combined range of full_filtered children,
-             or None if filtering node is filtered
+    This function traverse to lower level of the XML Query to filter descendants
+    Result:
+        1. Filtered Descendant
+        2. Updated limit range based on combined range of full_filtered children
+        3. Updated link xml | Filtered
     """
     start_check_lower_level = timeit.default_timer()
     filtering_node_index = all_elements_name.index(filtering_node.name)
@@ -287,7 +295,7 @@ def check_lower_level(filtering_node: Node, all_elements_name: [str], limit_rang
     # Value Filtering connected_element_nodes to get the updated limit range
     # TODO: Is this efficient, even though each node only has to value filtered once?
     connected_elements = list(filtering_node.link_xml.keys())
-    connected_elements.sort(key=lambda element: all_elements_name.index(element))
+    connected_elements.sort(key=lambda e: all_elements_name.index(e))
 
     for connected_element in connected_elements:
         logger.verbose('\t' * (filtering_node_index + 1) + 'Traverse down ' + connected_element)
@@ -315,6 +323,8 @@ def check_lower_level(filtering_node: Node, all_elements_name: [str], limit_rang
             filtering_node.filtered = True
             filtering_node.reason_of_filtered = 'Traversing down: None of ' + connected_element + \
                                                 ' nodes pass full filtering'
+            end_check_lower_level = timeit.default_timer()
+            filtering_node.check_lower_level_time = end_check_lower_level - start_check_lower_level
             return
 
         filtering_node.link_xml[connected_element] = remaining_nodes
@@ -332,10 +342,10 @@ def check_lower_level(filtering_node: Node, all_elements_name: [str], limit_rang
 def initialize_children_link(filtering_node, all_elements_name, limit_range):
     """
     This function initialize children link_xml and link_sql of a filtered node
-    :param filtering_node:
-    :param all_elements_name:
-    :param limit_range:
-    :return: (link_xml, link_sql)
+    Result:
+        1. Filtered children link xml based on structure filtering
+        2. Filtered children link sql based on limit range
+        3. Or FILTERED
     """
     start_init_children = timeit.default_timer()
     filtering_node_index = all_elements_name.index(filtering_node.name)
@@ -344,6 +354,8 @@ def initialize_children_link(filtering_node, all_elements_name, limit_range):
 
     if not filtering_node.children:
         logger.debug('\t' * (filtering_node_index + 1) + ' This is a leaf node ')
+        end_init_children = timeit.default_timer()
+        filtering_node.init_children_time = end_init_children - start_init_children
         return [], []
 
     logger.debug('\t' * filtering_node_index + 'Start initialize children link ' + str(filtering_node))
@@ -384,6 +396,8 @@ def initialize_children_link(filtering_node, all_elements_name, limit_range):
                 "No child node of " + connected_element + 'satisfy limit range or structure'
             logger.debug('\t' * (filtering_node_index + 1) + '###')
             logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
+            end_init_children = timeit.default_timer()
+            filtering_node.init_children_time = end_init_children - start_init_children
             return
 
     # Init link_sql and check if they satisfy the limit range
@@ -418,6 +432,8 @@ def initialize_children_link(filtering_node, all_elements_name, limit_range):
             filtering_node.reason_of_filtered = 'Init Children: No child node of ' + table_name + ' satisfy limit range'
             logger.debug('\t' * (filtering_node_index + 1) + '###')
             logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
+            end_init_children = timeit.default_timer()
+            filtering_node.init_children_time = end_init_children - start_init_children
             return
 
     end_init_children = timeit.default_timer()
@@ -430,6 +446,9 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
     """
     This function filter the filtering_node children and its link _sql based on the intersection range
     and assign the link xml and link sql
+    Result:
+        1. Assign link xml to children
+        2. Assign filtered link sql to children
     :param filtering_node:
     :return:
     """
@@ -440,6 +459,8 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
 
     if not filtering_node.children:
         logger.debug('\t' * (filtering_node_index + 1) + 'is a leaf node')
+        end_filter_children = timeit.default_timer()
+        filtering_node.filter_children_time = end_filter_children - start_filter_children
         return
 
     # if child does not fall into any part range of the intersection_range[filtering_node.name]
@@ -452,6 +473,8 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
             filtering_node_child.link_sql = link_sql.copy()
             logger.verbose('\t' * filtering_node_index + 'Result')
             log_node_all_link(filtering_node_child, logger, filtering_node_index + 1)
+        end_filter_children = timeit.default_timer()
+        filtering_node.filter_children_time = end_filter_children - start_filter_children
         return
 
     logger.debug('\t' * filtering_node_index + 'Begin Filter Children')
@@ -514,6 +537,8 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
         filtering_node.reason_of_filtered = "Filter Children: No children satisfy intersect boundary"
         logger.debug('\t' * (filtering_node_index + 1) + '###')
         logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
+        end_filter_children = timeit.default_timer()
+        filtering_node.filter_children_time = end_filter_children - start_filter_children
         return
 
     logger.debug('\t' * filtering_node_index + 'Begin Filter Children Node link sql based on intersection range')
@@ -611,6 +636,15 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     :return: updated limit range or None if this node is filtered
     """
 
+    def check_if_filtered(filtering_node: Node, logger, start_time):
+        if filtering_node.filtered:
+            logger.debug('\t' * filtering_node_index + '###')
+            logger.debug('\t' * filtering_node_index + 'FILTERED: ' + filtering_node.reason_of_filtered)
+            end_full_filtering = timeit.default_timer()
+            filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
+            return True
+        return False
+
     start_full_filtering = timeit.default_timer()
     logger = logging.getLogger("Main Filterer")
 
@@ -635,6 +669,8 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
         filtering_node.reason_of_filtered = 'Main Filter: Filtered by limit range ' + str(limit_range)
         logger.debug('\t' * filtering_node_index + '###')
         logger.debug('\t' * filtering_node_index + 'FILTERED: ' + filtering_node.reason_of_filtered)
+        end_full_filtering = timeit.default_timer()
+        filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
         return
 
     # If not value filtered before =>
@@ -645,6 +681,8 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     if filtering_node.filtered:
         logger.debug('\t' * filtering_node_index + '###')
         logger.debug('\t' * filtering_node_index + 'FILTERED: ' + filtering_node.reason_of_filtered)
+        end_full_filtering = timeit.default_timer()
+        filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
         return
 
     # If not filtered after value filtering => update limit range
@@ -660,6 +698,8 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     if filtering_node.filtered:
         logger.debug('\t' * (filtering_node_index + 1) + str(filtering_node) +
                      ' FILTERED by connected_element_filtering')
+        end_full_filtering = timeit.default_timer()
+        filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
         return
 
     limit_range = check_lower_level(filtering_node, all_elements_name, limit_range)
@@ -667,6 +707,8 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     if filtering_node.filtered:
         logger.debug('\t' * (filtering_node_index + 1) + str(filtering_node) +
                      ' FILTERED by when check_lower_level')
+        end_full_filtering = timeit.default_timer()
+        filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
         return
 
     # Update children's links

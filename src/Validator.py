@@ -3,29 +3,26 @@ import timeit
 
 from typing import List, Dict
 
-from .Combination import Combination
 from .DeweyID import relationship_satisfied
 from .Entry import Entry
 from .Node import Node
 
 
-def match_entry(entry1: Entry, table1: str, entry2: Entry, table2: str):
+def match_entry(entry1: Entry, elements1: list(str), entry2: Entry, elements2: list(str)):
     """
     This is an adhoc function that check if entry2 matches with entry1 assuming that entry2 always has less elements
     than entry 1
     :param entry1:
-    :param table1: name of table
+    :param elements1: list of elements of entry1
     :param entry2:
-    :param table2:
+    :param elements2:
     :return:
     """
-    table1_elements = table1.split('_')
-    table2_elements = table2.split('_')
-    if len(table1_elements) > len(table2_elements):
+    if len(elements2) > len(elements1):
         raise ValueError('Something is wrong' + str(entry2) + 'supposed to has less elements than ' + str(entry1))
     for i in range(len(entry2.coordinates)):
-        element_tbl2 = table2_elements[i]
-        idx_tbl1 = table1_elements.index(element_tbl2)
+        element_tbl2 = elements2[i]
+        idx_tbl1 = elements1.index(element_tbl2)
         if entry1.coordinates[idx_tbl1] != entry2.coordinates[i]:
             return False
 
@@ -42,6 +39,16 @@ def entries_value_validation(validating_node, all_elements_name):
 
     # validating_node.value_validation_visited = True
     validating_node_entries = validating_node.get_entries()
+
+
+    # If this node doesn't have any linked table -> matching entries = all its entries
+    if not validating_node.link_sql:
+        logger.debug('\t' * validating_node_index + 'No link sql ')
+        for e in validating_node_entries:
+            e.matching_value_entries = (None, e)
+        end_value_validation = timeit.default_timer()
+        validating_node.value_validation_time = end_value_validation - start_value_validation
+        return
 
     remaining_entries = []
     cursors = {}
@@ -65,14 +72,8 @@ def entries_value_validation(validating_node, all_elements_name):
         logger.verbose('\t' * (validating_node_index + 1) + 'Checking Entry: ' + str(entry))
         entry_satisfy = True
 
-        # This entry possible combination of each element
-        init_combination = Combination(all_elements_name)
-        init_combination.index[validating_node.name] = entry.coordinates[0]
-        init_combination.value[validating_node.name] = entry.coordinates[1]
-
-        matching_entries = []
-        matching_entries_table_name = ''
-        # possible_value_combinations = [init_combination]
+        matching_v_e = []
+        matching_v_e_elements = []
 
         # Check for all table if this entry can match with a table entry
         for table_name in table_names:
@@ -81,9 +82,8 @@ def entries_value_validation(validating_node, all_elements_name):
             #     break
 
             elements = table_elements[table_name]
-            # this_table_combinations = []  # type: List[Combination]
 
-            this_table_matching_entries = []
+            this_table_matching_v_e = []
 
             # if entry does not match a table -> ignore this entry
             while cursors[table_name] < len(table_entries[table_name]):
@@ -100,42 +100,45 @@ def entries_value_validation(validating_node, all_elements_name):
                 if entry.coordinates[1] > table_entry.coordinates[dimension]:
                     logger.verbose('\t' * (validating_node_index + 4) + 'NOT MATCH, move to next table entry')
                     cursors[table_name] += 1
-                # this entry match a table entry -> save combination, move to next table entry
+                # this entry match a table entry -> save this entry, move to next table entry
                 else:
                     logger.verbose('\t' * (validating_node_index + 4) + 'MATCH')
                     cursors[table_name] += 1
-                    this_table_matching_entries.append(table_entry)
+                    this_table_matching_v_e.append(table_entry)
 
             # This table does not have any matching entry
-            if not this_table_matching_entries:
+            if not this_table_matching_v_e:
                 logger.verbose('\t' * (validating_node_index + 2) + '---> No match entry, ignored')
                 entry_satisfy = False
                 break
 
             # Initialize matching entries if not
-            if not matching_entries:
-                matching_entries = this_table_matching_entries
-                matching_entries_table_name = table_name
+            if not matching_v_e:
+                matching_v_e = this_table_matching_v_e
+                matching_v_e_elements = table_name.split('_')
 
             # Combine existing matching entries with this table matching entries
             else:
-                updated_matching_entries = []
-                for matching_entry in matching_entries:
-                    for this_table_entry in this_table_matching_entries:
-                        if match_entry(matching_entry, matching_entries_table_name, this_table_entry, table_name):
-                            updated_matching_entries.append(matching_entry)
+                logger.verbose('\t' * (validating_node_index + 3) + 'Matching with prev entries')
+                updated_matching_v_e = []
+                for m_e in matching_v_e:
+                    for tbl_e in this_table_matching_v_e:
+                        if match_entry(m_e, matching_v_e_elements, tbl_e, elements):
+                            logger.verbose('\t' * (validating_node_index + 4) + 'Match: ' + str(m_e) + ' ' + str(tbl_e))
+                            updated_matching_v_e.append(m_e)
+                            break
 
-                if not updated_matching_entries:
+                if not updated_matching_v_e:
                     logger.verbose('\t' * (validating_node_index + 2) + '---> No match entry with existing table')
                     entry_satisfy = False
                     break
 
                 else:
-                    matching_entries = updated_matching_entries
+                    matching_v_e = updated_matching_v_e
 
         if entry_satisfy:
             remaining_entries.append(entry)
-            entry.matching_entries = {matching_entries_table_name: matching_entries}
+            entry.matching_value_entries = (matching_v_e_elements, matching_v_e)
 
     # if no entry satisfy -> filter this validating node
     if not remaining_entries:
@@ -143,14 +146,17 @@ def entries_value_validation(validating_node, all_elements_name):
         validating_node.reason_of_filtered = "Entries Value Validation: no entry satisfy"
         logger.debug('\t' * (validating_node_index + 1) + '###')
         logger.debug('\t' * (validating_node_index + 1) + 'FILTERED: ' + validating_node.reason_of_filtered)
+        end_value_validation = timeit.default_timer()
+        validating_node.value_validation_time = end_value_validation - start_value_validation
+        return
     # else update validating_node entry
     else:
         validating_node.entries = remaining_entries
 
-    logger.debug('\t' * (validating_node_index + 1) + 'Remaining Entries: ' +
-                 str([str(entry) for entry in remaining_entries]))
-    logger.debug('\t' * (validating_node_index + 1) + 'Matching Entries:' +
-                 str([str(entry) for entry in entry.matching_entries]))
+    logger.debug('\t' * validating_node_index + 'Remaining Entries: ')
+    for entry in validating_node.entries:
+        logger.debug('\t' * (validating_node_index + 1) + str(entry) + ' Matching entries: '
+                     + str([str(e) for e in entry.matching_value_entries]))
 
     logger.debug('\t' * validating_node_index + 'End Value Validation: ' + str(validating_node))
     end_value_validation = timeit.default_timer()
@@ -169,26 +175,28 @@ def entries_structure_validation(validating_node: Node, all_elements_name: [str]
     connected_elements = list(validating_node.link_xml.keys())
     connected_elements.sort(key=lambda element: all_elements_name.index(element))
 
-    for validating_entry in validating_node.entries:  # type: Entry
-        logger.debug('Checking entry: ' + str(validating_entry))
+    for validating_e in validating_node.entries:  # type: Entry
+        logger.verbose('\t' * (validating_node_index + 1) + 'Checking entry: ' + str(validating_e))
         # Check with each connected element, if found no match -> Skip this entry
-        for connected_element in connected_elements:
-            logger.debug('Checking connected element ' + connected_element)
-            updated_possible_combination = []  # type: List[Combination]
-            connected_index = all_elements_name.index(connected_element)
-            relationship = relationship_matrix[validating_node_index, connected_index]
-            # logger.debug('Relationship: ' + str(relationship))
+        for c_e in connected_elements:
+            logger.verbose('\t' * (validating_node_index + 2) + 'Checking connected element ' + c_e)
+            rls = relationship_matrix[validating_node_index, all_elements_name.index(c_e)]
 
             # Go through each connected node, perform node value validation and check entry pairwise
-            connected_nodes = validating_node.link_xml[connected_element]  # type: List[Node]
-            for connected_node in connected_nodes:  # type: Node
-                logger.debug('\t Checking connected node: ' + str(connected_node))
-                node_validation(connected_node, all_elements_name, relationship_matrix)
+            c_e_nodes = validating_node.link_xml[c_e]  # type: List[Node]
+            for c_e_node in c_e_nodes:  # type: Node
+                logger.verbose('\t' * (validating_node_index + 3) + 'Checking connected node: ' + str(c_e_node))
+                node_validation(c_e_node, all_elements_name, relationship_matrix)
 
-                if connected_node.entries:
-                    logger.debug('\t' + 'Connected node still have entries')
-                    for connected_entry in connected_node.entries:  # type: Entry
-                        logger.debug('\t' * 2 + 'connected_entry ' + str(connected_entry))
+                if c_e_node.entries:
+                    logger.verbose('\t' * (validating_node_index + 4) + 'Connected node still have entries')
+                    for c_e_entry in c_e_node.entries:  # type: Entry
+                        logger.verbose('\t' * (validating_node_index + 4) + 'Connected entry ' + str(c_e_entry))
+
+                        for matchi
+
+
+
                         for connected_combination in connected_entry.possible_combinations:  # type: Combination
                             for validating_entry_combination in validating_entry.possible_combinations:
                                 logger.debug('\t' * 2 + 'connected_combination: ' + str(connected_combination))
@@ -215,6 +223,9 @@ def entries_structure_validation(validating_node: Node, all_elements_name: [str]
     if not remaining_entries:
         validating_node.filtered = True
         validating_node.reason_of_filtered = "Entries Structure Validation: no entry satisfy"
+
+    end_structure_validation_time = timeit.default_timer()
+    validating_node.structure_validation_time = end_structure_validation_time - start_structure_validation_time
 
 
 def node_validation(node: Node, all_elements_name: [str], relationship_matrix: [[int]]):

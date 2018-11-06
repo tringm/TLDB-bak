@@ -61,6 +61,8 @@ class Node:
 
         # Validation time
         self.value_validation_time = -1
+        self.structure_validation_time = -1
+
 
     def __str__(self):
         return self.name + ':' + str(self.boundary)

@@ -14,7 +14,7 @@ class Entry:
         self.n_dimensions = len(coordinates)
         self.link_XML = {}
         self.link_SQL = {}
-        self.matching_entries = {}
+        self.matching_value_entry = (None, None)
 
     def __str__(self):
         return str(self.coordinates)
