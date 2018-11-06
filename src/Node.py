@@ -3,6 +3,8 @@ from typing import Dict, Any, List
 from .Entry import Entry
 import math
 
+import queue
+
 
 class Node:
     """RTree Node
@@ -49,9 +51,19 @@ class Node:
         # self.validated_entries = []
         self.validated = False
 
+        # Filter time
+        self.value_filtering_time = -1
+        self.connected_element_filtering_time = -1
+        self.check_lower_level_time = -1
+        self.init_children_time = -1
+        self.filter_children_time = -1
+        self.full_filtering_time = -1
+
+        # Validation time
+        self.value_validation_time = -1
+
     def __str__(self):
         return self.name + ':' + str(self.boundary)
-
 
     # def update_boundary(self, coordinates):
     # 	n_dimensions = len(coordinates)
@@ -78,6 +90,29 @@ class Node:
     # 			self.split
 
     def get_entries(self):
+        # if this is a leaf node or has already been get entries before
+        if len(self.entries) > 0:
+            return self.entries
+
+        node_queue = queue.Queue()
+        node_queue.put(self)
+        entries = []
+
+        while not node_queue.empty():
+            node = node_queue.get()
+            # if this is a leaf
+            if len(node.entries) > 0:
+                for entry in node.entries:
+                    entries.append(entry)
+            else:
+                for child_node in node.children:
+                    node_queue.put(child_node)
+
+        # cache entries
+        self.entries = entries
+        return self.entries
+
+    def get_entries_recursion(self):
         """
         This function return all entries contained in this node (included children's entries)
         :return: [Entry]

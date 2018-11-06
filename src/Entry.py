@@ -14,7 +14,7 @@ class Entry:
         self.n_dimensions = len(coordinates)
         self.link_XML = {}
         self.link_SQL = {}
-        self.possible_combinations = []
+        self.matching_entries = {}
 
     def __str__(self):
         return str(self.coordinates)

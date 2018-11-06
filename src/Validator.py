@@ -1,4 +1,6 @@
 import logging
+import timeit
+
 from typing import List, Dict
 
 from .Combination import Combination
@@ -7,14 +9,39 @@ from .Entry import Entry
 from .Node import Node
 
 
+def match_entry(entry1: Entry, table1: str, entry2: Entry, table2: str):
+    """
+    This is an adhoc function that check if entry2 matches with entry1 assuming that entry2 always has less elements
+    than entry 1
+    :param entry1:
+    :param table1: name of table
+    :param entry2:
+    :param table2:
+    :return:
+    """
+    table1_elements = table1.split('_')
+    table2_elements = table2.split('_')
+    if len(table1_elements) > len(table2_elements):
+        raise ValueError('Something is wrong' + str(entry2) + 'supposed to has less elements than ' + str(entry1))
+    for i in range(len(entry2.coordinates)):
+        element_tbl2 = table2_elements[i]
+        idx_tbl1 = table1_elements.index(element_tbl2)
+        if entry1.coordinates[idx_tbl1] != entry2.coordinates[i]:
+            return False
+
+    return True
+
+
 def entries_value_validation(validating_node, all_elements_name):
+    start_value_validation = timeit.default_timer()
+    validating_node_index = all_elements_name.index(validating_node.name)
+
     logger = logging.getLogger("Entries Value Validator")
     logger.setLevel(logging.getLogger("Node Validator").level)
-    logger.debug("Start entries value validating " + str(validating_node))
+    logger.debug('\t' * validating_node_index + 'Start entries value validating ' + str(validating_node))
 
     # validating_node.value_validation_visited = True
     validating_node_entries = validating_node.get_entries()
-    logger.debug('Validating Node Entries: ' + str([str(entry) for entry in validating_node_entries]))
 
     remaining_entries = []
     cursors = {}
@@ -29,96 +56,114 @@ def entries_value_validation(validating_node, all_elements_name):
         cursors[table_name] = 0
         entries = []
         for node in validating_node.link_sql[table_name]:
-            for entry in node.get_entries():
-                entries.append(entry)
+            entries += node.get_entries()
         table_entries[table_name] = entries
         table_elements[table_name] = table_name.split('_')
         table_dimension[table_name] = table_elements[table_name].index(validating_node.name)
 
     for entry in validating_node_entries:
-        logger.debug('Checking Entry: ' + str(entry))
+        logger.verbose('\t' * (validating_node_index + 1) + 'Checking Entry: ' + str(entry))
         entry_satisfy = True
 
         # This entry possible combination of each element
         init_combination = Combination(all_elements_name)
         init_combination.index[validating_node.name] = entry.coordinates[0]
         init_combination.value[validating_node.name] = entry.coordinates[1]
-        possible_value_combinations = [init_combination]
+
+        matching_entries = []
+        matching_entries_table_name = ''
+        # possible_value_combinations = [init_combination]
 
         # Check for all table if this entry can match with a table entry
         for table_name in table_names:
-            logger.debug('\t' + 'Checking table: ' + table_name)
+            logger.verbose('\t' * (validating_node_index + 2) + 'Checking table: ' + table_name)
             # if not entry_satisfy:
             #     break
 
             elements = table_elements[table_name]
-            this_table_combinations = []  # type: List[Combination]
+            # this_table_combinations = []  # type: List[Combination]
+
+            this_table_matching_entries = []
 
             # if entry does not match a table -> ignore this entry
             while cursors[table_name] < len(table_entries[table_name]):
                 table_entry = table_entries[table_name][cursors[table_name]]
                 dimension = table_dimension[table_name]
-                logger.debug('cursor: ' + str(cursors[table_name]) + ' table entry: ' + str(table_entry))
+                logger.verbose('\t' * (validating_node_index + 3)
+                               + 'cursor: ' + str(cursors[table_name]) + ' table entry: ' + str(table_entry))
                 # this entry is 'less' than all table_entries -> skip this entry
                 if entry.coordinates[1] < table_entry.coordinates[dimension]:
-                    logger.debug('\t' * 2 + 'out of range')
+                    logger.verbose('\t' * (validating_node_index + 4) + 'NOT MATCH, move to next table or end')
                     # entry_satisfy = False
                     break
                 # this entry is larger than this table_entry -> move to next table_entry
                 if entry.coordinates[1] > table_entry.coordinates[dimension]:
+                    logger.verbose('\t' * (validating_node_index + 4) + 'NOT MATCH, move to next table entry')
                     cursors[table_name] += 1
                 # this entry match a table entry -> save combination, move to next table entry
                 else:
-                    combination = Combination(all_elements_name)
-                    for i in range(len(elements)):
-                        combination.value[elements[i]] = table_entry.coordinates[i]
-                    combination.index[validating_node.name] = entry.coordinates[0]
-                    this_table_combinations.append(combination)
+                    logger.verbose('\t' * (validating_node_index + 4) + 'MATCH')
                     cursors[table_name] += 1
+                    this_table_matching_entries.append(table_entry)
 
-            if not this_table_combinations:
-                logger.debug('\t' + 'no possible combination')
+            # This table does not have any matching entry
+            if not this_table_matching_entries:
+                logger.verbose('\t' * (validating_node_index + 2) + '---> No match entry, ignored')
                 entry_satisfy = False
                 break
 
-            # else -> Update possible combinations
-            updated_possible_combinations = []
-            for combination in this_table_combinations:
-                for existing_combination in possible_value_combinations:
-                    if combination.match_with(existing_combination):
-                        updated_possible_combinations.append(combination.combine_with(existing_combination))
+            # Initialize matching entries if not
+            if not matching_entries:
+                matching_entries = this_table_matching_entries
+                matching_entries_table_name = table_name
 
-            if not updated_possible_combinations:
-                logger.debug('\t' + 'empty updated combination')
-                entry_satisfy = False
-                break
+            # Combine existing matching entries with this table matching entries
             else:
-                possible_value_combinations = updated_possible_combinations
+                updated_matching_entries = []
+                for matching_entry in matching_entries:
+                    for this_table_entry in this_table_matching_entries:
+                        if match_entry(matching_entry, matching_entries_table_name, this_table_entry, table_name):
+                            updated_matching_entries.append(matching_entry)
+
+                if not updated_matching_entries:
+                    logger.verbose('\t' * (validating_node_index + 2) + '---> No match entry with existing table')
+                    entry_satisfy = False
+                    break
+
+                else:
+                    matching_entries = updated_matching_entries
 
         if entry_satisfy:
             remaining_entries.append(entry)
-            entry.possible_combinations = possible_value_combinations
+            entry.matching_entries = {matching_entries_table_name: matching_entries}
 
-    logger.debug('Remaining Entries: ' + str([str(entry) for entry in remaining_entries]))
-    logger.debug('Possible combination')
-    for entry in remaining_entries:
-        logger.debug(str(entry))
-        for combination in entry.possible_combinations:
-            logger.debug('\t' + str(combination))
     # if no entry satisfy -> filter this validating node
     if not remaining_entries:
         validating_node.filtered = True
         validating_node.reason_of_filtered = "Entries Value Validation: no entry satisfy"
+        logger.debug('\t' * (validating_node_index + 1) + '###')
+        logger.debug('\t' * (validating_node_index + 1) + 'FILTERED: ' + validating_node.reason_of_filtered)
     # else update validating_node entry
-    validating_node.entries = remaining_entries
-    logger.debug('End Value Validation: ' + str(validating_node))
+    else:
+        validating_node.entries = remaining_entries
+
+    logger.debug('\t' * (validating_node_index + 1) + 'Remaining Entries: ' +
+                 str([str(entry) for entry in remaining_entries]))
+    logger.debug('\t' * (validating_node_index + 1) + 'Matching Entries:' +
+                 str([str(entry) for entry in entry.matching_entries]))
+
+    logger.debug('\t' * validating_node_index + 'End Value Validation: ' + str(validating_node))
+    end_value_validation = timeit.default_timer()
+    validating_node.value_validation_time = end_value_validation - start_value_validation
 
 
 def entries_structure_validation(validating_node: Node, all_elements_name: [str], relationship_matrix: [[int]]):
+    start_structure_validation_time = timeit.default_timer()
+
     logger = logging.getLogger("Entries Structure Validator")
     logger.setLevel(logging.getLogger("Node Validator").level)
-    logger.debug("Start entries structure validating " + str(validating_node))
     validating_node_index = all_elements_name.index(validating_node.name)
+    logger.debug('\t' * validating_node_index + "Start entries structure validating " + str(validating_node))
     remaining_entries = []
 
     connected_elements = list(validating_node.link_xml.keys())

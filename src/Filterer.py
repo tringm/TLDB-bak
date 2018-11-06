@@ -611,6 +611,7 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     :return: updated limit range or None if this node is filtered
     """
 
+    start_full_filtering = timeit.default_timer()
     logger = logging.getLogger("Main Filterer")
 
     filtering_node_index = all_elements_name.index(filtering_node.name)
@@ -671,5 +672,8 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     # Update children's links
     link_xml, link_sql = initialize_children_link(filtering_node, all_elements_name, limit_range)
     filter_children(filtering_node, all_elements_name, limit_range, link_xml, link_sql)
+
+    end_full_filtering = timeit.default_timer()
+    filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
 
     return limit_range
