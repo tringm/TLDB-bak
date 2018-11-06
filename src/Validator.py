@@ -3,6 +3,7 @@ import timeit
 
 from typing import List, Dict
 
+from src.Entry import Entry
 from .DeweyID import relationship_satisfied
 from .Entry import Entry
 from .Node import Node
@@ -72,8 +73,7 @@ def entries_value_validation(validating_node, all_elements_name):
         logger.verbose('\t' * (validating_node_index + 1) + 'Checking Entry: ' + str(entry))
         entry_satisfy = True
 
-        matching_v_e = []
-        matching_v_e_elements = []
+        matching_v = []  # type: List[Dict[str, List[int]]]
 
         # Check for all table if this entry can match with a table entry
         for table_name in table_names:
@@ -82,13 +82,13 @@ def entries_value_validation(validating_node, all_elements_name):
             #     break
 
             elements = table_elements[table_name]
+            dimension = table_dimension[table_name]
 
-            this_table_matching_v_e = []
+            this_table_matching_v_e = []  # type: List[Entry] 
 
             # if entry does not match a table -> ignore this entry
             while cursors[table_name] < len(table_entries[table_name]):
                 table_entry = table_entries[table_name][cursors[table_name]]
-                dimension = table_dimension[table_name]
                 logger.verbose('\t' * (validating_node_index + 3)
                                + 'cursor: ' + str(cursors[table_name]) + ' table entry: ' + str(table_entry))
                 # this entry is 'less' than all table_entries -> skip this entry
@@ -113,7 +113,9 @@ def entries_value_validation(validating_node, all_elements_name):
                 break
 
             # Initialize matching entries if not
-            if not matching_v_e:
+            if not matching_v:
+                for e in this_table_matching_v_e:
+                    matching_v.append(zip(elements, e.coordinates))
                 matching_v_e = this_table_matching_v_e
                 matching_v_e_elements = table_name.split('_')
 

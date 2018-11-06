@@ -636,12 +636,12 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     :return: updated limit range or None if this node is filtered
     """
 
-    def check_if_filtered(filtering_node: Node, logger, start_time):
+    def check_if_filtered(_filtering_node: Node, _logger, _start_time):
         if filtering_node.filtered:
-            logger.debug('\t' * filtering_node_index + '###')
-            logger.debug('\t' * filtering_node_index + 'FILTERED: ' + filtering_node.reason_of_filtered)
-            end_full_filtering = timeit.default_timer()
-            filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
+            _logger.debug('\t' * filtering_node_index + '###')
+            _logger.debug('\t' * filtering_node_index + 'FILTERED: ' + filtering_node.reason_of_filtered)
+            _end_full_filtering = timeit.default_timer()
+            filtering_node.full_filtering_time = _end_full_filtering - _start_time
             return True
         return False
 
@@ -667,10 +667,7 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     else:
         filtering_node.filtered = True
         filtering_node.reason_of_filtered = 'Main Filter: Filtered by limit range ' + str(limit_range)
-        logger.debug('\t' * filtering_node_index + '###')
-        logger.debug('\t' * filtering_node_index + 'FILTERED: ' + filtering_node.reason_of_filtered)
-        end_full_filtering = timeit.default_timer()
-        filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
+        check_if_filtered(filtering_node, logger, start_full_filtering)
         return
 
     # If not value filtered before =>
@@ -678,11 +675,7 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     if not filtering_node.value_filtering_visited:
         value_filtering(filtering_node, all_elements_name)
 
-    if filtering_node.filtered:
-        logger.debug('\t' * filtering_node_index + '###')
-        logger.debug('\t' * filtering_node_index + 'FILTERED: ' + filtering_node.reason_of_filtered)
-        end_full_filtering = timeit.default_timer()
-        filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
+    if check_if_filtered(filtering_node, logger, start_full_filtering):
         return
 
     # If not filtered after value filtering => update limit range
@@ -695,20 +688,12 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
     logger.debug('\t' * filtering_node_index + 'Begin Connected Element Filtering ' + str(filtering_node))
     connected_element_filtering(filtering_node, all_elements_name, limit_range)
 
-    if filtering_node.filtered:
-        logger.debug('\t' * (filtering_node_index + 1) + str(filtering_node) +
-                     ' FILTERED by connected_element_filtering')
-        end_full_filtering = timeit.default_timer()
-        filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
+    if check_if_filtered(filtering_node, logger, start_full_filtering):
         return
 
     limit_range = check_lower_level(filtering_node, all_elements_name, limit_range)
 
-    if filtering_node.filtered:
-        logger.debug('\t' * (filtering_node_index + 1) + str(filtering_node) +
-                     ' FILTERED by when check_lower_level')
-        end_full_filtering = timeit.default_timer()
-        filtering_node.full_filtering_time = end_full_filtering - start_full_filtering
+    if check_if_filtered(filtering_node, logger, start_full_filtering):
         return
 
     # Update children's links
