@@ -7,6 +7,7 @@ from .Filterer import full_filtering
 from .Loader import Loader, get_index_highest_element
 from .Node import Node
 from .Validator import node_validation
+from .io_support.LoggerSupport import *
 
 
 def initialization(loader: Loader):
@@ -106,8 +107,14 @@ def perform_filtering(loader: Loader, initial_limit_range: []):
         updated_limit_range = full_filtering(query_root_node, all_elements_name, limit_range)
         end_one_node_filtering = timeit.default_timer()
 
+        logger.debug('Node: ' + str(query_root_node) + ' status: ')
+        logger.debug('\t' + str(query_root_node.filtered) + query_root_node.reason_of_filtered)
+        log_node_time(query_root_node, logger, 1)
+
+        logger.debug('\t' + str(query_root_node.filtered) + query_root_node.reason_of_filtered)
         logger.debug('%s %s %s %d %s %s %s', 'query root node', str(query_root_node), 'filter time:',
                      end_one_node_filtering - start_one_node_filtering, 'filtered:', query_root_node.filtered, query_root_node.reason_of_filtered)
+        logger.debug('')
 
         if not query_root_node.filtered:
             for XML_query_root_node_child in query_root_node.children:
@@ -117,7 +124,7 @@ def perform_filtering(loader: Loader, initial_limit_range: []):
             n_node_filtered += 1
 
     end_filtering = timeit.default_timer()
-    logger.info('%s %d', 'Filtering time', end_filtering - start_filtering)
+    logger.info('%s %d', 'Total Filtering time', end_filtering - start_filtering)
     logger.info('%s %d', 'Number of node processed: ', n_node_processed)
     logger.info('%s %d', 'Number of node filtered: ', n_node_filtered)
     logger.info('%s %d', 'Average filtering time for one node:',
@@ -185,4 +192,4 @@ class Joiner:
         logger.info('%s %d', "Number of remaining leaf nodes after Filtering:", len(leaf_nodes))
         logger.debug('Remaining leaf nodes: ' + str([node.boundary for node in leaf_nodes]))
 
-        perform_validation(loader)
+        # perform_validation(loader)

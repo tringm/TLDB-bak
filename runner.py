@@ -3,7 +3,7 @@ from src.Joiner import Joiner
 import logging
 
 
-folder_name = "orderline_price_asin_small"
+folder_name = "tc_3_treebank_XML3"
 max_n_children = 10
 
 logging.basicConfig(filename="io/" + folder_name + "/" + "result" + str(max_n_children) + ".log",

@@ -9,7 +9,7 @@ from .Entry import Entry
 from .Node import Node
 
 
-def match_entry(entry1: Entry, elements1: list(str), entry2: Entry, elements2: list(str)):
+def match_entry(entry1: Entry, elements1: [str], entry2: Entry, elements2: [str]):
     """
     This is an adhoc function that check if entry2 matches with entry1 assuming that entry2 always has less elements
     than entry 1
@@ -165,69 +165,69 @@ def entries_value_validation(validating_node, all_elements_name):
     validating_node.value_validation_time = end_value_validation - start_value_validation
 
 
-def entries_structure_validation(validating_node: Node, all_elements_name: [str], relationship_matrix: [[int]]):
-    start_structure_validation_time = timeit.default_timer()
-
-    logger = logging.getLogger("Entries Structure Validator")
-    logger.setLevel(logging.getLogger("Node Validator").level)
-    validating_node_index = all_elements_name.index(validating_node.name)
-    logger.debug('\t' * validating_node_index + "Start entries structure validating " + str(validating_node))
-    remaining_entries = []
-
-    connected_elements = list(validating_node.link_xml.keys())
-    connected_elements.sort(key=lambda element: all_elements_name.index(element))
-
-    for validating_e in validating_node.entries:  # type: Entry
-        logger.verbose('\t' * (validating_node_index + 1) + 'Checking entry: ' + str(validating_e))
-        # Check with each connected element, if found no match -> Skip this entry
-        for c_e in connected_elements:
-            logger.verbose('\t' * (validating_node_index + 2) + 'Checking connected element ' + c_e)
-            rls = relationship_matrix[validating_node_index, all_elements_name.index(c_e)]
-
-            # Go through each connected node, perform node value validation and check entry pairwise
-            c_e_nodes = validating_node.link_xml[c_e]  # type: List[Node]
-            for c_e_node in c_e_nodes:  # type: Node
-                logger.verbose('\t' * (validating_node_index + 3) + 'Checking connected node: ' + str(c_e_node))
-                node_validation(c_e_node, all_elements_name, relationship_matrix)
-
-                if c_e_node.entries:
-                    logger.verbose('\t' * (validating_node_index + 4) + 'Connected node still have entries')
-                    for c_e_entry in c_e_node.entries:  # type: Entry
-                        logger.verbose('\t' * (validating_node_index + 4) + 'Connected entry ' + str(c_e_entry))
-
-                        for matchi
-
-
-
-                        for connected_combination in connected_entry.possible_combinations:  # type: Combination
-                            for validating_entry_combination in validating_entry.possible_combinations:
-                                logger.debug('\t' * 2 + 'connected_combination: ' + str(connected_combination))
-                                logger.debug('\t' * 2 + 'validating_entry_combination: ' + str(validating_entry_combination))
-                                # logger.debug('Value Satisfy: ' + str(connected_combination.match_with(validating_entry_combination)))
-                                # logger.debug('Structure Satisfy: ' + str(relationship_satisfied(validating_entry_combination.index[validating_node.name],
-                                #                                connected_combination.index[connected_element],
-                                #                                relationship)))
-                                if (connected_combination.match_with(validating_entry_combination)) and \
-                                        relationship_satisfied(validating_entry_combination.index[validating_node.name],
-                                                               connected_combination.index[connected_element],
-                                                               relationship):
-                                    logger.debug('\t' * 3 + 'MATCH')
-                                    updated_possible_combination.append(validating_entry_combination.combine_with(
-                                        connected_combination))
-
-            if updated_possible_combination:
-                logger.debug('Has combination')
-                for combination in updated_possible_combination:
-                    logger.debug(str(combination))
-                validating_entry.possible_combinations = updated_possible_combination
-                remaining_entries.append(validating_entry)
-
-    if not remaining_entries:
-        validating_node.filtered = True
-        validating_node.reason_of_filtered = "Entries Structure Validation: no entry satisfy"
-
-    end_structure_validation_time = timeit.default_timer()
-    validating_node.structure_validation_time = end_structure_validation_time - start_structure_validation_time
+# def entries_structure_validation(validating_node: Node, all_elements_name: [str], relationship_matrix: [[int]]):
+#     start_structure_validation_time = timeit.default_timer()
+#
+#     logger = logging.getLogger("Entries Structure Validator")
+#     logger.setLevel(logging.getLogger("Node Validator").level)
+#     validating_node_index = all_elements_name.index(validating_node.name)
+#     logger.debug('\t' * validating_node_index + "Start entries structure validating " + str(validating_node))
+#     remaining_entries = []
+#
+#     connected_elements = list(validating_node.link_xml.keys())
+#     connected_elements.sort(key=lambda element: all_elements_name.index(element))
+#
+#     for validating_e in validating_node.entries:  # type: Entry
+#         logger.verbose('\t' * (validating_node_index + 1) + 'Checking entry: ' + str(validating_e))
+#         # Check with each connected element, if found no match -> Skip this entry
+#         for c_e in connected_elements:
+#             logger.verbose('\t' * (validating_node_index + 2) + 'Checking connected element ' + c_e)
+#             rls = relationship_matrix[validating_node_index, all_elements_name.index(c_e)]
+#
+#             # Go through each connected node, perform node value validation and check entry pairwise
+#             c_e_nodes = validating_node.link_xml[c_e]  # type: List[Node]
+#             for c_e_node in c_e_nodes:  # type: Node
+#                 logger.verbose('\t' * (validating_node_index + 3) + 'Checking connected node: ' + str(c_e_node))
+#                 node_validation(c_e_node, all_elements_name, relationship_matrix)
+#
+#                 if c_e_node.entries:
+#                     logger.verbose('\t' * (validating_node_index + 4) + 'Connected node still have entries')
+#                     for c_e_entry in c_e_node.entries:  # type: Entry
+#                         logger.verbose('\t' * (validating_node_index + 4) + 'Connected entry ' + str(c_e_entry))
+#
+#                         for matchi
+#
+#
+#
+#                         for connected_combination in connected_entry.possible_combinations:  # type: Combination
+#                             for validating_entry_combination in validating_entry.possible_combinations:
+#                                 logger.debug('\t' * 2 + 'connected_combination: ' + str(connected_combination))
+#                                 logger.debug('\t' * 2 + 'validating_entry_combination: ' + str(validating_entry_combination))
+#                                 # logger.debug('Value Satisfy: ' + str(connected_combination.match_with(validating_entry_combination)))
+#                                 # logger.debug('Structure Satisfy: ' + str(relationship_satisfied(validating_entry_combination.index[validating_node.name],
+#                                 #                                connected_combination.index[connected_element],
+#                                 #                                relationship)))
+#                                 if (connected_combination.match_with(validating_entry_combination)) and \
+#                                         relationship_satisfied(validating_entry_combination.index[validating_node.name],
+#                                                                connected_combination.index[connected_element],
+#                                                                relationship):
+#                                     logger.debug('\t' * 3 + 'MATCH')
+#                                     updated_possible_combination.append(validating_entry_combination.combine_with(
+#                                         connected_combination))
+#
+#             if updated_possible_combination:
+#                 logger.debug('Has combination')
+#                 for combination in updated_possible_combination:
+#                     logger.debug(str(combination))
+#                 validating_entry.possible_combinations = updated_possible_combination
+#                 remaining_entries.append(validating_entry)
+#
+#     if not remaining_entries:
+#         validating_node.filtered = True
+#         validating_node.reason_of_filtered = "Entries Structure Validation: no entry satisfy"
+#
+#     end_structure_validation_time = timeit.default_timer()
+#     validating_node.structure_validation_time = end_structure_validation_time - start_structure_validation_time
 
 
 def node_validation(node: Node, all_elements_name: [str], relationship_matrix: [[int]]):

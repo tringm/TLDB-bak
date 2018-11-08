@@ -5,7 +5,7 @@ from typing import Dict, List
 
 from .Boundary import *
 from .Node import Node
-from .io.LoggerSupport import *
+from .io_support.LoggerSupport import *
 
 # TODO:
 #     * Improve Prefilter
@@ -33,7 +33,7 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
 
     if not filtering_node.link_sql:
         logger.debug('\t' * (filtering_node_index + 1) + 'EMPTY LINK_SQL')
-        end_value_filtering = timeit.default_timer
+        end_value_filtering = timeit.default_timer()
         filtering_node.value_filtering_time = end_value_filtering - start_value_filtering
         return
 
