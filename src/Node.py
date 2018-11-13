@@ -1,9 +1,6 @@
-from typing import Dict, Any, List
-
-from .Entry import Entry
-import math
-
 import queue
+from .DeweyID import get_center_index
+from numpy import mean
 
 
 class Node:
@@ -40,28 +37,28 @@ class Node:
         self.name = ""
         self.dimension = -1
 
-        # XML node attributes
-        self.filtered = False
-        self.reason_of_filtered = ""
-        self.value_filtering_visited = False
-        # self.value_validation_visited = False
-        self.link_xml = {}
-        self.link_sql = {}
-        self.intersection_range = {}
-        # self.validated_entries = []
-        self.validated = False
-
-        # Filter time
-        self.value_filtering_time = -1
-        self.connected_element_filtering_time = -1
-        self.check_lower_level_time = -1
-        self.init_children_time = -1
-        self.filter_children_time = -1
-        self.full_filtering_time = -1
-
-        # Validation time
-        self.value_validation_time = -1
-        self.structure_validation_time = -1
+        # # XML node attributes
+        # self.filtered = False
+        # self.reason_of_filtered = ""
+        # self.value_filtering_visited = False
+        # # self.value_validation_visited = False
+        # self.link_xml = {}
+        # self.link_sql = {}
+        # self.intersection_range = {}
+        # # self.validated_entries = []
+        # self.validated = False
+        #
+        # # Filter time
+        # self.value_filtering_time = -1
+        # self.connected_element_filtering_time = -1
+        # self.check_lower_level_time = -1
+        # self.init_children_time = -1
+        # self.filter_children_time = -1
+        # self.full_filtering_time = -1
+        #
+        # # Validation time
+        # self.value_validation_time = -1
+        # self.structure_validation_time = -1
 
     def __str__(self):
         return self.name + ':' + str(self.boundary)
@@ -230,3 +227,42 @@ class Node:
         print('\t' * (n_prefix_tabl + 1) + 'link sql: ')
         for table_name in self.link_sql:
             print('\t' * (n_prefix_tabl + 2) + str([str(node) for node in self.link_sql[table_name]]))
+
+
+class XMLNode(Node):
+    def __init__(self, max_n_children):
+        super().__init__(max_n_children)
+
+        self.filtered = False
+        self.reason_of_filtered = ""
+        self.value_filtering_visited = False
+        # self.value_validation_visited = False
+        self.link_xml = {}
+        self.link_sql = {}
+        self.intersection_range = {}
+        # self.validated_entries = []
+        self.validated = False
+
+        # Filtering Time
+        self.value_filtering_time = -1
+        self.connected_element_filtering_time = -1
+        self.check_lower_level_time = -1
+        self.init_children_time = -1
+        self.filter_children_time = -1
+        self.full_filtering_time = -1
+        # Validation time
+        self.value_validation_time = -1
+        self.structure_validation_time = -1
+
+    def get_center_point_coordinates(self):
+        # Specific for index coordinate, naive algorithm
+        mean_index = get_center_index(self.boundary[0][0], self.boundary[0][1])
+        return [mean_index, mean(self.boundary[1])]
+
+
+class SQLNode(Node):
+    def __init__(self, max_n_children):
+        super().__init__(max_n_children)
+
+    def get_center_point_coordinates(self):
+        return [mean(self.boundary[i]) for i in range(len(self.boundary))]

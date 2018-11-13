@@ -14,7 +14,7 @@ from .io_support.LoggerSupport import *
 #     case where previous node range overlap with the next node)
 
 
-def value_filtering(filtering_node: Node, all_elements_name: [str]):
+def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
     """
     This function do value filtering by checking all connected tables' nodes in filtering_node.link_SQL
     Filter this node if exist one table that has no match for this filtering_node or tables doesn't match (matching
@@ -196,8 +196,8 @@ def value_filtering(filtering_node: Node, all_elements_name: [str]):
                                                       for value_boundary in intersected_value_boundary]
 
     logger.debug('\t' * filtering_node_index + 'Value Filter result')
-    log_node_link_sql(filtering_node, logger, filtering_node_index + 1)
-    log_node_intersection_range(filtering_node, logger, filtering_node_index + 1)
+    log_node_link_sql(filtering_node, logger.debug, filtering_node_index + 1)
+    log_node_intersection_range(filtering_node, logger.debug, filtering_node_index + 1)
     end_value_filtering = timeit.default_timer()
     filtering_node.value_filtering_time = end_value_filtering - start_value_filtering
 
@@ -273,7 +273,7 @@ def connected_element_filtering(filtering_node: Node, all_elements_name: [str], 
             return
 
     logger.debug('\t' * filtering_node_index + 'Connected Element Filter result')
-    log_node_link_xml(filtering_node, logger, filtering_node_index + 1)
+    log_node_link_xml(filtering_node, logger.debug, filtering_node_index + 1)
     end_ce_filtering = timeit.default_timer()
     filtering_node.connected_element_filtering_time = end_ce_filtering - start_ce_filtering
 
@@ -472,7 +472,7 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
             filtering_node_child.link_xml = link_xml.copy()
             filtering_node_child.link_sql = link_sql.copy()
             logger.verbose('\t' * filtering_node_index + 'Result')
-            log_node_all_link(filtering_node_child, logger, filtering_node_index + 1)
+            log_node_all_link(filtering_node_child, logger.debug, filtering_node_index + 1)
         end_filter_children = timeit.default_timer()
         filtering_node.filter_children_time = end_filter_children - start_filter_children
         return
@@ -617,7 +617,7 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
     logger.debug('\t' * filtering_node_index + 'Result')
     for filtering_node_child in filtering_node.children:
         logger.debug('\t' * filtering_node_index + 'Children: ' + str(filtering_node_child))
-        log_node_all_link(filtering_node_child, logger, filtering_node_index + 1)
+        log_node_all_link(filtering_node_child, logger.debug, filtering_node_index + 1)
 
     end_filter_children = timeit.default_timer()
     filtering_node.filter_children_time = end_filter_children - start_filter_children

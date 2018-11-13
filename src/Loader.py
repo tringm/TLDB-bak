@@ -81,13 +81,14 @@ def load_sql_entries(folder_name: str, file_name: str) -> [Entry]:
     return entries
 
 
-def load_elements(folder_name: str, all_elements_name: [str], max_n_children: int):
+def load_elements(folder_name: str, all_elements_name: [str], max_n_children: int, load_method: str):
     """Summary
     Load elements and return list of root node of each element's R_Tree
 
     :param folder_name:
     :param all_elements_name:list of name of elements in XML query
     :param max_n_children: maximum number of children in a node
+    :param load_method: name of bulk loading method
     :return: dict with key is name of element and value is corresponding root node of RTree_XML
     """
     logger = logging.getLogger("Loader")
@@ -99,7 +100,8 @@ def load_elements(folder_name: str, all_elements_name: [str], max_n_children: in
 
         element_entries = load_xml_entries(folder_name, element_name)
         rtree_xml = XMLRTree()
-        rtree_xml.load(element_entries, element_name, max_n_children)
+        rtree_xml.bulk_loading_from_entry(load_method, element_entries, element_name, max_n_children, 1)
+        # rtree_xml.load(element_entries, element_name, max_n_children)
         all_elements_root[element_name] = rtree_xml.root
 
         end_loading = timeit.default_timer()
@@ -107,13 +109,14 @@ def load_elements(folder_name: str, all_elements_name: [str], max_n_children: in
     return all_elements_root
 
 
-def load_tables(folder_name, all_elements_name, max_n_children):
+def load_tables(folder_name, all_elements_name, max_n_children, load_method):
     """Summary
     Load all tables inside a folder (files that end with _table.dat)
 
     :param folder_name:
     :param all_elements_name:
     :param max_n_children:
+    :param load_method
     :return: dict with key is name of table and value is corresponding root node of SQLRTree
     """
     """
@@ -137,7 +140,8 @@ def load_tables(folder_name, all_elements_name, max_n_children):
             table_entries = load_sql_entries(folder_name, file_name)
             dimension = get_index_highest_element(all_elements_name, table_name)
             rtree_sql = SQLRTree()
-            rtree_sql.load(table_entries, table_name, max_n_children, dimension)
+            rtree_sql.bulk_loading_from_entry(load_method, table_entries, table_name, max_n_children, dimension)
+            # rtree_sql.load(table_entries, table_name, max_n_children, dimension)
             all_tables_root[table_name] = rtree_sql.root
 
             end_loading = timeit.default_timer()
@@ -187,17 +191,17 @@ class Loader:
 
     """
 
-    def __init__(self, folder_name: str, max_n_children: int):
+    def __init__(self, folder_name: str, max_n_children: int, load_method: str):
         logger = logging.getLogger("Loader")
         logger.info("Loader started")
         start_loading = timeit.default_timer()
         self.max_n_children = max_n_children
         self.all_elements_name, self.relationship_matrix = load_xml_query(folder_name)
-        self.all_elements_root = load_elements(folder_name, self.all_elements_name, self.max_n_children)
-        self.all_tables_root = load_tables(folder_name, self.all_elements_name, self.max_n_children)
+        self.all_elements_root = load_elements(folder_name, self.all_elements_name, self.max_n_children, load_method)
+        self.all_tables_root = load_tables(folder_name, self.all_elements_name, self.max_n_children, load_method)
         end_loading = timeit.default_timer()
         self.total_loading_time = end_loading - start_loading
-        logger.info('%s %d', "Total loading time:", self.total_loading_time)
+        logger.info('%s %.3f', "Total loading time:", self.total_loading_time)
 
     def print_tree(self):
         print('XML')

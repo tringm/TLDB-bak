@@ -98,22 +98,17 @@ def perform_filtering(loader: Loader, initial_limit_range: []):
     queue_limit_range.put(initial_limit_range)
 
     while not queue_query_root_node.empty():
-        query_root_node = queue_query_root_node.get()  # type: Node
+        query_root_node = queue_query_root_node.get()  # type: XMLNode
         limit_range = queue_limit_range.get()
 
         n_node_processed += 1
 
-        start_one_node_filtering = timeit.default_timer()
         updated_limit_range = full_filtering(query_root_node, all_elements_name, limit_range)
-        end_one_node_filtering = timeit.default_timer()
 
-        logger.debug('Node: ' + str(query_root_node) + ' status: ')
-        logger.debug('\t' + str(query_root_node.filtered) + query_root_node.reason_of_filtered)
-        log_node_time(query_root_node, logger, 1)
-
-        logger.debug('\t' + str(query_root_node.filtered) + query_root_node.reason_of_filtered)
-        logger.debug('%s %s %s %d %s %s %s', 'query root node', str(query_root_node), 'filter time:',
-                     end_one_node_filtering - start_one_node_filtering, 'filtered:', query_root_node.filtered, query_root_node.reason_of_filtered)
+        logger.debug('Node: ' + str(query_root_node))
+        log_node_filter_status(query_root_node, logger.debug, 1)
+        log_node_time_details(query_root_node, logger.verbose, 1)
+        logger.debug('%s %3f', '\t' + 'filter time: ', query_root_node.full_filtering_time)
         logger.debug('')
 
         if not query_root_node.filtered:
@@ -124,10 +119,10 @@ def perform_filtering(loader: Loader, initial_limit_range: []):
             n_node_filtered += 1
 
     end_filtering = timeit.default_timer()
-    logger.info('%s %d', 'Total Filtering time', end_filtering - start_filtering)
+    logger.info('%s %3f', 'Total Filtering time', end_filtering - start_filtering)
     logger.info('%s %d', 'Number of node processed: ', n_node_processed)
     logger.info('%s %d', 'Number of node filtered: ', n_node_filtered)
-    logger.info('%s %d', 'Average filtering time for one node:',
+    logger.info('%s %3f', 'Average filtering time for one node:',
                 (end_filtering - start_filtering) / n_node_processed)
 
 

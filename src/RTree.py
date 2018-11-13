@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from .Entry import Entry
 from .Entries import quick_sort_entries, get_boundaries
-from .Node import Node
+from .Node import *
 
 import logging
 import timeit
@@ -13,11 +13,20 @@ class RTree(ABC):
     def __init__(self):
         self.root = None
 
-    @staticmethod
-    def bulk_loading(entries: [Entry], name: str, max_n_children: int, dimension: int):
+    @abstractmethod
+    def bulk_loading_from_entry(self,
+                                load_method: str,
+                                entries: [Entry],
+                                tree_name: str,
+                                max_n_children: int,
+                                dimension: int):
+        pass
+
+    def stripe_bulk_loading(self, node_type: Node, entries: [Entry], name: str, max_n_children: int, dimension: int):
         """Summary
         Bulk loading RTree based on Overlap Minimizing Top-down Bulk Loading Algorithm
 
+        :param node_type: Either XMLNode or SQLNode
         :param entries: list of input entries
         :param name: name of the tree
         :param max_n_children: maximum number of children in a node of RTree
@@ -47,7 +56,7 @@ class RTree(ABC):
 
         # Initialization
         # Create root node
-        root = Node(max_n_children)
+        root = node_type(max_n_children)
         root.boundary = get_boundaries(entries)
         root.name = name
         root.dimension = dimension
@@ -102,7 +111,7 @@ class RTree(ABC):
                     # if range_high == range_low:
                     # 	break
 
-                    subtree_node = Node(max_n_children)
+                    subtree_node = node_type(max_n_children)
                     subtree_node.parent = current_node
                     subtree_node.boundary = get_boundaries(entries[range_low:range_high])
                     subtree_node.dimension = dimension
@@ -112,15 +121,12 @@ class RTree(ABC):
                     queue_node.put(subtree_node)
                     queue_range.put([range_low, range_high])
 
-        return root
+        self.root = root
 
     # @staticmethod
     # def str_dividing_node(self, nodes: [node]):
 
-
-
-
-    def str_bulk_loading(self, entries: [Entry], name: str, max_n_children: int, dimension: [int]):
+    def str_bulk_loading(self, node_type: Node, entries: [Entry], name: str, max_n_children: int, dimension: [int]):
         """Summary
         Bulk loading RTree based on Overlap Minimizing Top-down Bulk Loading Algorithm
 
@@ -228,16 +234,35 @@ class RTree(ABC):
 
 class XMLRTree(RTree):
     def __init__(self):
-        self.root = None
+        super().__init__()
 
-    def load(self, entries: [Entry], name: str, max_n_children: int):
-        dimension = 1  # This is based on the current version that Entry of XMLRTree Node is: index, value
-        self.root = super(XMLRTree, self).bulk_loading(entries, name, max_n_children, dimension)
+    def bulk_loading_from_entry(self,
+                                load_method: str,
+                                entries: [Entry],
+                                tree_name: str,
+                                max_n_children: int,
+                                dimension=1):
+        methods = {'stripe': self.stripe_bulk_loading, 'str': self.str_bulk_loading}
+        methods[load_method](XMLNode, entries, tree_name, max_n_children, dimension)
+
+
+    # def load(self, entries: [Entry], name: str, max_n_children: int):
+    #     dimension = 1  # This is based on the current version that Entry of XMLRTree Node is: index, value
+    #     self.root = super.bulk_loading(entries, name,  max_n_children, dimension)
 
 
 class SQLRTree(RTree):
     def __init__(self):
-        self.root = None
+        super().__init__()
 
-    def load(self, entries: [Entry], name: str, max_n_children: int, dimension: int):
-        self.root = super(SQLRTree, self).bulk_loading(entries, name, max_n_children, dimension)
+    def bulk_loading_from_entry(self,
+                                load_method: str,
+                                entries: [Entry],
+                                tree_name: str,
+                                max_n_children: int,
+                                dimension=1):
+        methods = {'stripe': self.stripe_bulk_loading, 'str': self.str_bulk_loading}
+        methods[load_method](SQLNode, entries, tree_name, max_n_children, dimension)
+
+    # def load(self, entries: [Entry], name: str, max_n_children: int, dimension: int):
+    #     self.root = super.bulk_loading(entries, name, max_n_children, dimension)
