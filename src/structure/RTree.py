@@ -1,12 +1,10 @@
-from abc import ABC, abstractmethod
-from .Entry import Entry
-from .Entries import quick_sort_entries, get_boundaries
-from .Node import *
-
 import logging
-import timeit
-import queue
 import math
+import timeit
+
+from src.lib.Entries import quick_sort_entries, get_boundaries
+from src.structure.Entry import Entry
+from .Node import *
 
 
 class RTree(ABC):
@@ -123,8 +121,15 @@ class RTree(ABC):
 
         self.root = root
 
-    # @staticmethod
-    # def str_dividing_node(self, nodes: [node]):
+    @staticmethod
+    def str_dividing_node(nodes: [Node], dimension: int):
+        """
+        Quick sort the nodes by its center coordinate and
+        :param nodes:
+        :param dimension:
+        :return:
+        """
+
 
     def str_bulk_loading(self, node_type: Node, entries: [Entry], name: str, max_n_children: int, dimension: [int]):
         """Summary
@@ -246,11 +251,6 @@ class XMLRTree(RTree):
         methods[load_method](XMLNode, entries, tree_name, max_n_children, dimension)
 
 
-    # def load(self, entries: [Entry], name: str, max_n_children: int):
-    #     dimension = 1  # This is based on the current version that Entry of XMLRTree Node is: index, value
-    #     self.root = super.bulk_loading(entries, name,  max_n_children, dimension)
-
-
 class SQLRTree(RTree):
     def __init__(self):
         super().__init__()
@@ -263,6 +263,3 @@ class SQLRTree(RTree):
                                 dimension=1):
         methods = {'stripe': self.stripe_bulk_loading, 'str': self.str_bulk_loading}
         methods[load_method](SQLNode, entries, tree_name, max_n_children, dimension)
-
-    # def load(self, entries: [Entry], name: str, max_n_children: int, dimension: int):
-    #     self.root = super.bulk_loading(entries, name, max_n_children, dimension)

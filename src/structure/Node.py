@@ -1,9 +1,10 @@
 import queue
-from .DeweyID import get_center_index
+from src.lib.DeweyID import get_center_index
 from numpy import mean
+from abc import ABC, abstractmethod
 
 
-class Node:
+class Node(ABC):
     """RTree Node
 
     Attributes:
@@ -16,16 +17,6 @@ class Node:
         entries ([Entry])           : list of entries if this node is a leaf node, empty if not leaf node
         name (str)                  : name of element for XML node, name of table for SQL Node
         dimension (int)             : 1 for XML Node, index of highest element in SQL Node
-
-        filtered (bool)             : True if this node is filtered
-        reason_of_filtered (str)    : reason for being filtered
-        value_filtering_visited (bool)  : True if this node has been value filtered
-        value_validation_visited (bool) : True if this node has been value validated
-
-        link_xml {[str, [Node]}         : key is element name, value is list of Node connected
-        link_sql {[str, [Node]}         : key is table name, value is list of Node connected
-        intersection_range ({str, [boundary]}): key is element, value is multiple boundary constraint
-                                                for the element. It is initiated in value filtering
     """
 
     def __init__(self, max_n_children):
@@ -62,6 +53,10 @@ class Node:
 
     def __str__(self):
         return self.name + ':' + str(self.boundary)
+
+    @abstractmethod
+    def get_center_point_coordinates(self):
+        pass
 
     # def update_boundary(self, coordinates):
     # 	n_dimensions = len(coordinates)
@@ -230,6 +225,17 @@ class Node:
 
 
 class XMLNode(Node):
+    """XML Node
+    Attributes:
+        filtered (bool)             : True if this node is filtered
+        reason_of_filtered (str)    : reason for being filtered
+        value_filtering_visited (bool)  : True if this node has been value filtered
+
+        link_xml {[str, [Node]}         : key is element name, value is list of Node connected
+        link_sql {[str, [Node]}         : key is table name, value is list of Node connected
+        intersection_range ({str, [boundary]}): key is element, value is multiple boundary constraint
+                                                for the element. It is initiated in value filterings
+    """
     def __init__(self, max_n_children):
         super().__init__(max_n_children)
 

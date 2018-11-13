@@ -3,10 +3,8 @@ import timeit
 
 from typing import List, Dict
 
-from src.Entry import Entry
-from .DeweyID import relationship_satisfied
-from .Entry import Entry
-from .Node import Node
+from src.structure.Entry import Entry
+from src.structure.Node import Node
 
 
 def match_entry(entry1: Entry, elements1: [str], entry2: Entry, elements2: [str]):

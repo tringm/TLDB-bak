@@ -1,4 +1,4 @@
-from .DeweyID import is_ancestor
+from src.lib.DeweyID import is_ancestor
 
 
 def compare_value_boundaries(boundary1: [], boundary2: []) -> float:

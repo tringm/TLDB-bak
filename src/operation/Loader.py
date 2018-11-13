@@ -1,6 +1,6 @@
-from .RTree import XMLRTree
-from .RTree import SQLRTree
-from .Entry import Entry
+from src.structure.RTree import XMLRTree
+from src.structure.RTree import SQLRTree
+from src.structure.Entry import Entry
 
 import os
 import numpy as np

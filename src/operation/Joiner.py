@@ -5,9 +5,8 @@ import timeit
 
 from .Filterer import full_filtering
 from .Loader import Loader, get_index_highest_element
-from .Node import Node
 from .Validator import node_validation
-from .io_support.LoggerSupport import *
+from src.io_support.LoggerSupport import *
 
 
 def initialization(loader: Loader):

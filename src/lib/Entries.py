@@ -1,12 +1,10 @@
 """
 This module contains helper function for list of Entry [Entry]
-
-Attributes:
 	quick_sort_entries ([Entry], dimension): quickSort a list of entries by value of given Entry's dimension
 	get_boundaries ([Entry]): Return MBR of list of entries
 """
 
-from .Entry import Entry
+from src.structure.Entry import Entry
 
 
 def quick_sort_entries(entries: [Entry], dimension: int) -> [Entry]:

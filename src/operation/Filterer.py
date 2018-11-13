@@ -3,9 +3,9 @@ import logging
 import timeit
 from typing import Dict, List
 
-from .Boundary import *
-from .Node import Node
-from .io_support.LoggerSupport import *
+from src.lib.Boundary import *
+from src.structure.Node import Node
+from src.io_support.LoggerSupport import *
 
 # TODO:
 #     * Improve Prefilter
