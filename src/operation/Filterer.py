@@ -53,7 +53,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
             filtering_node.reason_of_filtered = 'Value Filter: ' + table_name + ' is empty'
             logger.debug('\t' * (filtering_node_index + 1) + '###')
             logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
-            end_value_filtering = timeit.default_timer
+            end_value_filtering = timeit.default_timer()
             filtering_node.value_filtering_time = end_value_filtering - start_value_filtering
             return
         dimension = table_name.split('_').index(filtering_node.name)

@@ -1,7 +1,7 @@
 """
 This module contains helper function for list of Entry [Entry]
 	quick_sort_entries ([Entry], dimension): quickSort a list of entries by value of given Entry's dimension
-	get_boundaries ([Entry]): Return MBR of list of entries
+	get_boundaries_from_entries ([Entry]): Return MBR of list of entries
 """
 
 from src.structure.Entry import Entry
@@ -48,7 +48,7 @@ def quick_sort_entries(entries: [Entry], dimension: int) -> [Entry]:
 	return entries
 
 
-def get_boundaries(entries: [Entry]) -> [[int]]:
+def get_boundaries_from_entries(entries: [Entry]) -> [[int]]:
 	"""Summary
 	Find the MBR of list of Entries
 

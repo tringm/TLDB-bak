@@ -19,6 +19,9 @@ class Entry:
     def __str__(self):
         return str(self.coordinates)
 
+    def __repr__(self):
+        return str(self)
+
     def is_inside(self, boundary: [int]) -> bool:
         """Summary
         Check if this entry is inside a boundary

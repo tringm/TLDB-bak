@@ -1,7 +1,14 @@
 import queue
 from src.lib.DeweyID import get_center_index
+from src.lib.Entries import get_boundaries_from_entries
+from src.lib.Nodes import get_boundaries_from_nodes
 from numpy import mean
 from abc import ABC, abstractmethod
+
+# TODO:
+#     1. Implement isLeaf instead of checking self entries
+#     1. Evoke update boundary on entries/node change
+#     2. Implement own class for DeweyId
 
 
 class Node(ABC):
@@ -19,14 +26,23 @@ class Node(ABC):
         dimension (int)             : 1 for XML Node, index of highest element in SQL Node
     """
 
-    def __init__(self, max_n_children):
+    def __init__(self, max_n_children, parent=None, children=None, boundary=None, entries=None, name='', dimension=-1):
         self.max_n_children = max_n_children
-        self.parent = None
-        self.children = []
-        self.boundary = []
-        self.entries = []
-        self.name = ""
-        self.dimension = -1
+        self.parent = parent
+        if children is None:
+            self.children = []
+        else:
+            self.children = children
+        if boundary is None:
+            self.boundary = []
+        else:
+            self.boundary = boundary
+        if entries is None:
+            self.entries = []
+        else:
+            self.entries = entries
+        self.name = name
+        self.dimension = dimension
 
         # # XML node attributes
         # self.filtered = False
@@ -54,8 +70,11 @@ class Node(ABC):
     def __str__(self):
         return self.name + ':' + str(self.boundary)
 
+    def __repr__(self):
+        return str(self)
+
     @abstractmethod
-    def get_center_point_coordinates(self):
+    def get_center_coord(self):
         pass
 
     # def update_boundary(self, coordinates):
@@ -82,9 +101,19 @@ class Node(ABC):
     # 		if (len(self.entries) > max_n_entries):
     # 			self.split
 
+    def init_boundaries(self):
+        # if this is a leaf node
+        if not self.children:
+            if not self.entries:
+                raise ValueError(str(self) + ': Both children and entries is empty')
+            self.boundary = get_boundaries_from_entries(self.entries)
+        else:
+            self.boundary = get_boundaries_from_nodes(self.children)
+        return self.boundary
+
     def get_entries(self):
         # if this is a leaf node or has already been get entries before
-        if len(self.entries) > 0:
+        if not self.entries:
             return self.entries
 
         node_queue = queue.Queue()
@@ -111,7 +140,7 @@ class Node(ABC):
         :return: [Entry]
         """
         # if this node is a leaf node
-        if len(self.entries) > 0:
+        if self.entries:
             return self.entries
         # else get all child entry
         entries = []
@@ -131,7 +160,7 @@ class Node(ABC):
 
         if not self.filtered:
             # if this node is leaf
-            if len(self.entries) > 0:
+            if self.entries:
                 return [self]
 
             for child in self.children:
@@ -146,7 +175,7 @@ class Node(ABC):
         Args:
             level (int, optional): current level for printing
         """
-        if len(self.entries) > 0:
+        if self.entries:
             print('\t' * (level + 1), 'NODE ', self.boundary, 'is Leaf')
             for i in range(len(self.entries)):
                 print('\t' * (level + 1), self.entries[i].coordinates)
@@ -162,7 +191,7 @@ class Node(ABC):
             level (int, optional): current level for printing
         """
         if not self.filtered:
-            if len(self.entries) > 0:
+            if self.entries is not None:
                 print('\t' * level, 'NODE ', self.boundary, 'is Leaf')
                 print('\t' * (level + 1), 'Linked XML: ')
                 for connected_element_name in self.link_XML:
@@ -236,8 +265,8 @@ class XMLNode(Node):
         intersection_range ({str, [boundary]}): key is element, value is multiple boundary constraint
                                                 for the element. It is initiated in value filterings
     """
-    def __init__(self, max_n_children):
-        super().__init__(max_n_children)
+    def __init__(self, max_n_children, parent=None, children=None, boundary=None, entries=None, name='', dimension=-1):
+        super().__init__(max_n_children, parent, children, boundary, entries, name, dimension)
 
         self.filtered = False
         self.reason_of_filtered = ""
@@ -260,15 +289,15 @@ class XMLNode(Node):
         self.value_validation_time = -1
         self.structure_validation_time = -1
 
-    def get_center_point_coordinates(self):
+    def get_center_coord(self):
         # Specific for index coordinate, naive algorithm
         mean_index = get_center_index(self.boundary[0][0], self.boundary[0][1])
         return [mean_index, mean(self.boundary[1])]
 
 
 class SQLNode(Node):
-    def __init__(self, max_n_children):
-        super().__init__(max_n_children)
+    def __init__(self, max_n_children, parent=None, children=None, boundary=None, entries=None, name='', dimension=-1):
+        super().__init__(max_n_children, parent, children, boundary, entries, name, dimension)
 
-    def get_center_point_coordinates(self):
+    def get_center_coord(self):
         return [mean(self.boundary[i]) for i in range(len(self.boundary))]

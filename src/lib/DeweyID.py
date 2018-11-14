@@ -72,7 +72,6 @@ def get_center_index(id1: str, id2: str) -> str:
     mean_index = []
     remember = False
     for i in range(min_length):
-        print('id1:', id1[i], 'id2:', id2[i])
         mean_diff = (int(id2[i]) - int(id1[i]))/2
         if mean_diff < 0 and not remember:
             if len(mean_index) == 0 or (mean_index[len(mean_index) - 1] == 1):
@@ -84,10 +83,7 @@ def get_center_index(id1: str, id2: str) -> str:
         if (mean_diff * 2) % 2 != 0:
             mean_diff = floor(mean_diff)
             remember = True
-        print('mean_diff ', mean_diff)
-        print('mean: ', int(int(id1[i]) + mean_diff))
         mean_index.append(int(int(id1[i]) + mean_diff))
-        print('mean index', mean_index)
     if remember:
         mean_index.append(5)
     return '.'.join(str(num) for num in mean_index)
