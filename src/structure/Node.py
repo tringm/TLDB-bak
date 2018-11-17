@@ -2,13 +2,15 @@ import queue
 from src.lib.DeweyID import get_center_index
 from src.lib.Entries import get_boundaries_from_entries
 from src.lib.Nodes import get_boundaries_from_nodes
+from src.lib.Boundary import update_boundary_from_entry, update_boundary_from_node
 from numpy import mean
 from abc import ABC, abstractmethod
 
 # TODO:
 #     1. Implement isLeaf instead of checking self entries
-#     1. Evoke update boundary on entries/node change
-#     2. Implement own class for DeweyId
+#     2. Evoke update boundary on entries/node change: DONE
+#         2.1 Better implementation (for adding 1 node or adding 1 entry -> dont have to update all again)
+#     3. Implement own class for DeweyId
 
 
 class Node(ABC):
@@ -26,46 +28,14 @@ class Node(ABC):
         dimension (int)             : 1 for XML Node, index of highest element in SQL Node
     """
 
-    def __init__(self, max_n_children, parent=None, children=None, boundary=None, entries=None, name='', dimension=-1):
+    def __init__(self, max_n_children, parent=None, children=None, entries=None, name='', dimension=-1):
         self.max_n_children = max_n_children
         self.parent = parent
-        if children is None:
-            self.children = []
-        else:
-            self.children = children
-        if boundary is None:
-            self.boundary = []
-        else:
-            self.boundary = boundary
-        if entries is None:
-            self.entries = []
-        else:
-            self.entries = entries
         self.name = name
         self.dimension = dimension
-
-        # # XML node attributes
-        # self.filtered = False
-        # self.reason_of_filtered = ""
-        # self.value_filtering_visited = False
-        # # self.value_validation_visited = False
-        # self.link_xml = {}
-        # self.link_sql = {}
-        # self.intersection_range = {}
-        # # self.validated_entries = []
-        # self.validated = False
-        #
-        # # Filter time
-        # self.value_filtering_time = -1
-        # self.connected_element_filtering_time = -1
-        # self.check_lower_level_time = -1
-        # self.init_children_time = -1
-        # self.filter_children_time = -1
-        # self.full_filtering_time = -1
-        #
-        # # Validation time
-        # self.value_validation_time = -1
-        # self.structure_validation_time = -1
+        self._children = [] if children is None else children
+        self._entries = [] if entries is None else entries
+        self.boundary = self.init_boundary()
 
     def __str__(self):
         return self.name + ':' + str(self.boundary)
@@ -73,43 +43,53 @@ class Node(ABC):
     def __repr__(self):
         return str(self)
 
+    @property
+    def children(self):
+        return self._children
+
+    @children.setter
+    def children(self, value):
+        self._children = value
+        self.boundary = get_boundaries_from_nodes(value)
+
+    @property
+    def entries(self):
+        return self._entries
+
+    @entries.setter
+    def entries(self, value):
+        self._entries = value
+        self.boundary = get_boundaries_from_entries(value)
+
     @abstractmethod
     def get_center_coord(self):
         pass
 
-    # def update_boundary(self, coordinates):
-    # 	n_dimensions = len(coordinates)
+    def init_boundary(self):
+        if not self.children and not self.entries:
+            return None
+        if self.children:
+            return get_boundaries_from_nodes(self.children)
+        return get_boundaries_from_entries(self.entries)
 
-    # 	# if boundary is empty
-    # 	if (not self.boundary):
-    # 		for i in range(n_dimensions):
-    # 			self.boundary.append([coordinates[i], coordinates[i]])
-    # 	# Go through each dimension
-    # 	for i in range(n_dimensions):
-    # 		boundary[i][0] = min(boundary[i][0], coordinates[i])
-    # 		boundary[i][1] = max(boundary[i][1], coordinates[i])
+    def add_entry(self, entry):
+        self._entries.append(entry)
+        self.boundary = update_boundary_from_entry(self.boundary, entry)
 
-    # def dynamic_add(self, entry : Entry):
-    # 	# If this node is a leaf node
-    # 	if (len(self.children) == 0):
-    # 		# add entry to this node
-    # 		self.entries.append(entry)
-    # 		# if the boundary is empty or entry is not inside the boundary -> update boundary
-    # 		if (not boundary) or (not entry.is_inside(boundary)):
-    # 			self.update_boundary(entry.coordinates)
-    # 		# if this leaf node contains more than allowed entries -> split
-    # 		if (len(self.entries) > max_n_entries):
-    # 			self.split
+    def add_child_node(self, node):
+        self._children.append(node)
+        self.boundary = update_boundary_from_node(self.boundary, node)
 
-    def init_boundaries(self):
-        # if this is a leaf node
-        if not self.children:
-            if not self.entries:
-                raise ValueError(str(self) + ': Both children and entries is empty')
-            self.boundary = get_boundaries_from_entries(self.entries)
-        else:
-            self.boundary = get_boundaries_from_nodes(self.children)
-        return self.boundary
+    # def init_boundaries(self):
+    #     # if this is a leaf node
+    #     if not self.children:
+    #         if not self.entries:
+    #             raise ValueError(str(self) + ': Both children and entries is empty')
+    #         else:
+    #             self.boundary = get_boundaries_from_entries(self.entries)
+    #     else:
+    #         self.boundary = get_boundaries_from_nodes(self.children)
+    #     return self.boundary
 
     def get_entries(self):
         # if this is a leaf node or has already been get entries before
@@ -131,7 +111,7 @@ class Node(ABC):
                     node_queue.put(child_node)
 
         # cache entries
-        self.entries = entries
+        self._entries = entries
         return self.entries
 
     def get_entries_recursion(self):
@@ -148,26 +128,8 @@ class Node(ABC):
             child_entries = child.get_entries()
             for child_entry in child_entries:
                 entries.append(child_entry)
-        self.entries = entries
+        self._entries = entries
         return entries
-
-    def get_unfiltered_leaf_node(self):
-        """
-        This function return a list of nodes which are the unfiltered leaves of this node
-        :return: (List[Node]) leaf node of this not which are not filtered
-        """
-        leaf_nodes = []
-
-        if not self.filtered:
-            # if this node is leaf
-            if self.entries:
-                return [self]
-
-            for child in self.children:
-                leaf_nodes_child = child.get_unfiltered_leaf_node()
-                for node in leaf_nodes_child:
-                    leaf_nodes.append(node)
-        return leaf_nodes
 
     def print_node(self, level=0):
         """Summary
@@ -265,8 +227,8 @@ class XMLNode(Node):
         intersection_range ({str, [boundary]}): key is element, value is multiple boundary constraint
                                                 for the element. It is initiated in value filterings
     """
-    def __init__(self, max_n_children, parent=None, children=None, boundary=None, entries=None, name='', dimension=-1):
-        super().__init__(max_n_children, parent, children, boundary, entries, name, dimension)
+    def __init__(self, max_n_children, parent=None, children=None, entries=None, name='', dimension=-1):
+        super().__init__(max_n_children, parent, children, entries, name, dimension)
 
         self.filtered = False
         self.reason_of_filtered = ""
@@ -294,10 +256,28 @@ class XMLNode(Node):
         mean_index = get_center_index(self.boundary[0][0], self.boundary[0][1])
         return [mean_index, mean(self.boundary[1])]
 
+    def get_unfiltered_leaf_node(self):
+        """
+        This function return a list of nodes which are the unfiltered leaves of this node
+        :return: (List[Node]) leaf node of this not which are not filtered
+        """
+        leaf_nodes = []
+
+        if not self.filtered:
+            # if this node is leaf
+            if self.entries:
+                return [self]
+
+            for child in self.children:
+                leaf_nodes_child = child.get_unfiltered_leaf_node()
+                for node in leaf_nodes_child:
+                    leaf_nodes.append(node)
+        return leaf_nodes
+
 
 class SQLNode(Node):
-    def __init__(self, max_n_children, parent=None, children=None, boundary=None, entries=None, name='', dimension=-1):
-        super().__init__(max_n_children, parent, children, boundary, entries, name, dimension)
+    def __init__(self, max_n_children, parent=None, children=None, entries=None, name='', dimension=-1):
+        super().__init__(max_n_children, parent, children, entries, name, dimension)
 
     def get_center_coord(self):
         return [mean(self.boundary[i]) for i in range(len(self.boundary))]

@@ -1,3 +1,5 @@
+import copy
+
 """
 This module contains helper function for list of Entry [Entry]
     quick_sort_node ([Entry], dimension): quickSort a list of nodes by center point of a given dimension
@@ -57,7 +59,7 @@ def get_boundaries_from_nodes(nodes) -> [[int]]:
     """
     # init boundary
     n_dimensions = len(nodes[0].boundary)
-    boundary = nodes[0].boundary
+    boundary = copy.deepcopy(nodes[0].boundary)
 
     for idx in range(1, len(nodes)):
         node_boundary = nodes[idx].boundary

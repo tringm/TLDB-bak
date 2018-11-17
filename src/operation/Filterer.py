@@ -12,6 +12,7 @@ from src.io_support.LoggerSupport import *
 #     * Implement logging.verbose: DONE
 #     * Fix the while loop (at least in the init children so that next node would take previous_node index - 1 , in
 #     case where previous node range overlap with the next node)
+# TODO: Does it make sense if boundary change when filter/init children when filtering
 
 
 def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):

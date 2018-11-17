@@ -76,7 +76,7 @@ class RTree(ABC):
                 adding_entries = entries[current_range[0]:current_range[1]]
                 logger.debug('%s %d', "len(adding_entries):", len(adding_entries))
                 for i in range(len(adding_entries)):
-                    current_node.entries.append(adding_entries[i])
+                    current_node.add_entry(adding_entries[i])
 
             else:
                 logger.debug('Not a leaf => add new nodes')
@@ -110,7 +110,7 @@ class RTree(ABC):
                     subtree_node = node_type(max_n_children, parent=current_node, dimension=dimension, name=name)
                     subtree_node.boundary = get_boundaries_from_entries(entries[range_low:range_high])
                     logger.debug('%s %s', "Child node", str(subtree_node))
-                    current_node.children.append(subtree_node)
+                    current_node.add_child_node(subtree_node)
                     queue_node.put(subtree_node)
                     queue_range.put([range_low, range_high])
         root.print_node()

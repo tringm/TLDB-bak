@@ -16,8 +16,8 @@ logging.verbose = lambda msg, *args, **kwargs: logging.log(logging.VERBOSE, msg,
 
 # logging.getLogger("Loader").setLevel(logging.VERBOSE)
 # logging.getLogger("RTree").setLevel(logging.VERBOSE)
-# logging.getLogger("Joiner").setLevel(logging.DEBUG)
-# logging.getLogger("Main Filterer").setLevel(logging.DEBUG)
+logging.getLogger("Joiner").setLevel(logging.DEBUG)
+# logging.getLogger("Main Filterer").setLevel(logging.VERBOSE)
 # logging.getLogger("Value Filterer").disabled = True
 # logging.getLogger("Connected Element").disabled = True
 # logging.getLogger("Traversing Query").disabled = True
@@ -27,7 +27,7 @@ logging.verbose = lambda msg, *args, **kwargs: logging.log(logging.VERBOSE, msg,
 # logging.getLogger("Entries Value Validator").setLevel(logging.DEBUG)
 # logging.getLogger("Entries Structure Validator").setLevel(logging.DEBUG)
 
-loader = Loader(folder_name, max_n_children, 'str')
+loader = Loader(folder_name, max_n_children, 'stripe')
 joiner = Joiner(loader)
 
 logger = logging.getLogger("Main")

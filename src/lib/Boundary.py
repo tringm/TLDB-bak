@@ -1,5 +1,43 @@
 from src.lib.DeweyID import is_ancestor
 
+# Boundary is a list contains each item is a list of 2 storing min, max
+
+
+def update_boundary_from_entry(boundary: [[]], entry):
+    """
+    Return updated boundary when adding entry
+    :param boundary:
+    :param entry:
+    :return:
+    """
+    if len(boundary) != len(entry.coordinates):
+        raise ValueError(str(boundary) + ' not match dimension with ' + str(entry))
+    update_boundary = boundary.copy()
+
+    for dimension in range(len(boundary)):
+        update_boundary[dimension][0] = min(boundary[dimension][0], entry.coordinates[dimension])
+        update_boundary[dimension][1] = max(boundary[dimension][1], entry.coordinates[dimension])
+
+    return update_boundary
+
+
+def update_boundary_from_node(boundary, node):
+    """
+    Return updated boundary when adding node
+    :param boundary:
+    :param node:
+    :return:
+    """
+    if len(boundary) != len(node.boundary):
+        raise ValueError(str(boundary) + ' not match dimension with ' + str(node))
+    update_boundary = boundary.copy()
+
+    for dimension in range(len(boundary)):
+        update_boundary[dimension][0] = min(boundary[dimension][0], node.boundary[dimension][0])
+        update_boundary[dimension][1] = max(boundary[dimension][1], node.boundary[dimension][1])
+
+    return update_boundary
+
 
 def compare_value_boundaries(boundary1: [], boundary2: []) -> float:
     """
@@ -28,6 +66,7 @@ def compare_value_boundaries(boundary1: [], boundary2: []) -> float:
     else:
         return 2.2
     return 0
+
 
 def value_boundary_has_intersection(boundary1: [], boundary2: []) -> bool:
     """
