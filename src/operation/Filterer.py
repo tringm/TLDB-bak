@@ -399,7 +399,7 @@ def initialize_children_link(filtering_node, all_elements_name, limit_range):
             logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
             end_init_children = timeit.default_timer()
             filtering_node.init_children_time = end_init_children - start_init_children
-            return
+            return {}, {}
 
     # Init link_sql and check if they satisfy the limit range
     logger.verbose('\t' * filtering_node_index +
@@ -435,7 +435,7 @@ def initialize_children_link(filtering_node, all_elements_name, limit_range):
             logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
             end_init_children = timeit.default_timer()
             filtering_node.init_children_time = end_init_children - start_init_children
-            return
+            return {}, {}
 
     end_init_children = timeit.default_timer()
     filtering_node.init_children_time = end_init_children - start_init_children
@@ -624,7 +624,7 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
     filtering_node.filter_children_time = end_filter_children - start_filter_children
 
 
-def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: Dict[str, List[int]]) \
+def full_filtering(filtering_node: XMLNode, all_elements_name: [str], limit_range: Dict[str, List[int]]) \
         -> Dict[str, List[int]] or None:
     """
     1. Perform value filtering by going through tables
@@ -699,6 +699,9 @@ def full_filtering(filtering_node: Node, all_elements_name: [str], limit_range: 
 
     # Update children's links
     link_xml, link_sql = initialize_children_link(filtering_node, all_elements_name, limit_range)
+    if check_if_filtered(filtering_node, logger, start_full_filtering):
+        return
+
     filter_children(filtering_node, all_elements_name, limit_range, link_xml, link_sql)
 
     end_full_filtering = timeit.default_timer()

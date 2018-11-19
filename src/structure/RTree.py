@@ -113,7 +113,6 @@ class RTree(ABC):
                     current_node.add_child_node(subtree_node)
                     queue_node.put(subtree_node)
                     queue_range.put([range_low, range_high])
-        root.print_node()
         self.root = root
 
     def str_bulk_loading(self, node_type, entries: [Entry], tree_name: str, max_n_children: int, dimension: int):
@@ -191,7 +190,6 @@ class RTree(ABC):
             nodes = [[child_nodes_to_parent_node(group_nodes) for group_nodes in nodes]]
 
         self.root = nodes[0][0]
-        self.root.print_node()
 
 
 class XMLRTree(RTree):

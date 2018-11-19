@@ -1,5 +1,3 @@
-from src.lib.DeweyID import is_ancestor
-
 # Boundary is a list contains each item is a list of 2 storing min, max
 
 
@@ -122,7 +120,7 @@ def index_boundary_can_be_ancestor(boundary1: [], boundary2: []) -> bool:
         return False
 
     if boundary2[0] > boundary1[1]:
-        if not is_ancestor(boundary1[1], boundary2[0]):
+        if not boundary1[1].is_ancestor(boundary2[0]):
             return False
 
     return True

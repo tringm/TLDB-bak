@@ -15,17 +15,14 @@ def quick_sort_nodes(nodes, dimension: int):
     :return: sorted entries
     """
 
-    def partition(nodes, low: int, high: int, dimension: int) -> int:
+    def partition(low: int, high: int) -> int:
         pivot = nodes[low]
         i = low + 1
         j = high
         while 1:
-            while i <= j and nodes[i].get_center_coord()[dimension] \
-                    <= pivot.get_center_coord()[dimension]:
+            while i <= j and nodes[i].get_center_coord()[dimension] <= pivot.get_center_coord()[dimension]:
                 i += 1
-            while j >= i and \
-                    nodes[j].get_center_coord()[dimension] \
-                    >= pivot.get_center_coord()[dimension]:
+            while j >= i and nodes[j].get_center_coord()[dimension] >= pivot.get_center_coord()[dimension]:
                 j -= 1
             if j <= i:
                 break
@@ -41,7 +38,7 @@ def quick_sort_nodes(nodes, dimension: int):
     while temp_stack:
         pos = temp_stack.pop()
         low, high = pos[0], pos[1]
-        partition_index = partition(nodes, low, high, dimension)
+        partition_index = partition(low, high)
         if partition_index - 1 > low:
             temp_stack.append((low, partition_index - 1))
         if partition_index + 1 < high:

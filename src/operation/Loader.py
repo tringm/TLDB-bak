@@ -1,6 +1,7 @@
 from src.structure.RTree import XMLRTree
 from src.structure.RTree import SQLRTree
 from src.structure.Entry import Entry
+from src.structure.DeweyID import DeweyID
 
 import os
 import numpy as np
@@ -61,7 +62,7 @@ def load_xml_entries(folder_name: str, element_name: str) -> [Entry]:
         # entries.append(Entry([entry_id, int(values[i])]))
 
         # Dewey index
-        entries.append(Entry([ids[i], float(values[i])]))  # Convert value from string to int
+        entries.append(Entry([DeweyID(ids[i]), float(values[i])]))  # Convert value from string to int
     return entries
 
 

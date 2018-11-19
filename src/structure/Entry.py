@@ -9,7 +9,7 @@ class Entry:
         link_SQL (dict): a dict contains a list of entries contained in linked tables
     """
 
-    def __init__(self, coordinates: [int]):
+    def __init__(self, coordinates: []):
         self.coordinates = coordinates
         self.n_dimensions = len(coordinates)
         self.link_XML = {}

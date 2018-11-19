@@ -5,9 +5,10 @@ import logging
 
 folder_name = "simple_small"
 max_n_children = 2
+method = 'stripe'
 
-logging.basicConfig(filename="io/" + folder_name + "/" + "result" + str(max_n_children) + ".log",
-                    level=logging.INFO)
+logging.basicConfig(filename="io/" + folder_name + "/" + "result_" + str(max_n_children) + '_' + method
+                             + ".log", level=logging.INFO)
 
 logging.VERBOSE = 5
 logging.addLevelName(logging.VERBOSE, "VERBOSE")
@@ -27,7 +28,7 @@ logging.getLogger("Joiner").setLevel(logging.DEBUG)
 # logging.getLogger("Entries Value Validator").setLevel(logging.DEBUG)
 # logging.getLogger("Entries Structure Validator").setLevel(logging.DEBUG)
 
-loader = Loader(folder_name, max_n_children, 'stripe')
+loader = Loader(folder_name, max_n_children, method)
 joiner = Joiner(loader)
 
 logger = logging.getLogger("Main")
