@@ -42,7 +42,8 @@ class RTree(ABC):
 
         start_sorting = timeit.default_timer()
         # sort entries based on value
-        quick_sort_entries(entries, dimension)
+        entries.sort(key=lambda entry: entry.coordinates[dimension])
+        # quick_sort_entries(entries, dimension)
         end_sorting = timeit.default_timer()
         logger.debug('%s %d', 'sorting took:', end_sorting - start_sorting)
 
@@ -64,8 +65,8 @@ class RTree(ABC):
             current_node = queue_node.get()
             current_range = queue_range.get()
             current_n_entries = current_range[1] - current_range[0]  # Number of entries contained in this current node
-            height = ceil(round(log(current_n_entries, max_n_children),
-                                     5))  # Calculate the height of this subtree based on max_n_children
+            # Calculate the height of this subtree based on max_n_children
+            height = ceil(round(log(current_n_entries, max_n_children), 5))
             logger.debug('%s %s', 'current_range:', ','.join(str(number) for number in current_range))
             logger.debug('%s %d', 'current_n_entries:', current_n_entries)
             logger.debug('%s %d', 'height:', height)
@@ -165,7 +166,8 @@ class RTree(ABC):
             updated_groups = []
             for group in groups:
                 n_leaves = len(group) / max_n_children
-                quick_sort_entries(group, dimension_order[slice_step])
+                # quick_sort_entries(group, dimension_order[slice_step])
+                group.sort(key=lambda entry: entry.coordinates[dimension_order[slice_step]])
                 # dividing in to slice
                 n_slices = ceil(n_leaves ** (1 / (n_dimension - slice_step)))
                 slice_size = ceil(len(group) / n_slices)
@@ -181,7 +183,8 @@ class RTree(ABC):
                 upper_layer_nodes = []
                 for nodes_group in nodes:
                     n_upper_layer = len(nodes_group) / max_n_children
-                    quick_sort_nodes(nodes_group, dimension_order[slice_step])
+                    nodes_group.sort(key=lambda node: node.get_center_coord()[dimension_order[slice_step]])
+                    # quick_sort_nodes(nodes_group, dimension_order[slice_step])
                     n_slices = ceil(n_upper_layer ** (1/(n_dimension - slice_step)))
                     slice_size = ceil(len(nodes_group) / n_slices)
                     for slice in divide_into_slices(nodes_group, n_slices, slice_size):
@@ -189,6 +192,7 @@ class RTree(ABC):
                 nodes = upper_layer_nodes
             nodes = [[child_nodes_to_parent_node(group_nodes) for group_nodes in nodes]]
 
+        # nodes[0][0].print_node()
         self.root = nodes[0][0]
 
 

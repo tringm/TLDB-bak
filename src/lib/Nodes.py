@@ -55,6 +55,9 @@ def get_boundaries_from_nodes(nodes) -> [[int]]:
     :return:
     """
     # init boundary
+    if not nodes:
+        return None
+
     n_dimensions = len(nodes[0].boundary)
     boundary = copy.deepcopy(nodes[0].boundary)
 

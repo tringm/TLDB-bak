@@ -184,6 +184,6 @@ class Joiner:
         query_root_node = loader.all_elements_root[loader.all_elements_name[0]]
         leaf_nodes = query_root_node.get_unfiltered_leaf_node()
         logger.info('%s %d', "Number of remaining leaf nodes after Filtering:", len(leaf_nodes))
-        logger.debug('Remaining leaf nodes: ' + str([node.boundary for node in leaf_nodes]))
+        logger.info('Remaining leaf nodes: ' + str(leaf_nodes))
 
         # perform_validation(loader)
