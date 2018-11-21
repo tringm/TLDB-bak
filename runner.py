@@ -1,14 +1,19 @@
 from src.operation.Loader import Loader
 from src.operation.Joiner import Joiner
+from pathlib import Path
 import logging
 
 
 folder_name = "orderline_price_asin_small"
 max_n_children = 10
 method = 'str'
+n_try = 0
+while Path('io/' + folder_name + '/'
+           + 'result_' + str(max_n_children) + '_' + method + '_try' + str(n_try) + '.log').exists():
+    n_try += 1
 
 logging.basicConfig(filename="io/" + folder_name + "/" + "result_" + str(max_n_children) + '_' + method
-                             + ".log", level=logging.INFO)
+                             + '_try' + str(n_try) + ".log", level=logging.INFO)
 
 logging.VERBOSE = 5
 logging.addLevelName(logging.VERBOSE, "VERBOSE")
