@@ -66,16 +66,16 @@ def compare_value_boundaries(boundary1: [], boundary2: []) -> float:
     return 0
 
 
-def value_boundary_has_intersection(boundary1: [], boundary2: []) -> bool:
-    """
-    This function check if these 2 boundary intersect
-    :param boundary1: list of size 2
-    :param boundary2: list of size 2
-    :return: True if they intersect
-    """
-    if (boundary1[1] < boundary2[0]) or (boundary1[0] > boundary2[1]):
-        return False
-    return True
+# def value_boundary_has_intersection(boundary1: [], boundary2: []) -> bool:
+#     """
+#     This function check if these 2 boundary intersect
+#     :param boundary1: list of size 2
+#     :param boundary2: list of size 2
+#     :return: True if they intersect
+#     """
+#     if (boundary1[1] < boundary2[0]) or (boundary1[0] > boundary2[1]):
+#         return False
+#     return True
 
 
 def value_boundary_intersection(boundary1: [], boundary2: []) -> []:
@@ -83,8 +83,10 @@ def value_boundary_intersection(boundary1: [], boundary2: []) -> []:
     This function found the intersection between 2 boundary of number
     :param boundary1: list of size 2
     :param boundary2: list of size 2
-    :return: intersection of the 2 boundary
+    :return: None if does not intersect else intersection of the 2 boundary
     """
+    if (boundary1[1] < boundary2[0]) or (boundary1[0] > boundary2[1]):
+        return None
     return [max(boundary1[0], boundary2[0]), min(boundary1[1], boundary2[1])]
 
 

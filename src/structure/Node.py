@@ -2,7 +2,7 @@ import queue
 from src.lib.DeweyID import get_center_index
 from src.lib.Entries import get_boundaries_from_entries
 from src.lib.Nodes import get_boundaries_from_nodes
-from src.lib.Boundary import update_boundary_from_entry, update_boundary_from_node
+from src.lib.boundary import update_boundary_from_entry, update_boundary_from_node
 from numpy import mean
 from abc import ABC, abstractmethod
 
@@ -241,12 +241,16 @@ class XMLNode(Node):
         self.validated = False
 
         # Filtering Time
-        self.value_filtering_time = -1
+        self.start_full_filtering = -1
+        self.end_full_filtering = -1
+        self.start_value_filtering = -1
+        self.end_value_filtering = -1
+
+
         self.connected_element_filtering_time = -1
         self.check_lower_level_time = -1
         self.init_children_time = -1
         self.filter_children_time = -1
-        self.full_filtering_time = -1
         # Validation time
         self.value_validation_time = -1
         self.structure_validation_time = -1
@@ -273,6 +277,14 @@ class XMLNode(Node):
                 for node in leaf_nodes_child:
                     leaf_nodes.append(node)
         return leaf_nodes
+
+    @property
+    def full_filtering_time(self):
+        return self.end_full_filtering - self.start_full_filtering
+
+    @property
+    def value_filtering_time(self):
+        return self.end_value_filtering - self.start_value_filtering
 
 
 class SQLNode(Node):

@@ -2,7 +2,7 @@ from src.operation.Loader import Loader
 from src.operation.Joiner import Joiner
 from pathlib import Path
 import logging
-
+import os
 
 folder_name = "orderline_price_asin_small"
 max_n_children = 10
@@ -34,7 +34,7 @@ logging.verbose = lambda msg, *args, **kwargs: logging.log(logging.VERBOSE, msg,
 # logging.getLogger("Entries Structure Validator").setLevel(logging.DEBUG)
 
 loader = Loader(folder_name, max_n_children, method)
-joiner = Joiner(loader)
+joiner = Joiner(loader, method)
 
 logger = logging.getLogger("Main")
 logger.info("#####################")

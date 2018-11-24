@@ -3,10 +3,10 @@ import logging
 import queue
 import timeit
 
-from .Filterer import full_filtering
+from .filterer_stripe import full_filtering
 from .Loader import Loader, get_index_highest_element
 from .Validator import node_validation
-from src.io_support.LoggerSupport import *
+from src.io_support.logger_support import *
 
 
 def initialization(loader: Loader):
@@ -87,8 +87,8 @@ def perform_filtering(loader: Loader, initial_limit_range: []):
 
     # Push root of XML query RTree root node to queue
     start_filtering = timeit.default_timer()
-    n_node_processed = 0
-    n_node_filtered = 0
+    n_root_node_processed = 0
+    n_root_node_filtered = 0
 
     query_root_name = all_elements_name[0]
     queue_query_root_node = queue.Queue()
@@ -100,7 +100,7 @@ def perform_filtering(loader: Loader, initial_limit_range: []):
         query_root_node = queue_query_root_node.get()  # type: XMLNode
         limit_range = queue_limit_range.get()
 
-        n_node_processed += 1
+        n_root_node_processed += 1
 
         updated_limit_range = full_filtering(query_root_node, all_elements_name, limit_range)
 
@@ -115,14 +115,14 @@ def perform_filtering(loader: Loader, initial_limit_range: []):
                 queue_query_root_node.put(XML_query_root_node_child)
                 queue_limit_range.put(copy.deepcopy(updated_limit_range))
         else:
-            n_node_filtered += 1
+            n_root_node_filtered += 1
 
     end_filtering = timeit.default_timer()
     logger.info('%s %3f', 'Total Filtering time', end_filtering - start_filtering)
-    logger.info('%s %d', 'Number of node processed: ', n_node_processed)
-    logger.info('%s %d', 'Number of node filtered: ', n_node_filtered)
+    logger.info('%s %d', 'Number of node processed: ', n_root_node_processed)
+    logger.info('%s %d', 'Number of node filtered: ', n_root_node_filtered)
     logger.info('%s %3f', 'Average filtering time for one node:',
-                (end_filtering - start_filtering) / n_node_processed)
+                (end_filtering - start_filtering) / n_root_node_processed)
 
 
 def perform_validation(loader: Loader):
@@ -173,7 +173,7 @@ class Joiner:
     This joiner takes a loader and do the joining
     """
 
-    def __init__(self, loader: Loader):
+    def __init__(self, loader: Loader, loading_method: str):
         logger = logging.getLogger("Joiner")
         logger.info("Started Joiner")
         initial_limit_range = initialization(loader)

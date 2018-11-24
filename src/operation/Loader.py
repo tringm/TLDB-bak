@@ -196,6 +196,7 @@ class Loader:
         logger = logging.getLogger("Loader")
         logger.info("Loader started")
         start_loading = timeit.default_timer()
+        self.method = load_method
         self.max_n_children = max_n_children
         self.all_elements_name, self.relationship_matrix = load_xml_query(folder_name)
         self.all_elements_root = load_elements(folder_name, self.all_elements_name, self.max_n_children, load_method)
