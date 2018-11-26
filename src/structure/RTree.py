@@ -1,6 +1,8 @@
 import logging
 from math import floor, ceil, log
 import timeit
+from queue import Queue
+from typing import Any
 
 from src.lib.Entries import quick_sort_entries, get_boundaries_from_entries
 from src.lib.Nodes import quick_sort_nodes
@@ -50,7 +52,7 @@ class RTree(ABC):
         n_entries = len(entries)
 
         # Configuration
-        queue_node = queue.Queue()  # Queue for node at each level
+        queue_node = queue.Queue()  # type: Queue[Node] # Queue for node at each level
         queue_range = queue.Queue()  # Queue for range of entries contained in a node at each level
 
         # Initialization
@@ -73,6 +75,7 @@ class RTree(ABC):
 
             # if current node contains has n_entries <= max_n_children then this is a leaf and proceed to add entries
             if current_n_entries <= max_n_children:
+                current_node.isLeaf = True
                 logger.debug("Found leaf => add entries")
                 adding_entries = entries[current_range[0]:current_range[1]]
                 logger.debug('%s %d', "len(adding_entries):", len(adding_entries))
@@ -146,6 +149,7 @@ class RTree(ABC):
                 raise ValueError('Slicing error: A leaf ' + str(some_entries) + 'has more than ' + str(max_n_children))
             node = node_type(max_n_children, entries=some_entries, name=tree_name, dimension=dimension)
             node.boundary = get_boundaries_from_entries(some_entries)
+            node.isLeaf = True
             return node
 
         def child_nodes_to_parent_node(child_nodes: [Node]):

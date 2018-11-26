@@ -23,11 +23,15 @@ logging.verbose = lambda msg, *args, **kwargs: logging.log(logging.VERBOSE, msg,
 # logging.getLogger("Loader").setLevel(logging.VERBOSE)
 # logging.getLogger("RTree").setLevel(logging.VERBOSE)
 # logging.getLogger("Joiner").setLevel(logging.DEBUG)
-# logging.getLogger("Main Filterer").setLevel(logging.VERBOSE)
+# # logging.getLogger("Main Filterer").setLevel(logging.VERBOSE)
+# logging.getLogger("Full Filterer").setLevel(logging.VERBOSE)
 # logging.getLogger("Value Filterer").disabled = True
-# logging.getLogger("Connected Element").disabled = True
-# logging.getLogger("Traversing Query").disabled = True
-# logging.getLogger("Init Children").disabled = True
+# logging.getLogger("Connected Element Filterer").disabled = True
+# logging.getLogger("Check Lower Level").disabled = True
+# # logging.getLogger("Traversing Query").disabled = True
+# logging.getLogger("Init Children Link").disabled = True
+# logging.getLogger("Filter Children").disabled = True
+# logging.getLogger("Filter Children Link SQL").disabled = True
 
 # logging.getLogger("Node Validator").setLevel(logging.DEBUG)
 # logging.getLogger("Entries Value Validator").setLevel(logging.DEBUG)

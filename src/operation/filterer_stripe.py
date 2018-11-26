@@ -365,7 +365,7 @@ def initialize_children_link(filtering_node, all_elements_name, limit_range):
     logger.verbose('\t' * filtering_node_index +
                    'Init xml_link and check if connected_element_node_child can satisfy limit range and structure')
     if not filtering_node.link_xml:
-        ('\t' * (filtering_node_index + 1) + 'Link xml is empty')
+        logger.verbose('\t' * (filtering_node_index + 1) + 'Link xml is empty')
     connected_elements = list(filtering_node.link_xml.keys())
     connected_elements.sort(key=lambda element: all_elements_name.index(element))
     children_link_xml = {}

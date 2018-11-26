@@ -35,7 +35,9 @@ class Node(ABC):
         self.dimension = dimension
         self._children = [] if children is None else children
         self._entries = [] if entries is None else entries
-        self.boundary = self.init_boundary()
+        self.original_boundary = self.init_boundary()
+        self.boundary = self.original_boundary
+        self.isLeaf = False
 
     def __str__(self):
         return self.name + ':' + str(self.boundary)
@@ -245,12 +247,17 @@ class XMLNode(Node):
         self.end_full_filtering = -1
         self.start_value_filtering = -1
         self.end_value_filtering = -1
+        self.start_ce_filtering = -1
+        self.end_ce_filtering = -1
+        self.start_check_lower_level = -1
+        self.end_check_lower_level = -1
+        self.start_init_children = -1
+        self.end_init_children = -1
+        self.start_filter_children = -1
+        self.end_filter_children = -1
+        self.start_filter_children_link_sql = -1
+        self.end_filter_children_link_sql = -1
 
-
-        self.connected_element_filtering_time = -1
-        self.check_lower_level_time = -1
-        self.init_children_time = -1
-        self.filter_children_time = -1
         # Validation time
         self.value_validation_time = -1
         self.structure_validation_time = -1
@@ -285,6 +292,26 @@ class XMLNode(Node):
     @property
     def value_filtering_time(self):
         return self.end_value_filtering - self.start_value_filtering
+
+    @property
+    def connected_element_filtering_time(self):
+        return self.end_ce_filtering - self.start_ce_filtering
+
+    @property
+    def check_lower_level_time(self):
+        return self.end_check_lower_level - self.start_check_lower_level
+
+    @property
+    def init_children_time(self):
+        return self.end_init_children - self.start_init_children
+
+    @property
+    def filter_children_time(self):
+        return self.end_filter_children - self.start_filter_children
+
+    @property
+    def filter_children_link_sql_time(self):
+        return self.end_filter_children_link_sql - self.start_filter_children_link_sql
 
 
 class SQLNode(Node):

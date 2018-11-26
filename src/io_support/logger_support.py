@@ -1,7 +1,6 @@
 # Helper library for logging
 from src.structure.Node import XMLNode
 
-
 def log_node_filter_status(node: XMLNode, logger_function, n_prefix_tab=1):
     if not isinstance(node, XMLNode):
         raise ValueError('Cannot log filter status of ' + str(node) + ' if is not XMLNode')

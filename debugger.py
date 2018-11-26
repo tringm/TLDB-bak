@@ -22,4 +22,5 @@ logging.verbose = lambda msg, *args, **kwargs: logging.log(logging.VERBOSE, msg,
 
 
 filterer = Filterer(loader, initial_limit_range)
-filterer.node_value_filter_str(filterer.roots[filterer.elements[0]])
+filterer.perform()
+# filterer.node_value_filter_str(filterer.roots[filterer.elements[0]])
