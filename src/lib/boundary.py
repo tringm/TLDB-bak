@@ -118,7 +118,7 @@ def index_boundary_can_be_ancestor(boundary1: [], boundary2: []) -> bool:
     :param boundary2: index boundary
     :return: True if boundary 1 can be ancestor of boundary 2
     """
-    if boundary2[1] < boundary1[0]:
+    if boundary2[1] <= boundary1[0]:
         return False
 
     if boundary2[0] > boundary1[1]:

@@ -204,14 +204,3 @@ class Loader:
         end_loading = timeit.default_timer()
         self.total_loading_time = end_loading - start_loading
         logger.info('%s %.3f', "Total loading time:", self.total_loading_time)
-
-    def print_tree(self):
-        print('XML')
-        for element in self.all_elements_name:
-            print(element)
-            self.all_elements_root[element].print_node()
-
-        print('SQL')
-        for table_name in self.all_tables_root:
-            print(table_name)
-            self.all_tables_root[table_name].print_node()

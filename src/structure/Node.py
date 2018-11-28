@@ -1,17 +1,17 @@
 import queue
+from abc import ABC, abstractmethod
+
+from numpy import mean
+
+from src.structure.DeweyID import DeweyID
 from src.lib.DeweyID import get_center_index
 from src.lib.Entries import get_boundaries_from_entries
 from src.lib.Nodes import get_boundaries_from_nodes
-from src.lib.boundary import update_boundary_from_entry, update_boundary_from_node
-from numpy import mean
-from abc import ABC, abstractmethod
+from src.lib.boundary import *
 
-# TODO:
-#     1. Implement isLeaf instead of checking self entries
-#     2. Evoke update boundary on entries/node change: DONE
-#         2.1 Better implementation (for adding 1 node or adding 1 entry -> dont have to update all again)
-#     3. Implement own class for DeweyId
-
+from typing import List
+# TODO: id (basically Dewey ID for fast traversal)
+# TODO: Find node that fit this range
 
 class Node(ABC):
     """RTree Node
@@ -82,17 +82,6 @@ class Node(ABC):
         self._children.append(node)
         self.boundary = update_boundary_from_node(self.boundary, node)
 
-    # def init_boundaries(self):
-    #     # if this is a leaf node
-    #     if not self.children:
-    #         if not self.entries:
-    #             raise ValueError(str(self) + ': Both children and entries is empty')
-    #         else:
-    #             self.boundary = get_boundaries_from_entries(self.entries)
-    #     else:
-    #         self.boundary = get_boundaries_from_nodes(self.children)
-    #     return self.boundary
-
     def get_entries(self):
         # if this is a leaf node or has already been get entries before
         if not self.entries:
@@ -115,38 +104,6 @@ class Node(ABC):
         # cache entries
         self._entries = entries
         return self.entries
-
-    def get_entries_recursion(self):
-        """
-        This function return all entries contained in this node (included children's entries)
-        :return: [Entry]
-        """
-        # if this node is a leaf node
-        if self.entries:
-            return self.entries
-        # else get all child entry
-        entries = []
-        for child in self.children:
-            child_entries = child.get_entries()
-            for child_entry in child_entries:
-                entries.append(child_entry)
-        self._entries = entries
-        return entries
-
-    def print_node(self, level=0):
-        """Summary
-        Simple implementation to print this node and its children
-        Args:
-            level (int, optional): current level for printing
-        """
-        if self.entries:
-            print('\t' * (level + 1), 'NODE ', self.boundary, 'is Leaf')
-            for i in range(len(self.entries)):
-                print('\t' * (level + 1), self.entries[i].coordinates)
-        else:
-            print('\t' * (level + 1), 'NODE ', self.boundary)
-            for child in self.children:
-                child.print_node(level + 1)
 
     def print_node_not_filtered_with_link(self, level=0):
         """Summary
@@ -190,31 +147,6 @@ class Node(ABC):
 
                 for child in self.children:
                     child.print_node_not_filtered_with_link(level + 1)
-
-    def print_node_not_filtered(self, level=0):
-        """Summary
-        Simple implementation to print this node and its children
-        Args:
-            level (int, optional): current level for printing
-        """
-        if not self.filtered:
-            if len(self.entries) > 0:
-                print('\t' * (level + 1), 'NODE ', self.boundary, 'is Leaf')
-                for i in range(len(self.entries)):
-                    print('\t' * (level + 1), self.entries[i].coordinates)
-            else:
-                print('\t' * (level + 1), 'NODE ', self.boundary)
-                for child in self.children:
-                    child.print_node_not_filtered(level + 1)
-
-    def print_link(self, n_prefix_tabl = 1):
-        print('\t' * n_prefix_tabl + 'Child ' + str(self))
-        print('\t' * (n_prefix_tabl + 1) + 'link xml: ')
-        for connected_element in self.link_xml:
-            print('\t' * (n_prefix_tabl + 2) + str([str(node) for node in self.link_xml[connected_element]]))
-        print('\t' * (n_prefix_tabl + 1) + 'link sql: ')
-        for table_name in self.link_sql:
-            print('\t' * (n_prefix_tabl + 2) + str([str(node) for node in self.link_sql[table_name]]))
 
     def get_leaf_nodes(self):
         """
@@ -299,6 +231,47 @@ class XMLNode(Node):
                     leaf_nodes.append(node)
         return leaf_nodes
 
+    def desc_range_search(self, idx_range: List[DeweyID], v_range, max_depth=2):
+        if idx_range is None and v_range is None:
+            raise ValueError('Must have some criteria, both idx_range and v_range is None')
+        if idx_range is not None:
+            if not index_boundary_can_be_ancestor(idx_range, self.boundary[0]):
+                return
+        if v_range is not None:
+            if value_boundary_intersection(self.boundary[1], v_range) is None:
+                return
+        if self.isLeaf:
+            return self
+
+        checking_nodes = self.children.copy()
+        depth = 1
+        while checking_nodes:
+            satisfy_node = []
+            for idx, node in enumerate(checking_nodes):
+                if idx_range is not None:
+                    if not index_boundary_can_be_ancestor(idx_range, node.boundary[0]):
+                        continue
+                if v_range is not None:
+                    if value_boundary_intersection(node.boundary[1], v_range) is None:
+                        continue
+                satisfy_node.append(node)
+            if not satisfy_node:
+                return
+            if depth == max_depth or satisfy_node[0].isLeaf:
+                checking_nodes = satisfy_node
+                break
+
+            depth += 1
+            next_layer = []
+            for node in satisfy_node:
+                for child in node.children:
+                    next_layer.append(child)
+            checking_nodes = next_layer
+
+        if not checking_nodes:
+            return None
+        return checking_nodes
+
     @property
     def full_filtering_time(self):
         return self.end_full_filtering - self.start_full_filtering
@@ -334,3 +307,45 @@ class SQLNode(Node):
 
     def get_center_coord(self):
         return [mean(self.boundary[i]) for i in range(len(self.boundary))]
+
+    def range_search(self, boundaries: List[List[int]], max_depth=2):
+        if not len(self.boundary) == len(boundaries):
+            raise ValueError('Range mismatch')
+
+        for idx, boundary in enumerate(boundaries):
+            if boundary is not None:
+                if value_boundary_intersection(self.boundary[idx], boundary) is None:
+                    return
+
+        if self.isLeaf:
+            return self
+
+        checking_nodes = self.children.copy()
+        depth = 1
+        while checking_nodes:
+            satisfy_node = []
+            for idx, node in enumerate(checking_nodes):
+                node_ok = True
+                for d, boundary in enumerate(boundaries):
+                    if boundary is not None:
+                        if value_boundary_intersection(node.boundary[d], boundary) is None:
+                            node_ok = False
+                            break
+                if node_ok:
+                    satisfy_node.append(node)
+            if not satisfy_node:
+                return
+            if depth == max_depth or satisfy_node[0].isLeaf:
+                checking_nodes = satisfy_node
+                break
+
+            depth += 1
+            next_layer = []
+            for node in satisfy_node:
+                for child in node.children:
+                    next_layer.append(child)
+            checking_nodes = next_layer
+
+        if not checking_nodes:
+            return None
+        return checking_nodes

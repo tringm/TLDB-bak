@@ -3,7 +3,7 @@ from src.operation.Joiner import Joiner
 from pathlib import Path
 import logging
 
-folder_name = "orderline_price_asin_small"
+folder_name = "orderline_price_asin_small_original"
 max_n_children = 10
 method = 'str'
 n_try = 0

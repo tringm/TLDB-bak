@@ -1,18 +1,21 @@
 # This file contains helper functions for DeweyID
 from math import floor
+
 from src.structure.DeweyID import DeweyID
 
 
 def get_center_index(id1: DeweyID, id2: DeweyID) -> str:
     """
     This function returns the "medium" of 2 Dewey ID index
-    For example, medium of '1.2.1' and '1.1.2' is '1.1'6'
-    Assuming that id2 is always "larger" than id1
+    For example:
+        medium of '1.2.1' and '1.1.2' is '1.1'6'
+        medium of '1.42.1.3' and '1.30.19' is '1.35.9'
     :param id1:
     :param id2:
     :return:
     """
-    # TODO: handling 1.30.19 and 1.42.1.3 -> 1.35.9 case
+    if id1 > id2:
+        id1, id2 = id2, id1
 
     min_length = min(len(id1.components), len(id2.components))
     mean_index = []
@@ -20,10 +23,7 @@ def get_center_index(id1: DeweyID, id2: DeweyID) -> str:
     for i in range(min_length):
         mean_diff = (id2.components[i] - id1.components[i])/2
         if mean_diff < 0 and not remember:
-            if len(mean_index) == 0 or (mean_index[i - 1] == id1.components[i - 1]):
-                raise ValueError('Max index ' + str(id1) + 'smaller than min index ' + str(id2))
-            else:
-                mean_index[len(mean_index) - 1] -= 1
+            mean_index[len(mean_index) - 1] -= 1
         if remember:
             mean_diff = mean_diff + 5
         if (mean_diff * 2) % 2 != 0:
