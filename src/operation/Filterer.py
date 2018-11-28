@@ -196,6 +196,7 @@ class Filterer:
                 child.link_sql = copy.deepcopy(link_sql)
 
         logger.verbose('\t' * (f_n_idx + 1) + 'Limit range:' + str(limit_range))
+        filtering_node.end_full_filtering = timeit.default_timer()
 
         return limit_range
 
@@ -845,11 +846,11 @@ class Filterer:
             self.mark_node_as_filtered(filtering_node, 'filter_children_link_sql', 'No remaining children')
             log_node_filter_status(filtering_node, logger.verbose, f_n_idx + 1)
 
+        filtering_node.children = remaining_children
         logger.debug('\t'*f_n_idx + 'Result')
         for idx, child in enumerate(filtering_node.children):
             logger.debug('\t'*(f_n_idx + 1) + 'Child ' + str(child) + str(children_link_sql[idx]))
 
-        filtering_node.children = remaining_children
         logger.debug("")
         filtering_node.end_filter_children_link_sql = timeit.default_timer()
         return children_link_sql

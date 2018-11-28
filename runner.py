@@ -3,8 +3,8 @@ from src.operation.Joiner import Joiner
 from pathlib import Path
 import logging
 
-folder_name = "simple_small"
-max_n_children = 2
+folder_name = "orderline_price_asin_small"
+max_n_children = 10
 method = 'str'
 n_try = 0
 while Path('io/' + folder_name + '/'
@@ -23,8 +23,8 @@ logging.verbose = lambda msg, *args, **kwargs: logging.log(logging.VERBOSE, msg,
 # logging.getLogger("RTree").setLevel(logging.VERBOSE)
 # logging.getLogger("Joiner").setLevel(logging.DEBUG)
 # # logging.getLogger("Main Filterer").setLevel(logging.VERBOSE)
-# logging.getLogger("Filterer").setLevel(logging.VERBOSE)
-# logging.getLogger("Full Filterer").setLevel(logging.VERBOSE)
+logging.getLogger("Filterer").setLevel(logging.VERBOSE)
+logging.getLogger("Full Filterer").setLevel(logging.VERBOSE)
 # logging.getLogger("Value Filterer").disabled = True
 # logging.getLogger("Connected Element Filterer").disabled = True
 # logging.getLogger("Check Lower Level").disabled = True
