@@ -3,6 +3,7 @@ import logging
 import queue
 import timeit
 
+from .Filterer import Filterer
 from .filterer_stripe import full_filtering
 from .Loader import Loader, get_index_highest_element
 from .Validator import node_validation
@@ -177,7 +178,9 @@ class Joiner:
         logger = logging.getLogger("Joiner")
         logger.info("Started Joiner")
         initial_limit_range = initialization(loader)
-        perform_filtering(loader, initial_limit_range)
+        # perform_filtering(loader, initial_limit_range)
+        filterer = Filterer(loader, initial_limit_range)
+        filterer.perform()
 
         logger = logging.getLogger("Joiner Validating")
         logger.setLevel(logging.getLogger("Joiner").level)

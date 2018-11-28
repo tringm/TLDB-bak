@@ -60,7 +60,7 @@ class DeweyID:
         :return: True if id1 is an ancestor of id2
         """
         # id2 is shorter -> can't be descendant
-        if len(self.components) <= len(another_id.components):
+        if len(self.components) >= len(another_id.components):
             return False
         # Compare element wise
         for i in range(len(self.components)):

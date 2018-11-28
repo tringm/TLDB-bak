@@ -216,6 +216,20 @@ class Node(ABC):
         for table_name in self.link_sql:
             print('\t' * (n_prefix_tabl + 2) + str([str(node) for node in self.link_sql[table_name]]))
 
+    def get_leaf_nodes(self):
+        """
+        This function return a list of nodes which are the unfiltered leaves of this node
+        :return: (List[Node]) leaf node of this not which are not filtered
+        """
+        leaf_nodes = []
+
+        if self.isLeaf:
+            return [self]
+        for child in self.children:
+            for node in child.get_leaf_nodes():
+                leaf_nodes.append(node)
+        return leaf_nodes
+
 
 class XMLNode(Node):
     """XML Node
@@ -251,8 +265,8 @@ class XMLNode(Node):
         self.end_ce_filtering = -1
         self.start_check_lower_level = -1
         self.end_check_lower_level = -1
-        self.start_init_children = -1
-        self.end_init_children = -1
+        self.start_init_children_link = -1
+        self.end_init_children_link = -1
         self.start_filter_children = -1
         self.end_filter_children = -1
         self.start_filter_children_link_sql = -1
@@ -302,8 +316,8 @@ class XMLNode(Node):
         return self.end_check_lower_level - self.start_check_lower_level
 
     @property
-    def init_children_time(self):
-        return self.end_init_children - self.start_init_children
+    def init_children_link_time(self):
+        return self.end_init_children_link - self.start_init_children_link
 
     @property
     def filter_children_time(self):

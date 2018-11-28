@@ -2,31 +2,43 @@ import logging
 import timeit
 import queue
 import copy
+import numpy as np
 from src.io_support.logger_support import *
 from src.lib.boundary import *
 from typing import Dict, List
 
 
+# TODO: log last layer of node
 # TODO: Implement RTree Range Search => find node in range, instead of going level by level (with depth for optimization)
-# Implement caching for faster test iteration
+# TODO: Implement caching for faster test iteration
+# TODO: query given range load from loader
 
 class Filterer:
-    def __init__(self, loader, initial_limit_range):
+    def __init__(self, loader, query_given_range):
         self.total_time = -1
         self.loader = loader
-        self.initial_limit_range = initial_limit_range
+        self.query_given_range = query_given_range
+        self.query_given_range = query_given_range
         self.elements = loader.all_elements_name
         self.roots = loader.all_elements_root
-        self.n_node_processed = 0
-        self.n_node_filtered = 0
-        self.n_node_skipped = 0
-        self.n_node_filtered_by_limit_range = 0
-        self.n_node_filtered_by_value = 0
-        self.n_node_filtered_by_connected_element = 0
-        self.n_node_filtered_by_check_lower_level = 0
-        self.n_node_filtered_by_init_children_link = 0
-        self.n_node_filtered_by_filter_children = 0
-        self.n_node_filtered_by_filter_children_link_sql = 0
+
+        self.main_trackers = ['n_processed', 'n_filtered', 'n_skipped']
+        self.detail_trackers = ['n_flt_lr', 'n_flt_v', 'n_flt_c_e', 'n_flt_filter_desc', 
+                                'n_flt_init_children_link', 'n_flt_filter_children', 'n_flt_filter_children_sql']
+
+        self.status = dict(zip(self.main_trackers + self.detail_trackers,
+                               np.zeros(len(self.main_trackers + self.detail_trackers))))
+
+        self.status['n_processed'] = 0
+        self.status['n_filtered'] = 0
+        self.status['n_skipped'] = 0
+        self.status['n_flt_lr'] = 0
+        self.status['n_flt_v'] = 0
+        self.status['n_flt_c_e'] = 0
+        self.status['n_flt_filter_desc'] = 0
+        self.status['n_flt_init_children_link'] = 0
+        self.status['n_flt_filter_children'] = 0
+        self.status['n_flt_filter_children_sql'] = 0
 
     def perform(self):
         logger = logging.getLogger("Filterer")
@@ -37,12 +49,12 @@ class Filterer:
         queue_root_node = queue.Queue()
         queue_limit_range = queue.Queue()
         queue_root_node.put(self.roots[root])
-        queue_limit_range.put(self.initial_limit_range)
+        queue_limit_range.put(self.query_given_range)
 
         while not queue_root_node.empty():
-            root_node = queue_root_node.get()
+            root_node = queue_root_node.get()  # type: XMLNode
             limit_range = queue_limit_range.get()
-            updated_limit_range = self.node_full_filtering(root_node, limit_range)
+            updated_lr = self.node_full_filtering(root_node, limit_range)
             logger.debug('Filtering root node: ' + str(root_node))
             log_node_filter_status(root_node, logger.debug, 1)
             logger.debug('%s %3f', '\t' + 'Root node filter time: ', root_node.full_filtering_time)
@@ -52,40 +64,43 @@ class Filterer:
             if not root_node.filtered:
                 for child in root_node.children:
                     queue_root_node.put(child)
-                    queue_limit_range.put(copy.deepcopy(updated_limit_range))
+                    queue_limit_range.put(copy.deepcopy(updated_lr))
 
         end_filtering = timeit.default_timer()
         self.total_time = end_filtering - start_filtering
+        self.log_all_status(logger.info)
 
     def mark_node_as_filtered(self, node: XMLNode, filter_type: str, reason_of_filtered: str):
-        possible_filter_types = ['value_filter', 'connected_element', 'check_lower_level',
+        possible_filter_types = ['limit_range', 'value_filter', 'connected_element', 'check_lower_level',
                                  'init_children_link', 'filter_children', 'filter_link_sql']
         if filter_type not in possible_filter_types:
             raise ValueError('Filter type: ' + filter_type + ' is wrong')
 
+        if filter_type == 'limit_range':
+            self.status['n_flt_lr'] += 1
         if filter_type == 'value_filter':
-            self.n_node_filtered_by_value += 1
+            self.status['n_flt_v'] += 1
             node.end_value_filtering = timeit.default_timer()
         if filter_type == 'connected_element':
             node.end_ce_filtering = timeit.default_timer()
-            self.n_node_filtered_by_connected_element +=1
+            self.status['n_flt_c_e'] +=1
         if filter_type == 'check_lower_level':
             node.end_check_lower_level = timeit.default_timer()
-            self.n_node_filtered_by_check_lower_level += 1
+            self.status['n_flt_filter_desc'] += 1
         if filter_type == 'init_children_link':
-            node.end_check_lower_level = timeit.default_timer()
-            self.n_node_filtered_by_init_children_link += 1
+            node.end_init_children_link = timeit.default_timer()
+            self.status['n_flt_init_children_link'] += 1
         if filter_type == 'filter_children':
             node.end_filter_children = timeit.default_timer()
-            self.n_node_filtered_by_filter_children += 1
+            self.status['n_flt_filter_children'] += 1
         if filter_type == 'filter_children_link_sql':
             node.end_filter_children_link_sql = timeit.default_timer()
-            self.n_node_filtered_by_filter_children_link_sql += 1
+            self.status['n_flt_filter_children_sql'] += 1
 
         node.filtered = True
         node.reason_of_filtered = filter_type + ': ' + reason_of_filtered
         node.end_full_filtering = timeit.default_timer()
-        self.n_node_filtered += 1
+        self.status['n_filtered'] += 1
 
     def node_full_filtering(self, filtering_node: XMLNode, limit_range):
         """
@@ -99,7 +114,7 @@ class Filterer:
         :return: Dict[str, List[int]] or None
                  updated limit range or None if this node is filtered
         """
-        self.n_node_processed += 1
+        self.status['n_processed'] += 1
         filtering_node.start_full_filtering = timeit.default_timer()
 
         logger = logging.getLogger("Full Filterer")
@@ -113,18 +128,21 @@ class Filterer:
         logger.verbose('\t' * (f_n_idx + 1) + 'Limit range: ' + str(limit_range))
 
         if filtering_node.filtered:
-            self.n_node_skipped += 1
+            self.status['n_skipped'] += 1
             return
 
         # Go through limit range and check if this node satisfy the limit range
-        intersected_lr = value_boundary_intersection(limit_range[filtering_node.name], filtering_node.boundary[1])
-        if intersected_lr is not None:
-            limit_range[filtering_node.name] = intersected_lr
-            logger.verbose('\t' * (f_n_idx + 1) +
-                           'Limit range updated based on node value' + str(limit_range))
-        else:
-            self.n_node_skipped += 1
+        limit_range[filtering_node.name] = value_boundary_intersection(limit_range[filtering_node.name],
+                                                                       filtering_node.boundary[1])
+        if limit_range[filtering_node.name] is None:
+            if filtering_node.name == self.elements[0]:
+                self.mark_node_as_filtered(filtering_node, 'limit_range', 'Node v_boundary not satisfy')
+                log_node_filter_status(filtering_node, logger.verbose, f_n_idx + 1)
+            else:
+                self.status['n_skipped'] += 1
             return
+
+        logger.verbose('\t' * (f_n_idx + 1) + 'Limit range updated based on node value' + str(limit_range))
 
         # If not value filtered before =>
         # Perform value filtering by checking all connected table and return limit ranges based on these tables
@@ -138,16 +156,24 @@ class Filterer:
             return
 
         # Update limit range
-        intersection_range = filtering_node.intersection_range
-        for element in intersection_range:
-            limit_range[element] = value_boundary_intersection(
-                limit_range[element], value_boundaries_union(intersection_range[element]))
+        for e in filtering_node.intersection_range:
+            limit_range[e] = value_boundary_intersection(limit_range[e],
+                                                         value_boundaries_union(filtering_node.intersection_range[e]))
         logger.verbose('\t' * f_n_idx + 'Limit range updated based on value filtering ' + str(limit_range))
+        for e in limit_range:
+            if limit_range[e] is None:
+                if filtering_node.name == self.elements[0]:
+                    self.mark_node_as_filtered(filtering_node, 'limit_range',
+                                               'node value interX range does not intersect')
+                else:
+                    self.status['n_skipped'] += 1
+                return
 
         self.connected_element_filtering(filtering_node, limit_range)
         if filtering_node.filtered:
             return
         limit_range = self.check_lower_level(filtering_node, limit_range)
+        logger.verbose('\t' * (f_n_idx + 1) + 'Limit range updated after check lower level:' + str(limit_range))
         if filtering_node.filtered:
             return
 
@@ -163,11 +189,14 @@ class Filterer:
 
         # Assign link xml and link sql to children
         for idx, child in enumerate(filtering_node.children):
-            child.link_xml = link_xml
+            child.link_xml = copy.deepcopy(link_xml)
             if children_link_sql:
                 child.link_sql = children_link_sql[idx]
             else:
-                child.link_sql = link_sql
+                child.link_sql = copy.deepcopy(link_sql)
+
+        logger.verbose('\t' * (f_n_idx + 1) + 'Limit range:' + str(limit_range))
+
         return limit_range
 
     def node_value_filter_stripe(self, filtering_node):
@@ -375,14 +404,18 @@ class Filterer:
 
         # init join_range for each element
         join_range = []  # type: List[Dict[str, List[int]]]
-        first_table_nodes = filtering_node.link_sql[table_names[0]]  # type: List[Node]
-        first_table_elements = table_names[0].split('_')  # type: [str]
-        for node in first_table_nodes:
-            join_range.append(dict(zip(first_table_elements, node.boundary)))
+        join_range.append({filtering_node.name: filtering_node.boundary[1]})
+        # first_table_nodes = filtering_node.link_sql[table_names[0]]  # type: List[Node]
+        # first_table_elements = table_names[0].split('_')  # type: [str]
+        # for node in first_table_nodes:
+        #     join_range.append(dict(zip(first_table_elements, node.boundary)))
+        # for idx, node in enumerate(first_table_nodes):
+        #     join_range[idx][filtering_node.name] = value_boundary_intersection(node.boundary[node.dimension],
+        #                                                                        filtering_node.boundary[1])
 
         logger.verbose('\t' * f_n_idx + 'Find intersected value boundary')
         # Checking nodes of different table, if found no intersection -> Filter
-        for table_name in table_names[1:]:
+        for table_name in table_names:
             logger.verbose('\t' * f_n_idx + 'Checking ' + table_name)
             table_elements = table_name.split('_')
             table_nodes = filtering_node.link_sql[table_name]  # type: List[Node]
@@ -396,14 +429,13 @@ class Filterer:
                     logger.verbose('\t' * (f_n_idx + 2) + 'Checking boundary' + str(boundary))
                     intersected_boundary = {}
                     all_elements_checked_ok = True
-                    for i in range(len(table_elements)):
-                        element = table_elements[i]
-                        if element not in boundary:
-                            intersected_boundary[element] = node.boundary[i]
+                    for idx, e in enumerate(table_elements):
+                        if e not in boundary:
+                            intersected_boundary[e] = node.boundary[idx]
                         else:
-                            intersected_boundary[element] = value_boundary_intersection(node.boundary[i], boundary[element])
-                            if intersected_boundary[element] is None:
-                                logger.verbose('\t' * (f_n_idx + 3) + 'Doesn\'t intersect at ' + element)
+                            intersected_boundary[e] = value_boundary_intersection(node.boundary[idx], boundary[e])
+                            if intersected_boundary[e] is None:
+                                logger.verbose('\t' * (f_n_idx + 3) + 'Doesn\'t intersect at ' + e)
                                 all_elements_checked_ok = False
                                 break
                     if all_elements_checked_ok:
@@ -465,6 +497,7 @@ class Filterer:
         logger.debug('\t' * f_n_idx + 'Value Filter result')
         log_node_link_sql(filtering_node, logger.debug, f_n_idx + 1)
         log_node_intersection_range(filtering_node, logger.debug, f_n_idx + 1)
+        logger.debug("")
         filtering_node.end_value_filtering = timeit.default_timer()
         return
 
@@ -528,6 +561,7 @@ class Filterer:
 
         logger.debug('\t' * f_n_idx + 'Connected Element Filter result')
         log_node_link_xml(filtering_node, logger.debug, f_n_idx + 1)
+        logger.debug("")
         filtering_node.end_ce_filtering = timeit.default_timer()
 
     def check_lower_level(self, filtering_node: XMLNode, limit_range: Dict[str, List[int]]) -> [] or None:
@@ -558,7 +592,7 @@ class Filterer:
             for node in c_e_nodes:
                 child_lr = copy.deepcopy(limit_range)
                 update_child_lr = self.node_full_filtering(node, child_lr)
-                if node.filtered:
+                if node.filtered or update_child_lr is None:
                     continue
                 remaining_nodes.append(node)
                 for e in self.elements:
@@ -578,6 +612,7 @@ class Filterer:
             for e in self.elements:
                 limit_range[e] = value_boundary_intersection(limit_range[e], children_combined_lr[e])
 
+        logger.debug("")
         filtering_node.end_check_lower_level = timeit.default_timer()
         return limit_range
 
@@ -589,7 +624,7 @@ class Filterer:
             2. Filtered children link sql based on limit range
             3. Or FILTERED
         """
-        filtering_node.start_init_children = timeit.default_timer()
+        filtering_node.start_init_children_link = timeit.default_timer()
         f_n_idx = self.elements.index(filtering_node.name)
         logger = logging.getLogger("Init Children Link")
         logger.setLevel(logging.getLogger("Full Filterer").level)
@@ -597,8 +632,9 @@ class Filterer:
 
         if not filtering_node.children:
             logger.debug('\t' * (f_n_idx + 1) + ' This is a leaf node ')
-            filtering_node.end_init_children = timeit.default_timer()
+            filtering_node.end_init_children_link = timeit.default_timer()
             return [], []
+        logger.verbose('\t'*f_n_idx + 'Limit range: ' + str(limit_range))
 
         def init_link_xml():
             logger.verbose('\t' * f_n_idx +
@@ -624,7 +660,7 @@ class Filterer:
                                 logger.verbose('\t' * (f_n_idx + 2) + str(child) +
                                                ' IGNORED: not satisfy structure requirement')
                                 continue
-                            if value_boundary_intersection(child.boundary[1], limit_range[c_e]):
+                            if value_boundary_intersection(child.boundary[1], limit_range[c_e]) is None:
                                 logger.verbose('\t' * (f_n_idx + 2) + str(child) +
                                                ' IGNORED: not satisfy limit_range')
                                 continue
@@ -679,7 +715,8 @@ class Filterer:
         logger.debug('\t'*f_n_idx + 'Result')
         logger.debug('\t'*(f_n_idx + 1) + 'Inited link_xml: ' + str(link_xml))
         logger.debug('\t' * (f_n_idx + 1) + 'Inited link_sql: ' + str(link_sql))
-        filtering_node.end_init_children = timeit.default_timer()
+        logger.debug("")
+        filtering_node.end_init_children_link = timeit.default_timer()
         return link_xml, link_sql
 
     def filter_children(self, filtering_node: XMLNode):
@@ -725,6 +762,7 @@ class Filterer:
             log_node_filter_status(filtering_node, logger.verbose, f_n_idx + 1)
             return
         logger.debug('\t'*f_n_idx + 'Result: ' + str(filtering_node.children))
+        logger.debug("")
         filtering_node.end_filter_children = timeit.default_timer()
 
     def filter_children_link_sql(self, filtering_node: XMLNode, link_sql):
@@ -751,6 +789,7 @@ class Filterer:
         # if child does not fall into any part range of the intersection_range[filtering_node.name]
         # => filtered and not init
         # Similar execution to value filtering
+        logger.debug('\t' * f_n_idx + 'Begin Filter Children Node link sql based on intersection range')
         if not filtering_node.intersection_range:
             logger.debug('\t' * f_n_idx + 'No intersection range')
             filtering_node.end_filter_link_sql = timeit.default_timer()
@@ -759,7 +798,6 @@ class Filterer:
                 children_link_sql.append(link_sql)
             return children_link_sql
 
-        logger.debug('\t' * f_n_idx + 'Begin Filter Children Node link sql based on intersection range')
         for table in link_sql:
             logger.verbose('\t'*(f_n_idx + 1) + 'current link_sql[' + table + ']:' + str(link_sql[table]))
         remaining_children = []
@@ -778,7 +816,6 @@ class Filterer:
 
             for table in filtering_node.link_sql:
                 table_elements = table.split('_')
-                logger.verbose('\t' * (f_n_idx + 1) + 'Checking table: ' + table)
                 child_link_sql[table] = []
                 for tbl_node in link_sql[table]:
                     node_ok = False
@@ -790,11 +827,13 @@ class Filterer:
                                 intersect = False
                                 break
                         if intersect:
+                            logger.verbose('\t' * (f_n_idx + 2) + 'Table node: ' + str(tbl_node) + ' OK')
                             node_ok = True
                             break
                     if node_ok:
                         child_link_sql[table].append(tbl_node)
                 if not child_link_sql[table]:
+                    logger.verbose('\t' * (f_n_idx + 1) + 'This child does not have ' + table + ' nodes')
                     child_ok = False
                     break
 
@@ -811,13 +850,22 @@ class Filterer:
             logger.debug('\t'*(f_n_idx + 1) + 'Child ' + str(child) + str(children_link_sql[idx]))
 
         filtering_node.children = remaining_children
+        logger.debug("")
         filtering_node.end_filter_children_link_sql = timeit.default_timer()
         return children_link_sql
 
-    def log_status(self, logger_function, n_prefix_tab=0):
+    def log_trackers(self, logger_function, tracker_type, n_prefix_tab=0):
+        if tracker_type == 'main':
+            for tracker in self.main_trackers:
+                logger_function('%s %s %d', '\t' * n_prefix_tab, tracker, self.status[tracker])
+        if tracker_type == 'details':
+            for tracker in self.detail_trackers:
+                logger_function('%s %s %d', '\t' * n_prefix_tab, tracker, self.status[tracker])
+
+    def log_all_status(self, logger_function, n_prefix_tab=0):
         logger_function('%s %s %3f', '\t' * n_prefix_tab, 'Total time:', self.total_time)
-        logger_function('%s %s %d', '\t' * n_prefix_tab, 'Number of node processed:', self.n_node_processed)
-        logger_function('%s %s %d', '\t' * n_prefix_tab, 'Number of node filtered:', self.n_node_filtered)
+        self.log_trackers(logger_function, 'main', n_prefix_tab)
+        self.log_trackers(logger_function, 'details', n_prefix_tab)
         logger_function('%s %s %3f', '\t' * n_prefix_tab, 'Average filtering time for one node:',
-                        self.total_time / self.n_node_processed)
+                        self.total_time / self.status['n_processed'])
 

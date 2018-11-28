@@ -1,10 +1,11 @@
 # Helper library for logging
 from src.structure.Node import XMLNode
 
+
 def log_node_filter_status(node: XMLNode, logger_function, n_prefix_tab=1):
     if not isinstance(node, XMLNode):
         raise ValueError('Cannot log filter status of ' + str(node) + ' if is not XMLNode')
-    logger_function('\t' * n_prefix_tab + 'status: ')
+    logger_function('\t' * n_prefix_tab + str(node) + ' status: ')
     logger_function('\t' * (n_prefix_tab + 1) + 'Filtered: ' + str(node.filtered))
     logger_function('\t' * (n_prefix_tab + 1) + 'Reason of Filtered: ' + node.reason_of_filtered)
 
@@ -41,16 +42,19 @@ def log_node_intersection_range(node: XMLNode, logger_function, n_prefix_tab=1):
                      str([str(boundary) for boundary in node.intersection_range[element]]))
 
 
-def log_node_filter_time_details(node: XMLNode, logger_function, n_prefix_tab = 1):
+def log_node_filter_time_details(node: XMLNode, logger_function, n_prefix_tab=1):
     if not isinstance(node, XMLNode):
         raise ValueError('Cannot log filtering time of  ' + str(node) + ' if is not XMLNode')
     logger_function('\t' * n_prefix_tab + 'Filtering time break down: ')
+    logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Total Filtering Time: ', node.full_filtering_time)
     logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Value Filtering Time: ', node.value_filtering_time)
     logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Connected Element Filtering Time: ',
                     node.connected_element_filtering_time)
     logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Check Descendants Time: ', node.check_lower_level_time)
-    logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Init Children Time: ', node.init_children_time)
+    logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Init Children Link Time: ', node.init_children_link_time)
     logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Filter Children Time: ', node.filter_children_time)
+    logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Filter Children Link Sql Time: ',
+                    node.filter_children_link_sql_time)
 
 
 def log_node_validation_time_details(node: XMLNode, logger_function, n_prefix_tab=1):
