@@ -1,3 +1,5 @@
+from pathlib import Path
+from config import root_path, data_path
 from src.structure.RTree import XMLRTree
 from src.structure.RTree import SQLRTree
 from src.structure.Entry import Entry
@@ -26,7 +28,7 @@ def get_index_highest_element(all_elements_name: [str], table_name: str) -> int:
     return np.argmin(np.asarray(index))
 
 
-def load_text_file(file_path: str) -> [str]:
+def load_text_file(file_path: Path) -> [str]:
     """Summary
     Load text file by lines
 
@@ -34,7 +36,7 @@ def load_text_file(file_path: str) -> [str]:
     :return: lines
     """
 
-    with open(file_path) as f:
+    with file_path.open() as f:
         content = f.readlines()
     content = [x.strip() for x in content]
     return content
@@ -50,23 +52,20 @@ def load_xml_entries(folder_name: str, element_name: str) -> [Entry]:
     :return: list of loaded entries
     """
     id_file_path = "data/" + folder_name + "/" + element_name + "_id.dat"
+    id_file_path = data_path() / folder_name / (element_name + '_id.dat')
     value_file_path = "data/" + folder_name + "/" + element_name + "_v.dat"
+    value_file_path = data_path() / folder_name / (element_name + '_v.dat')
     ids = load_text_file(id_file_path)
     values = load_text_file(value_file_path)
     if len(ids) != len(values):
         raise ValueError('Id and value files have different size')
     entries = []
     for i in range(len(ids)):
-        # Range Index - legacy
-        # entry_id = [int(x) for x in ids[i].split()]						# Convert list of string id -> list of int
-        # entries.append(Entry([entry_id, int(values[i])]))
-
-        # Dewey index
         entries.append(Entry([DeweyID(ids[i]), float(values[i])]))  # Convert value from string to int
     return entries
 
 
-def load_sql_entries(folder_name: str, file_name: str) -> [Entry]:
+def load_sql_entries(folder_name: str, file_path: Path) -> [Entry]:
     """Summary
     This function load contents of the SQL table file and put them as coordinate in Entry
 
@@ -74,7 +73,6 @@ def load_sql_entries(folder_name: str, file_name: str) -> [Entry]:
     :param file_name: name of file containing table (e.g: "A_B_table.dat")
     :return: loaded entries
     """
-    file_path = "data/" + folder_name + "/" + file_name
     content = load_text_file(file_path)
     entries = []
     for i in range(len(content)):
@@ -131,22 +129,19 @@ def load_tables(folder_name, all_elements_name, max_n_children, load_method):
     """
     logger = logging.getLogger("Loader")
     all_tables_root = {}
-    for file_name in os.listdir("data/" + folder_name):
-        if 'table' in file_name:
-            table_name = file_name[:-10]
-            logger.debug('%s %s', 'Loading table:', table_name)
+    path = data_path() / folder_name
+    for file_path in path.glob('*_table.dat'):
+        table_name = file_path.name[:-10]
+        logger.debug('%s %s', 'Loading table:', table_name)
+        start_loading = timeit.default_timer()
+        table_entries = load_sql_entries(folder_name, file_path)
+        dimension = get_index_highest_element(all_elements_name, table_name)
+        rtree_sql = SQLRTree()
+        rtree_sql.bulk_loading_from_entry(load_method, table_entries, table_name, max_n_children, dimension)
+        all_tables_root[table_name] = rtree_sql.root
 
-            start_loading = timeit.default_timer()
-
-            table_entries = load_sql_entries(folder_name, file_name)
-            dimension = get_index_highest_element(all_elements_name, table_name)
-            rtree_sql = SQLRTree()
-            rtree_sql.bulk_loading_from_entry(load_method, table_entries, table_name, max_n_children, dimension)
-            # rtree_sql.load(table_entries, table_name, max_n_children, dimension)
-            all_tables_root[table_name] = rtree_sql.root
-
-            end_loading = timeit.default_timer()
-            logger.debug('%s %d', 'Loading table:', end_loading - start_loading)
+        end_loading = timeit.default_timer()
+        logger.debug('%s %d', 'Loading table:', end_loading - start_loading)
     return all_tables_root
 
 
@@ -162,8 +157,9 @@ def load_xml_query(folder_name: str) -> ([str], [[int]]):
     :param folder_name: name of the folder containing XML query file
     :return: element names and relationship matrix
     """
-    xml_query_file_path = "data/" + folder_name + "/" + "XML_query.dat"
-    with open(xml_query_file_path) as f:
+
+    xml_query_file_path = data_path() / folder_name / "XML_query.dat"
+    with xml_query_file_path.open() as f:
         content = f.readlines()
     content = [x.strip() for x in content]
 

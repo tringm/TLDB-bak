@@ -1,17 +1,19 @@
 import queue
 from abc import ABC, abstractmethod
+from typing import List
 
 from numpy import mean
 
-from src.structure.DeweyID import DeweyID
 from src.lib.DeweyID import get_center_index
 from src.lib.Entries import get_boundaries_from_entries
 from src.lib.Nodes import get_boundaries_from_nodes
 from src.lib.boundary import *
+from src.structure.DeweyID import DeweyID
 
-from typing import List
+
 # TODO: id (basically Dewey ID for fast traversal)
-# TODO: Find node that fit this range
+# TODO: range search: change depth so that if find node go extra 1 layer
+# TODO: ancestor link: What happened if it is empty
 
 class Node(ABC):
     """RTree Node
@@ -105,49 +107,6 @@ class Node(ABC):
         self._entries = entries
         return self.entries
 
-    def print_node_not_filtered_with_link(self, level=0):
-        """Summary
-        Simple implementation to print this node and its children
-        Args:
-            level (int, optional): current level for printing
-        """
-        if not self.filtered:
-            if self.entries is not None:
-                print('\t' * level, 'NODE ', self.boundary, 'is Leaf')
-                print('\t' * (level + 1), 'Linked XML: ')
-                for connected_element_name in self.link_XML:
-                    print('\t' * (level + 1), connected_element_name, end=" ")
-                    for node in self.link_XML[connected_element_name]:
-                        print(node.boundary, end=" ")
-                    print()
-                print('\t' * (level + 1), 'Linked SQL: ')
-                for table_name in self.link_SQL:
-                    print('\t' * (level + 1), table_name, end=" ")
-                    for node in self.link_SQL[table_name]:
-                        print(node.boundary, end=" ")
-                    print()
-                print('\t' * (level + 1), 'Entries')
-                for i in range(len(self.entries)):
-                    print('\t' * (level + 1), self.entries[i].coordinates)
-
-            else:
-                print('\t' * level, 'NODE ', self.boundary)
-                print('\t' * (level + 1), 'Linked XML: ')
-                for connected_element_name in self.link_XML.keys():
-                    print('\t' * (level + 1), connected_element_name, end=" ")
-                    for node in self.link_XML[connected_element_name]:
-                        print(node.boundary, end=" ")
-                    print()
-                print('\t' * (level + 1), 'Linked SQL: ')
-                for table_name in self.link_SQL:
-                    print('\t' * (level + 1), table_name, end=" ")
-                    for node in self.link_SQL[table_name]:
-                        print(node.boundary, end=" ")
-                    print()
-
-                for child in self.children:
-                    child.print_node_not_filtered_with_link(level + 1)
-
     def get_leaf_nodes(self):
         """
         This function return a list of nodes which are the unfiltered leaves of this node
@@ -172,7 +131,7 @@ class XMLNode(Node):
 
         link_xml {[str, [Node]}         : key is element name, value is list of Node connected
         link_sql {[str, [Node]}         : key is table name, value is list of Node connected
-        intersection_range ({str, [boundary]}): key is element, value is multiple boundary constraint
+        intersection_range ({str, [boundaries]}): key is element, value is multiple boundaries constraint
                                                 for the element. It is initiated in value filterings
     """
     def __init__(self, max_n_children, parent=None, children=None, entries=None, name='', dimension=-1):
@@ -185,8 +144,19 @@ class XMLNode(Node):
         self.link_xml = {}
         self.link_sql = {}
         self.intersection_range = {}
+
+        self.join_boundaries = {}
+        self.join_boundaries_combined = {}
+        self.link_children = []
+
         # self.validated_entries = []
         self.validated = False
+
+        self.inited_link = False
+
+        # New time
+        self.start_init_link = -1
+        self.end_init_link = -1
 
         # Filtering Time
         self.start_full_filtering = -1
@@ -231,7 +201,7 @@ class XMLNode(Node):
                     leaf_nodes.append(node)
         return leaf_nodes
 
-    def desc_range_search(self, idx_range: List[DeweyID], v_range, max_depth=2):
+    def desc_range_search(self, idx_range: List[DeweyID], v_range, max_depth=1):
         if idx_range is None and v_range is None:
             raise ValueError('Must have some criteria, both idx_range and v_range is None')
         if idx_range is not None:
@@ -241,12 +211,13 @@ class XMLNode(Node):
             if value_boundary_intersection(self.boundary[1], v_range) is None:
                 return
         if self.isLeaf:
-            return self
+            return [self]
 
         checking_nodes = self.children.copy()
+        satisfy_nodes = []
         depth = 1
         while checking_nodes:
-            satisfy_node = []
+            satisfy_nodes = []
             for idx, node in enumerate(checking_nodes):
                 if idx_range is not None:
                     if not index_boundary_can_be_ancestor(idx_range, node.boundary[0]):
@@ -254,23 +225,52 @@ class XMLNode(Node):
                 if v_range is not None:
                     if value_boundary_intersection(node.boundary[1], v_range) is None:
                         continue
-                satisfy_node.append(node)
-            if not satisfy_node:
+                satisfy_nodes.append(node)
+            if not satisfy_nodes:
                 return
-            if depth == max_depth or satisfy_node[0].isLeaf:
-                checking_nodes = satisfy_node
+            if depth == max_depth or satisfy_nodes[0].isLeaf:
                 break
 
             depth += 1
             next_layer = []
-            for node in satisfy_node:
+            for node in satisfy_nodes:
                 for child in node.children:
                     next_layer.append(child)
             checking_nodes = next_layer
 
-        if not checking_nodes:
+        return satisfy_nodes
+
+    def link_sql_first_ancestor(self):
+        if self.link_sql:
+            return self.link_sql
+        upper = self
+        while upper.parent is not None and not upper.link_sql:
+            upper = upper.parent
+        return upper.link_sql
+
+    def link_xml_first_ancestor(self):
+        if self.link_xml:
+            return self.link_xml
+        upper = self
+        while upper.parent is not None and not upper.link_xml:
+            upper = upper.parent
+        return upper.link_xml
+
+    @property
+    def idx_boundary(self):
+        if not self.boundary:
             return None
-        return checking_nodes
+        if len(self.boundary) > 2:
+            raise ValueError('XML Node only allowed 2 dimensions')
+        return self.boundary[0]
+
+    @property
+    def v_boundary(self):
+        if not self.boundary:
+            return None
+        if len(self.boundary) > 2:
+            raise ValueError('XML Node only allowed 2 dimensions')
+        return self.boundary[1]
 
     @property
     def full_filtering_time(self):
@@ -308,7 +308,7 @@ class SQLNode(Node):
     def get_center_coord(self):
         return [mean(self.boundary[i]) for i in range(len(self.boundary))]
 
-    def range_search(self, boundaries: List[List[int]], max_depth=2):
+    def range_search(self, boundaries: List[List[int]], max_depth=1):
         if not len(self.boundary) == len(boundaries):
             raise ValueError('Range mismatch')
 
@@ -318,12 +318,13 @@ class SQLNode(Node):
                     return
 
         if self.isLeaf:
-            return self
+            return [self]
 
         checking_nodes = self.children.copy()
+        satisfy_nodes = []
         depth = 1
         while checking_nodes:
-            satisfy_node = []
+            satisfy_nodes = []
             for idx, node in enumerate(checking_nodes):
                 node_ok = True
                 for d, boundary in enumerate(boundaries):
@@ -332,20 +333,17 @@ class SQLNode(Node):
                             node_ok = False
                             break
                 if node_ok:
-                    satisfy_node.append(node)
-            if not satisfy_node:
+                    satisfy_nodes.append(node)
+            if not satisfy_nodes:
                 return
-            if depth == max_depth or satisfy_node[0].isLeaf:
-                checking_nodes = satisfy_node
+            if depth == max_depth or satisfy_nodes[0].isLeaf:
                 break
 
             depth += 1
             next_layer = []
-            for node in satisfy_node:
+            for node in satisfy_nodes:
                 for child in node.children:
                     next_layer.append(child)
             checking_nodes = next_layer
 
-        if not checking_nodes:
-            return None
-        return checking_nodes
+        return satisfy_nodes

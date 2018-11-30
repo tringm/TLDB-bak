@@ -3,7 +3,7 @@
 
 def update_boundary_from_entry(boundary: [[]], entry):
     """
-    Return updated boundary when adding entry
+    Return updated boundaries when adding entry
     :param boundary:
     :param entry:
     :return:
@@ -21,7 +21,7 @@ def update_boundary_from_entry(boundary: [[]], entry):
 
 def update_boundary_from_node(boundary, node):
     """
-    Return updated boundary when adding node
+    Return updated boundaries when adding node
     :param boundary:
     :param node:
     :return:
@@ -39,11 +39,11 @@ def update_boundary_from_node(boundary, node):
 
 def compare_value_boundaries(boundary1: [], boundary2: []) -> float:
     """
-    This function compare 2 boundary and return case number
-    If boundary1 does not intersect with boundary 2:
+    This function compare 2 boundaries and return case number
+    If boundary1 does not intersect with boundaries 2:
         If boundary1 is on the left side of boundary2 -> 1.1
         If boundary1 is on the right side of boundary2 -> 1.2
-    If boundary1 intersect with boundary 2:
+    If boundary1 intersect with boundaries 2:
         If boundary1 is on the left side of boundary2 -> 2.1
         If boundary1 is on the right side of boundary2 -> 2.2
     :param boundary1:
@@ -68,7 +68,7 @@ def compare_value_boundaries(boundary1: [], boundary2: []) -> float:
 
 # def value_boundary_has_intersection(boundary1: [], boundary2: []) -> bool:
 #     """
-#     This function check if these 2 boundary intersect
+#     This function check if these 2 boundaries intersect
 #     :param boundary1: list of size 2
 #     :param boundary2: list of size 2
 #     :return: True if they intersect
@@ -80,11 +80,13 @@ def compare_value_boundaries(boundary1: [], boundary2: []) -> float:
 
 def value_boundary_intersection(boundary1: [], boundary2: []) -> []:
     """
-    This function found the intersection between 2 boundary of number
+    This function found the intersection between 2 boundaries of number
     :param boundary1: list of size 2
     :param boundary2: list of size 2
-    :return: None if does not intersect else intersection of the 2 boundary
+    :return: None if does not intersect else intersection of the 2 boundaries
     """
+    if boundary1 is None or boundary2 is None:
+        print(haha)
     if (boundary1[1] < boundary2[0]) or (boundary1[0] > boundary2[1]):
         return None
     return [max(boundary1[0], boundary2[0]), min(boundary1[1], boundary2[1])]
@@ -92,10 +94,10 @@ def value_boundary_intersection(boundary1: [], boundary2: []) -> []:
 
 def value_boundary_union(boundary1: [], boundary2: []) -> []:
     """
-    This function found the union of 2 boundary of number
+    This function found the union of 2 boundaries of number
     :param boundary1: list of size 2
     :param boundary2: list of size 2
-    :return: union of the 2 boundary
+    :return: union of the 2 boundaries
     """
     return [min(boundary1[0], boundary2[0]), max(boundary1[1], boundary2[1])]
 
@@ -113,10 +115,10 @@ def value_boundaries_union(boundaries: [[]]) -> []:
 
 def index_boundary_can_be_ancestor(boundary1: [], boundary2: []) -> bool:
     """
-    This function check if index boundary 1 can be ancestor of index boudnary 2
-    :param boundary1: index boundary
-    :param boundary2: index boundary
-    :return: True if boundary 1 can be ancestor of boundary 2
+    This function check if index boundaries 1 can be ancestor of index boudnary 2
+    :param boundary1: index boundaries
+    :param boundary2: index boundaries
+    :return: True if boundaries 1 can be ancestor of boundaries 2
     """
     if boundary2[1] <= boundary1[0]:
         return False

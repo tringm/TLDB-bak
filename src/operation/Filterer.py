@@ -228,7 +228,7 @@ class Filterer:
         table_names = list(filtering_node.link_sql.keys())
         table_names.sort(key=lambda name: len(name), reverse=True)
 
-        # Pre-filter the link_sql nodes with filtering_node.boundary
+        # Pre-filter the link_sql nodes with filtering_node.boundaries
         # TODO: This is usually not needed since it's already done when init
         logger.verbose('\t' * f_n_idx + 'Begin Pre-Filter')
         for table_name in table_names:
@@ -264,7 +264,7 @@ class Filterer:
         for node in first_table_nodes:
             intersected_value_boundary.append(dict(zip(first_table_elements, node.boundary)))
 
-        logger.verbose('\t' * f_n_idx + 'Find intersected value boundary')
+        logger.verbose('\t' * f_n_idx + 'Find intersected value boundaries')
         # Checking nodes of different table, if found no intersection -> Filter
         for table_name in table_names:
             if table_name != first_table_name:
@@ -287,7 +287,7 @@ class Filterer:
                     if current_table_node.boundary[current_table_node.dimension][0] > \
                             current_boundary[filtering_node.name][1]:
                         if boundary_cursor < len(intersected_value_boundary):
-                            logger.verbose('\t' * (f_n_idx + 2) + 'NO INTERSECT, Move to next boundary')
+                            logger.verbose('\t' * (f_n_idx + 2) + 'NO INTERSECT, Move to next boundaries')
                             boundary_cursor += 1
                         else:
                             logger.verbose('\t' * (f_n_idx + 2) + 'NO INTERSECT, Skip remaining nodes')
@@ -305,7 +305,7 @@ class Filterer:
                         logger.verbose('\t' * (f_n_idx + 2) + 'INTERSECT, Find element-wise intersection')
                         all_elements_checked_ok = True
                         current_boundary_intersected = {}
-                        # check element of the current node, if it intersect with the value boundary
+                        # check element of the current node, if it intersect with the value boundaries
                         for idx, e in enumerate(table_elements):
                             if e not in current_boundary:
                                 current_boundary_intersected[e] = current_table_node.boundary[idx]
@@ -318,7 +318,7 @@ class Filterer:
                                     all_elements_checked_ok = False
                                     break
 
-                        # If all element check are satisfied -> add the intersected boundary, add current_table_node
+                        # If all element check are satisfied -> add the intersected boundaries, add current_table_node
                         if all_elements_checked_ok:
                             # add element in current_value_boundary that not in current_node
                             for element in current_boundary:
@@ -332,13 +332,13 @@ class Filterer:
                         else:
                             logger.verbose('\t' * (f_n_idx + 3) + 'element check failed')
 
-                        # if current node already on the right side of value boundary
-                        #     1. Move right value boundary if can
+                        # if current node already on the right side of value boundaries
+                        #     1. Move right value boundaries if can
                         #     2. Else: all nodes on the right side of current_table_node is eliminated
                         if current_table_node.boundary[current_table_node.dimension][1] > \
                                 current_boundary[filtering_node.name][1]:
                             if boundary_cursor < len(intersected_value_boundary):
-                                logger.verbose('\t' * (f_n_idx + 2) + 'Move to next boundary')
+                                logger.verbose('\t' * (f_n_idx + 2) + 'Move to next boundaries')
                                 boundary_cursor += 1
                             else:
                                 logger.verbose('\t' * (f_n_idx + 2) + 'SKip remaining table nodes')
@@ -350,7 +350,7 @@ class Filterer:
 
                 logger.verbose('\t' * f_n_idx + 'remaining nodes: '
                                + str([node.boundary for node in remaining_nodes]))
-                logger.verbose('\t' * f_n_idx + 'Updated intersected boundary: '
+                logger.verbose('\t' * f_n_idx + 'Updated intersected boundaries: '
                                + str(updated_intersected_value_boundary))
 
                 if not remaining_nodes:
@@ -392,12 +392,12 @@ class Filterer:
         f_n_idx = self.elements.index(filtering_node.name)
         logger.debug('\t' * f_n_idx + 'Begin Value Filtering ' + str(filtering_node))
 
+        filtering_node.value_filtering_visited = True
+
         if not filtering_node.link_sql:
             filtering_node.end_value_filtering = timeit.default_timer()
             logger.debug('\t' * (f_n_idx + 1) + 'EMPTY LINK_SQL')
             return
-
-        filtering_node.value_filtering_visited = True
 
         # Always look for table with the most number of elements first
         table_names = list(filtering_node.link_sql.keys())
@@ -409,12 +409,12 @@ class Filterer:
         # first_table_nodes = filtering_node.link_sql[table_names[0]]  # type: List[Node]
         # first_table_elements = table_names[0].split('_')  # type: [str]
         # for node in first_table_nodes:
-        #     join_range.append(dict(zip(first_table_elements, node.boundary)))
+        #     join_range.append(dict(zip(first_table_elements, node.boundaries)))
         # for idx, node in enumerate(first_table_nodes):
-        #     join_range[idx][filtering_node.name] = value_boundary_intersection(node.boundary[node.dimension],
-        #                                                                        filtering_node.boundary[1])
+        #     join_range[idx][filtering_node.name] = value_boundary_intersection(node.boundaries[node.dimension],
+        #                                                                        filtering_node.boundaries[1])
 
-        logger.verbose('\t' * f_n_idx + 'Find intersected value boundary')
+        logger.verbose('\t' * f_n_idx + 'Find intersected value boundaries')
         # Checking nodes of different table, if found no intersection -> Filter
         for table_name in table_names:
             logger.verbose('\t' * f_n_idx + 'Checking ' + table_name)
@@ -427,7 +427,7 @@ class Filterer:
                 logger.verbose('\t' * (f_n_idx + 1) + 'Checking ' + str(node))
                 node_ok = False
                 for boundary in join_range:
-                    logger.verbose('\t' * (f_n_idx + 2) + 'Checking boundary' + str(boundary))
+                    logger.verbose('\t' * (f_n_idx + 2) + 'Checking boundaries' + str(boundary))
                     intersected_boundary = {}
                     all_elements_checked_ok = True
                     for idx, e in enumerate(table_elements):
@@ -759,7 +759,7 @@ class Filterer:
 
         filtering_node.children = remaining_children
         if not remaining_children:
-            self.mark_node_as_filtered(filtering_node, 'filter_children', 'No children satisfy intersect boundary')
+            self.mark_node_as_filtered(filtering_node, 'filter_children', 'No children satisfy intersect boundaries')
             log_node_filter_status(filtering_node, logger.verbose, f_n_idx + 1)
             return
         logger.debug('\t'*f_n_idx + 'Result: ' + str(filtering_node.children))

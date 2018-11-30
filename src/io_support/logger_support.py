@@ -1,6 +1,6 @@
 # Helper library for logging
-from src.structure.Node import Node, XMLNode
 from src.operation.Loader import Loader
+from src.structure.Node import XMLNode
 
 
 def log_loader(loader: Loader, logger_function, n_prefix_tab=0, only_unfiltered=False):
@@ -48,16 +48,22 @@ def log_node_link_xml(node: XMLNode, logger_function, n_prefix_tab=0):
     if not isinstance(node, XMLNode):
         raise ValueError('Cannot log link xml of  ' + str(node) + ' if is not XMLNode')
     logger_function('\t' * n_prefix_tab + 'link xml: ')
-    for connected_element in node.link_xml:
-        logger_function('\t' * (n_prefix_tab + 1) + str([str(node) for node in node.link_xml[connected_element]]))
+    if not node.link_xml:
+        logger_function('\t'*(n_prefix_tab + 1) + 'None')
+    else:
+        for connected_element in node.link_xml:
+            logger_function('\t' * (n_prefix_tab + 1) + str([str(node) for node in node.link_xml[connected_element]]))
 
 
 def log_node_link_sql(node: XMLNode, logger_function, n_prefix_tab=0):
     if not isinstance(node, XMLNode):
         raise ValueError('Cannot log link sql of  ' + str(node) + ' if is not XMLNode')
     logger_function('\t' * n_prefix_tab + 'link sql: ')
-    for table_name in node.link_sql:
-        logger_function('\t' * (n_prefix_tab + 1) + str([str(node) for node in node.link_sql[table_name]]))
+    if not node.link_sql:
+        logger_function('\t'*(n_prefix_tab + 1) + str(node.link_sql))
+    else:
+        for table_name in node.link_sql:
+            logger_function('\t' * (n_prefix_tab + 1) + str([str(node) for node in node.link_sql[table_name]]))
 
 
 def log_node_all_link(node: XMLNode, logger_function, n_prefix_tab=0):
@@ -73,7 +79,19 @@ def log_node_intersection_range(node: XMLNode, logger_function, n_prefix_tab=0):
     logger_function('\t' * n_prefix_tab + 'intersection_range: ')
     for element in node.intersection_range:
         logger_function('\t' * (n_prefix_tab + 1) + element + ': ' +
-                     str([str(boundary) for boundary in node.intersection_range[element]]))
+                        str([str(boundary) for boundary in node.intersection_range[element]]))
+
+
+def log_node_join_boundaries(node: XMLNode, logger_function, n_prefix_tab=0):
+    if not isinstance(node, XMLNode):
+        raise ValueError('Cannot log join boundaries of  ' + str(node) + ' if is not XMLNode')
+    logger_function('\t' * n_prefix_tab + 'join boundaries: ')
+    if not node.join_boundaries:
+        logger_function('\t' * (n_prefix_tab + 1) + str(node.join_boundaries))
+    else:
+        for element in node.join_boundaries:
+            logger_function('\t' * (n_prefix_tab + 1) + element + ': ' +
+                            str([str(boundary) for boundary in node.join_boundaries[element]]))
 
 
 def log_node_filter_time_details(node: XMLNode, logger_function, n_prefix_tab=0):
@@ -99,6 +117,6 @@ def log_node_validation_time_details(node: XMLNode, logger_function, n_prefix_ta
     logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Structure validation Time:', node.structure_validation_time)
 
 
-def log_node_time_details(node, logger_function, n_prefix_tab = 1):
+def log_node_time_details(node, logger_function, n_prefix_tab=0):
     log_node_filter_time_details(node, logger_function, n_prefix_tab)
     log_node_validation_time_details(node, logger_function, n_prefix_tab)

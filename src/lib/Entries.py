@@ -53,11 +53,11 @@ def get_boundaries_from_entries(entries: [Entry]) -> [[int]]:
     Find the MBR of list of Entries
 
     :param entries: list of input entries
-    :return: list of size Entry.dimension contains boundary of each dimension
+    :return: list of size Entry.dimension contains boundaries of each dimension
     """
     boundary = []
 
-    # init boundary
+    # init boundaries
     first_entry_coordinates = entries[0].coordinates.copy()
     n_dimensions = entries[0].n_dimensions
 

@@ -3,7 +3,7 @@ from src.operation.Joiner import Joiner
 from pathlib import Path
 import logging
 
-folder_name = "orderline_price_asin_small_original"
+folder_name = "simple_small"
 max_n_children = 10
 method = 'str'
 n_try = 0
@@ -38,6 +38,7 @@ logging.getLogger("Full Filterer").setLevel(logging.VERBOSE)
 # logging.getLogger("Entries Structure Validator").setLevel(logging.DEBUG)
 
 loader = Loader(folder_name, max_n_children, method)
+loader.
 joiner = Joiner(loader, method)
 
 logger = logging.getLogger("Main")

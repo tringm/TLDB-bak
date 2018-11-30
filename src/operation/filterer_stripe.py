@@ -12,7 +12,7 @@ from src.io_support.logger_support import *
 #     * Implement logging.verbose: DONE
 #     * Fix the while loop (at least in the init children so that next node would take previous_node index - 1 , in
 #     case where previous node range overlap with the next node)
-# TODO: Does it make sense if boundary change when filter/init children when filtering
+# TODO: Does it make sense if boundaries change when filter/init children when filtering
 
 
 def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
@@ -44,7 +44,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
     table_names = list(filtering_node.link_sql.keys())
     table_names.sort(key=lambda name: len(name), reverse=True)
 
-    # Pre-filter the link_sql nodes with filtering_node.boundary
+    # Pre-filter the link_sql nodes with filtering_node.boundaries
     # TODO: This is usually not needed since it's already done when init
     logger.verbose('\t' * filtering_node_index + 'Begin Pre-Filter')
     for table_name in table_names:
@@ -87,7 +87,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
     for node in first_table_nodes:
         intersected_value_boundary.append(dict(zip(first_table_elements, node.boundary)))
 
-    logger.verbose('\t' * filtering_node_index + 'Find intersected value boundary')
+    logger.verbose('\t' * filtering_node_index + 'Find intersected value boundaries')
     # Checking nodes of different table, if found no intersection -> Filter
     for table_name in table_names:
         if table_name != first_table_name:
@@ -109,7 +109,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
                 if current_table_node.boundary[current_table_node.dimension][0] > \
                         current_boundary[filtering_node.name][1]:
                     if boundary_cursor < len(intersected_value_boundary):
-                        logger.verbose('\t' * (filtering_node_index + 2) + 'NO INTERSECT, Move to next boundary')
+                        logger.verbose('\t' * (filtering_node_index + 2) + 'NO INTERSECT, Move to next boundaries')
                         boundary_cursor += 1
                     else:
                         logger.verbose('\t' * (filtering_node_index + 2) + 'NO INTERSECT, Skip remaining nodes')
@@ -127,7 +127,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
                     logger.verbose('\t' * (filtering_node_index + 2) + 'INTERSECT, Find element-wise intersection')
                     all_elements_checked_ok = True
                     current_boundary_intersected = {}
-                    # check element of the current node, if it intersect with the value boundary
+                    # check element of the current node, if it intersect with the value boundaries
                     for i in range(len(table_elements)):
                         element = table_elements[i]
                         if element not in current_boundary:
@@ -141,7 +141,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
                                 all_elements_checked_ok = False
                                 break
 
-                    # If all element check are satisfied -> add the intersected boundary, add current_table_node
+                    # If all element check are satisfied -> add the intersected boundaries, add current_table_node
                     if all_elements_checked_ok:
                         # add element in current_value_boundary that not in current_node
                         for element in current_boundary:
@@ -155,13 +155,13 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
                     else:
                         logger.verbose('\t' * (filtering_node_index + 3) + 'element check failed')
 
-                    # if current node already on the right side of value boundary
-                    #     1. Move right value boundary if can
+                    # if current node already on the right side of value boundaries
+                    #     1. Move right value boundaries if can
                     #     2. Else: all nodes on the right side of current_table_node is eliminated
                     if current_table_node.boundary[current_table_node.dimension][1] > \
                             current_boundary[filtering_node.name][1]:
                         if boundary_cursor < len(intersected_value_boundary):
-                            logger.verbose('\t' * (filtering_node_index + 2) + 'Move to next boundary')
+                            logger.verbose('\t' * (filtering_node_index + 2) + 'Move to next boundaries')
                             boundary_cursor += 1
                         else:
                             logger.verbose('\t' * (filtering_node_index + 2) + 'SKip remaining table nodes')
@@ -173,7 +173,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
 
             logger.verbose('\t' * filtering_node_index + 'remaining nodes: '
                          + str([node.boundary for node in remaining_nodes]))
-            logger.verbose('\t' * filtering_node_index + 'Updated intersected boundary: '
+            logger.verbose('\t' * filtering_node_index + 'Updated intersected boundaries: '
                          + str(updated_intersected_value_boundary))
 
             if not remaining_nodes:
@@ -500,7 +500,7 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
         if current_children_node.boundary[1][0] > current_value_boundary[1]:
             if value_boundary_cursor < len(allowed_value_boundary):
                 value_boundary_cursor += 1
-                logger.verbose('\t' * (filtering_node_index + 2) + 'NO INTERSECT, move value boundary')
+                logger.verbose('\t' * (filtering_node_index + 2) + 'NO INTERSECT, move value boundaries')
             else:
                 children_cursor = len(filtering_node.children)
                 logger.verbose('\t' * (filtering_node_index + 2) + 'NO INTERSECT, skip remaining nodes')
@@ -520,7 +520,7 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
             if current_value_boundary[1] < current_children_node.boundary[1][1]:
                 if value_boundary_cursor < len(allowed_value_boundary):
                     value_boundary_cursor += 1
-                    logger.verbose('\t' * (filtering_node_index + 2) + 'INTERSECT, move value boundary')
+                    logger.verbose('\t' * (filtering_node_index + 2) + 'INTERSECT, move value boundaries')
                 else:
                     children_cursor = len(filtering_node.children)
                     logger.verbose('\t' * (filtering_node_index + 2) + 'INTERSECT, skip remaining nodes')
@@ -535,7 +535,7 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
     filtering_node.children = remaining_children
     if not remaining_children:
         filtering_node.filtered = True
-        filtering_node.reason_of_filtered = "Filter Children: No children satisfy intersect boundary"
+        filtering_node.reason_of_filtered = "Filter Children: No children satisfy intersect boundaries"
         logger.debug('\t' * (filtering_node_index + 1) + '###')
         logger.debug('\t' * (filtering_node_index + 1) + 'FILTERED: ' + filtering_node.reason_of_filtered)
         end_filter_children = timeit.default_timer()

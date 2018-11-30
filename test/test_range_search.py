@@ -16,7 +16,7 @@ logging.verbose = lambda msg, *args, **kwargs: logging.log(logging.VERBOSE, msg,
 
 root_A = loader.all_elements_root['A']  # type: XMLNode
 log_tree_from_root(root_A, print)
-print(root_A.desc_range_search([DeweyID('1'), DeweyID('2.5')], [40, 40], 3))
+print(root_A.desc_range_search([DeweyID('1'), DeweyID('2.5')], [35, 39], 3))
 
 
 # first_table = loader.all_tables_root['A_B_D']  # type: SQLNode

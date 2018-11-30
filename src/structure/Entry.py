@@ -24,14 +24,14 @@ class Entry:
 
     def is_inside(self, boundary: [int]) -> bool:
         """Summary
-        Check if this entry is inside a boundary
+        Check if this entry is inside a boundaries
 
-        :param boundary: list of size dimension containing boundary in each dimension
+        :param boundary: list of size dimension containing boundaries in each dimension
         :return: true if is inside
         """
 
         if self.n_dimensions != len(boundary):
-            raise ValueError('Entry and boundary has different number of dimensions')
+            raise ValueError('Entry and boundaries has different number of dimensions')
 
         is_inside = True
         # Checking each dimension

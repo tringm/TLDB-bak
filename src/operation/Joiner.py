@@ -77,7 +77,7 @@ def perform_filtering(loader: Loader, initial_limit_range: []):
     This function use two queue to do filtering, starting from the root node
 
     :param loader                 : a Loader that contains all info
-    :param initial_limit_range    : list of initial boundary for each element
+    :param initial_limit_range    : list of initial boundaries for each element
     :return:
     """
     logger = logging.getLogger("Joiner Filtering")

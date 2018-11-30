@@ -54,7 +54,7 @@ def get_boundaries_from_nodes(nodes) -> [[int]]:
     :param nodes:
     :return:
     """
-    # init boundary
+    # init boundaries
     if not nodes:
         return None
 
