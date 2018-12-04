@@ -108,9 +108,6 @@ class RTree(ABC):
 
                     logger.debug('%s %d %s %d %d', "Child node index:", i, "range", range_low, range_high)
 
-                    # if range_high == range_low:
-                    # 	break
-
                     subtree_node = node_type(max_n_children, parent=current_node, dimension=dimension, name=name)
                     subtree_node.boundary = get_boundaries_from_entries(entries[range_low:range_high])
                     logger.debug('%s %s', "Child node", str(subtree_node))

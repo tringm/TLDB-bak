@@ -2,10 +2,16 @@ from typing import List
 
 
 class Context:
-    def __init__(self, elements: List[str]):
+    def __init__(self, elements: List[str], boundaries=None, nodes=None):
         self.elements = elements
-        self.boundaries = dict(zip(self.elements, [None] * len(self.elements)))
-        self.nodes = dict(zip(self.elements, [None] * len(self.elements)))
+        if boundaries is None:
+            self.boundaries = dict(zip(self.elements, [None] * len(self.elements)))
+        else:
+            self.boundaries = dict(zip(self.elements, boundaries))
+        if nodes is None:
+            self.nodes = dict(zip(self.elements, [None] * len(self.elements)))
+        else:
+            self.nodes = dict(zip(self.elements, nodes))
 
     @property
     def compacted(self):
@@ -19,3 +25,7 @@ class Context:
 
     def __repr__(self):
         return str(self)
+
+    def __copy__(self):
+        return Context([e for e in self.elements], [self.boundaries[e] for e in self.elements],
+                       [self.nodes[e] for e in self.elements])

@@ -120,3 +120,18 @@ def log_node_validation_time_details(node: XMLNode, logger_function, n_prefix_ta
 def log_node_time_details(node, logger_function, n_prefix_tab=0):
     log_node_filter_time_details(node, logger_function, n_prefix_tab)
     log_node_validation_time_details(node, logger_function, n_prefix_tab)
+
+
+def log_node_timer(node: XMLNode, logger_function, n_prefix_tab=0):
+    def minus_tuple(tuple):
+        return tuple[1] - tuple[0]
+
+    logger_function('%s %.3f', '\t' * n_prefix_tab + 'Init Link took: ', minus_tuple(node.timer['init_link']))
+    logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Init Link SQL took: ',
+                    minus_tuple(node.timer['init_link_sql']))
+    logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Init Link Children took: ',
+                    minus_tuple(node.timer['init_link_children']))
+    logger_function('%s %.3f', '\t' * (n_prefix_tab + 1) + 'Init Link XML took: ',
+                    minus_tuple(node.timer['init_link_xml']))
+    logger_function('\n')
+

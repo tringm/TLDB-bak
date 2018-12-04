@@ -139,44 +139,47 @@ class XMLNode(Node):
 
         self.filtered = False
         self.reason_of_filtered = ""
-        self.value_filtering_visited = False
+        # self.value_filtering_visited = False
         # self.value_validation_visited = False
         self.link_xml = {}
         self.link_sql = {}
-        self.intersection_range = {}
+        # self.intersection_range = {}
 
         self.join_boundaries = {}
         self.join_boundaries_combined = {}
         self.link_children = []
 
+        self.inited_contexts = []
+
         # self.validated_entries = []
-        self.validated = False
+        # self.validated = False
 
         self.inited_link = False
 
         # New time
-        self.start_init_link = -1
-        self.end_init_link = -1
+        self.timer = {'init_link': [-1, -1], 'init_link_xml': [-1, -1], 'init_link_sql': [-1, -1],
+                      'init_link_children': [-1, -1]}
 
-        # Filtering Time
-        self.start_full_filtering = -1
-        self.end_full_filtering = -1
-        self.start_value_filtering = -1
-        self.end_value_filtering = -1
-        self.start_ce_filtering = -1
-        self.end_ce_filtering = -1
-        self.start_check_lower_level = -1
-        self.end_check_lower_level = -1
-        self.start_init_children_link = -1
-        self.end_init_children_link = -1
-        self.start_filter_children = -1
-        self.end_filter_children = -1
-        self.start_filter_children_link_sql = -1
-        self.end_filter_children_link_sql = -1
 
-        # Validation time
-        self.value_validation_time = -1
-        self.structure_validation_time = -1
+        # # Filtering Time
+        # self.start_full_filtering = -1
+        # self.end_full_filtering = -1
+        # self.start_value_filtering = -1
+        # self.end_value_filtering = -1
+        # self.start_ce_filtering = -1
+        # self.end_ce_filtering = -1
+        # self.start_check_lower_level = -1
+        # self.end_check_lower_level = -1
+        # self.start_init_children_link = -1
+        # self.end_init_children_link = -1
+        # self.start_filter_children = -1
+        # self.end_filter_children = -1
+        # self.start_filter_children_link_sql = -1
+        # self.end_filter_children_link_sql = -1
+        #
+        # # Validation time
+        # self.value_validation_time = -1
+        # self.structure_validation_time = -1
 
     def get_center_coord(self):
         # Specific for index coordinate, naive algorithm
@@ -217,6 +220,7 @@ class XMLNode(Node):
         satisfy_nodes = []
         depth = 1
         while checking_nodes:
+            expected = len(checking_nodes) * self.max_n_children
             satisfy_nodes = []
             for idx, node in enumerate(checking_nodes):
                 if idx_range is not None:
@@ -228,7 +232,10 @@ class XMLNode(Node):
                 satisfy_nodes.append(node)
             if not satisfy_nodes:
                 return
-            if depth == max_depth or satisfy_nodes[0].isLeaf:
+            # if depth == max_depth or satisfy_nodes[0].isLeaf:
+            #     break
+
+            if len(satisfy_nodes)/expected > 0.7 or satisfy_nodes[0].isLeaf:
                 break
 
             depth += 1
@@ -272,33 +279,33 @@ class XMLNode(Node):
             raise ValueError('XML Node only allowed 2 dimensions')
         return self.boundary[1]
 
-    @property
-    def full_filtering_time(self):
-        return self.end_full_filtering - self.start_full_filtering
-
-    @property
-    def value_filtering_time(self):
-        return self.end_value_filtering - self.start_value_filtering
-
-    @property
-    def connected_element_filtering_time(self):
-        return self.end_ce_filtering - self.start_ce_filtering
-
-    @property
-    def check_lower_level_time(self):
-        return self.end_check_lower_level - self.start_check_lower_level
-
-    @property
-    def init_children_link_time(self):
-        return self.end_init_children_link - self.start_init_children_link
-
-    @property
-    def filter_children_time(self):
-        return self.end_filter_children - self.start_filter_children
-
-    @property
-    def filter_children_link_sql_time(self):
-        return self.end_filter_children_link_sql - self.start_filter_children_link_sql
+    # @property
+    # def full_filtering_time(self):
+    #     return self.end_full_filtering - self.start_full_filtering
+    #
+    # @property
+    # def value_filtering_time(self):
+    #     return self.end_value_filtering - self.start_value_filtering
+    #
+    # @property
+    # def connected_element_filtering_time(self):
+    #     return self.end_ce_filtering - self.start_ce_filtering
+    #
+    # @property
+    # def check_lower_level_time(self):
+    #     return self.end_check_lower_level - self.start_check_lower_level
+    #
+    # @property
+    # def init_children_link_time(self):
+    #     return self.end_init_children_link - self.start_init_children_link
+    #
+    # @property
+    # def filter_children_time(self):
+    #     return self.end_filter_children - self.start_filter_children
+    #
+    # @property
+    # def filter_children_link_sql_time(self):
+    #     return self.end_filter_children_link_sql - self.start_filter_children_link_sql
 
 
 class SQLNode(Node):
@@ -324,6 +331,7 @@ class SQLNode(Node):
         satisfy_nodes = []
         depth = 1
         while checking_nodes:
+            expected = len(checking_nodes) * self.max_n_children
             satisfy_nodes = []
             for idx, node in enumerate(checking_nodes):
                 node_ok = True
@@ -337,6 +345,9 @@ class SQLNode(Node):
             if not satisfy_nodes:
                 return
             if depth == max_depth or satisfy_nodes[0].isLeaf:
+                break
+
+            if len(satisfy_nodes)/expected > 0.7 or satisfy_nodes[0].isLeaf:
                 break
 
             depth += 1
