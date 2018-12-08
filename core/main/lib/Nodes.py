@@ -76,10 +76,4 @@ def sql_nodes_range_search(nodes, boundary):
         nodes_in_range = node.range_search(boundary)
         if nodes_in_range is not None:
             results = results.union(set(nodes_in_range))
-
     return list(results)
-
-
-# def get_node_in_range(nodes: [Node], boundary):
-#     nodes_in_range = set()
-#     for node in nodes:

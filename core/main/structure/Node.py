@@ -8,7 +8,7 @@ from core.main.lib.DeweyID import get_center_index
 from core.main.lib.Entries import get_boundaries_from_entries
 from core.main.lib.Nodes import get_boundaries_from_nodes
 from core.main.lib.boundary import update_boundary_from_entry, update_boundary_from_node, value_boundary_intersection, \
-    index_boundary_can_be_ancestor
+    index_boundary_can_be_ancestor, boundary_is_inside
 from core.main.structure.DeweyID import DeweyID
 
 
@@ -318,9 +318,30 @@ class SQLNode(Node):
     def get_center_coord(self):
         return [mean(self.boundary[i]) for i in range(len(self.boundary))]
 
+    def is_inside_boundary(self, boundaries):
+        if not len(self.boundary) == len(boundaries):
+            raise ValueError('Boundary mismatch')
+        for d, boundary in enumerate(boundaries):
+            if boundary is not None:
+                if not boundary_is_inside(self.boundary[d], boundary):
+                    return False
+        return True
+
+    def children_inside_boundary(self, boundaries):
+        return list(filter(lambda child: child.is_inside_boundary, self.children))
+
+    def intersect_with_boundary(self, boundaries):
+        if not len(self.boundary) == len(boundaries):
+            raise ValueError('Boundary mismatch')
+        for d, boundary in enumerate(boundaries):
+            if boundary is not None:
+                if value_boundary_intersection(self.boundary[d], boundary) is None:
+                    return False
+        return True
+
     def range_search(self, boundaries: List[List[int]]):
         if not len(self.boundary) == len(boundaries):
-            raise ValueError('Range mismatch')
+            raise ValueError('Boundary mismatch')
 
         for idx, boundary in enumerate(boundaries):
             if boundary is not None:
@@ -330,32 +351,28 @@ class SQLNode(Node):
         if self.isLeaf:
             return [self]
 
-        checking_nodes = self.children.copy()
+        checking_nodes = self.children
         satisfy_nodes = []
         while checking_nodes:
             expected = len(checking_nodes) * self.max_n_children
-            satisfy_nodes = []
-            for idx, node in enumerate(checking_nodes):
-                node_ok = True
-                for d, boundary in enumerate(boundaries):
-                    if boundary is not None:
-                        if value_boundary_intersection(node.boundary[d], boundary) is None:
-                            node_ok = False
-                            break
-                if node_ok:
-                    satisfy_nodes.append(node)
+
+            satisfy_nodes = list(filter(lambda node: node.intersect_with_boundary(boundaries), checking_nodes))
+
+            # if checking_nodes[0].isLeaf:
+            #     satisfy_nodes = list(filter(lambda node: node.intersect_with_boundary(boundaries), checking_nodes))
+            # else:
+            #     satisfy_nodes = list(filter(lambda node: node.is_inside_boundary(boundaries), checking_nodes))
+
             if not satisfy_nodes:
                 return
+
             if satisfy_nodes[0].isLeaf:
                 break
 
             if len(satisfy_nodes)/expected > 0.7 or satisfy_nodes[0].isLeaf:
                 break
 
-            next_layer = []
-            for node in satisfy_nodes:
-                for child in node.children:
-                    next_layer.append(child)
-            checking_nodes = next_layer
+            checking_nodes = list(map(lambda node: node.children_inside_boundary(boundaries), satisfy_nodes))
+            checking_nodes = [c for child in checking_nodes for c in child]
 
         return satisfy_nodes

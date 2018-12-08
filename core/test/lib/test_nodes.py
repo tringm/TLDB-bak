@@ -1,12 +1,12 @@
 from core.main.io_support.logger_support import *
-
+from core.main.lib.Nodes import *
 
 # TODO: Install/Implement expect
 
 
 def test_sql_nodes_range_search():
     loader = Loader('simple_small', 2, 'str')
-    log_loader(loader, print)
+    # log_loader(loader, print)
 
     parent = loader.all_tables_root['A_B_D']  # type: Node
     child = loader.all_tables_root['A_B_D'].children[0]

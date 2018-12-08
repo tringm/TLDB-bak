@@ -71,3 +71,4 @@ def get_boundaries_from_entries(entries: [Entry]) -> [[int]]:
             boundary[dimension][1] = max(boundary[dimension][1], entry_coordinates[dimension])
 
     return boundary
+

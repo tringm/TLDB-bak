@@ -78,6 +78,15 @@ def compare_value_boundaries(boundary1: [], boundary2: []) -> float:
 #     return True
 
 
+def boundary_is_inside(boundary1: [], boundary2: []):
+    """
+        Check if boundary 1 is inside boundary 2
+    """
+    if (boundary1[0] >= boundary2[0]) and (boundary1[1] <= boundary2[1]):
+        return True
+    return False
+
+
 def value_boundary_intersection(boundary1: [], boundary2: []) -> []:
     """
     This function found the intersection between 2 boundaries of number
@@ -86,7 +95,7 @@ def value_boundary_intersection(boundary1: [], boundary2: []) -> []:
     :return: None if does not intersect else intersection of the 2 boundaries
     """
     if boundary1 is None or boundary2 is None:
-        print(haha)
+        raise ValueError('Both boundary is None' + str(boundary1) + ' - ' + str(boundary2))
     if (boundary1[1] < boundary2[0]) or (boundary1[0] > boundary2[1]):
         return None
     return [max(boundary1[0], boundary2[0]), min(boundary1[1], boundary2[1])]

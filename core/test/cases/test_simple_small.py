@@ -1,7 +1,5 @@
-import logging
 from config import *
 
-from core.main.operation.Loader import Loader
 from core.main.io_support.logger_support import *
 from core.main.operation.FiltererContextBased import Filterer
 # from core.operation.Filterer_new_no_logger import Filterer
