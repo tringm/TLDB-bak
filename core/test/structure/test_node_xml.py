@@ -26,5 +26,5 @@ def test_map_to_children():
     print('Expect:', [child.children for child in root_A.children])
 
 
-# test_desc_range_search()
-test_map_to_children()
+test_desc_range_search()
+# test_map_to_children()

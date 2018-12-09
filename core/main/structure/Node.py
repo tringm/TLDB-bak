@@ -14,7 +14,7 @@ from core.main.structure.DeweyID import DeweyID
 
 # TODO: id (basically Dewey ID for fast traversal)
 # TODO: range search: change depth so that if find node go extra 1 layer
-# TODO: ancestor link: What happened if it is empty
+# TODO: better desc search (using different level of boundary)
 
 class Node(ABC):
     """RTree Node
@@ -208,47 +208,79 @@ class XMLNode(Node):
                     leaf_nodes.append(node)
         return leaf_nodes
 
-    def desc_range_search(self, idx_range: List[DeweyID], v_range):
-        if idx_range is None and v_range is None:
-            raise ValueError('Must have some criteria, both idx_range and v_range is None')
-        if idx_range is not None:
-            if not index_boundary_can_be_ancestor(idx_range, self.boundary[0]):
-                return
-        if v_range is not None:
-            if value_boundary_intersection(self.boundary[1], v_range) is None:
-                return
-        if self.isLeaf:
-            return [self]
+    # def is_inside_boundary(self, v_boundary):
+    #     if v_boundary is None:
+    #         return True
+    #     if not boundary_is_inside(self.v_boundary, v_boundary):
+    #         return False
+    #     return True
+    #
+    # def children_inside_boundary(self, v_boundary):
+    #     return list(filter(lambda child: child.is_inside_boundary(v_boundary), self.children))
+    #
+    # def is_desc_intersect_v_boundary(self, idx_boundary, v_boundary):
+    #     if idx_boundary is not None:
+    #         if not index_boundary_can_be_ancestor(self.v_boundary, idx_boundary):
+    #             return False
+    #     if v_boundary is not None:
+    #         if value_boundary_intersection(self.v_boundary, v_boundary) is None:
+    #             return False
+    #     return True
+    #
 
-        checking_nodes = self.children.copy()
-        satisfy_nodes = []
+    def compare_with_idx_and_v_boundary(self, idx_boundary, v_boundary):
+        """
+        Check if this node is inside idx_boundary and v_boundary
+            - 0 if not intersect
+            - 1 if can be desc and intersect v_boundary
+            - 2 if can be desc and inside v_boudary
+        :param idx_boundary:
+        :param v_boundary:
+        :return:
+        """
+        if idx_boundary is None and v_boundary is None:
+            return 2
+        if idx_boundary is not None:
+            if self.idx_boundary[1] <= idx_boundary[0]:
+                return 0
+            if self.idx_boundary[0] > idx_boundary[1]:
+                if not idx_boundary[1].is_ancestor(self.idx_boundary[0]):
+                    return 0
+        if v_boundary is not None:
+            if self.v_boundary[1] < v_boundary[0] or self.v_boundary[0] > v_boundary[1]:
+                return 0
+            if not (self.v_boundary[0] >= v_boundary[0] and self.v_boundary[1] <= v_boundary[1]):
+                return 1
+
+        return 2
+
+    def desc_range_search(self, idx_boundary, v_boundary):
+        if self.compare_with_idx_and_v_boundary(idx_boundary, v_boundary) == 0:
+            return
+
+        checking_nodes = [self]
+        in_range_nodes = []
+
         while checking_nodes:
-            expected = len(checking_nodes) * self.max_n_children
-            satisfy_nodes = []
-            for idx, node in enumerate(checking_nodes):
-                if idx_range is not None:
-                    if not index_boundary_can_be_ancestor(idx_range, node.boundary[0]):
-                        continue
-                if v_range is not None:
-                    if value_boundary_intersection(node.boundary[1], v_range) is None:
-                        continue
-                satisfy_nodes.append(node)
-            if not satisfy_nodes:
+            if checking_nodes[0].isLeaf:
+                break
+
+            checking_nodes = [child for node in checking_nodes for child in node.children]
+
+            intersect_nodes = []
+
+            for node in checking_nodes:
+                if node.compare_with_idx_and_v_boundary(idx_boundary, v_boundary) == 1:
+                    intersect_nodes.append(node)
+                if node.compare_with_idx_and_v_boundary(idx_boundary, v_boundary) == 2:
+                    in_range_nodes.append(node)
+
+            if not in_range_nodes and not intersect_nodes:
                 return
 
-            if satisfy_nodes[0].isLeaf:
-                break
+            checking_nodes = intersect_nodes
 
-            if len(satisfy_nodes)/expected > 0.7 or satisfy_nodes[0].isLeaf:
-                break
-
-            next_layer = []
-            for node in satisfy_nodes:
-                for child in node.children:
-                    next_layer.append(child)
-            checking_nodes = next_layer
-
-        return satisfy_nodes
+        return in_range_nodes + checking_nodes
 
     def link_sql_first_ancestor(self):
         if self.link_sql:
@@ -318,61 +350,61 @@ class SQLNode(Node):
     def get_center_coord(self):
         return [mean(self.boundary[i]) for i in range(len(self.boundary))]
 
-    def is_inside_boundary(self, boundaries):
+    def compare_with_boundaries(self, boundaries):
+        """
+        Check if this node is inside multiple v_boundaries
+        3 cases:
+            - 0 : Not intersect
+            - 1 : Intersect but not inside
+            - 2 : Is inside
+        :param boundaries:
+        :return:
+        """
         if not len(self.boundary) == len(boundaries):
             raise ValueError('Boundary mismatch')
+        is_inside = True
         for d, boundary in enumerate(boundaries):
             if boundary is not None:
-                if not boundary_is_inside(self.boundary[d], boundary):
-                    return False
-        return True
+                if self.boundary[d][1] < boundary[0] or self.boundary[d][0] > boundary[1]:
+                    return 0
+                if is_inside and not (self.boundary[d][0] >= boundary[0] and self.boundary[d][1] <= boundary[1]):
+                    is_inside = False
 
-    def children_inside_boundary(self, boundaries):
-        return list(filter(lambda child: child.is_inside_boundary, self.children))
-
-    def intersect_with_boundary(self, boundaries):
-        if not len(self.boundary) == len(boundaries):
-            raise ValueError('Boundary mismatch')
-        for d, boundary in enumerate(boundaries):
-            if boundary is not None:
-                if value_boundary_intersection(self.boundary[d], boundary) is None:
-                    return False
-        return True
+        if not is_inside:
+            return 1
+        return 2
 
     def range_search(self, boundaries: List[List[int]]):
         if not len(self.boundary) == len(boundaries):
             raise ValueError('Boundary mismatch')
 
-        for idx, boundary in enumerate(boundaries):
-            if boundary is not None:
-                if value_boundary_intersection(self.boundary[idx], boundary) is None:
-                    return
+        if self.compare_with_boundaries(boundaries) == 0:
+            return
 
-        if self.isLeaf:
-            return [self]
-
-        checking_nodes = self.children
-        satisfy_nodes = []
+        checking_nodes = [self]
+        in_range_nodes = []
         while checking_nodes:
-            expected = len(checking_nodes) * self.max_n_children
+            if checking_nodes[0].isLeaf:
+                break
 
-            satisfy_nodes = list(filter(lambda node: node.intersect_with_boundary(boundaries), checking_nodes))
+            checking_nodes = [child for node in checking_nodes for child in node.children]
 
-            # if checking_nodes[0].isLeaf:
-            #     satisfy_nodes = list(filter(lambda node: node.intersect_with_boundary(boundaries), checking_nodes))
-            # else:
-            #     satisfy_nodes = list(filter(lambda node: node.is_inside_boundary(boundaries), checking_nodes))
+            # expected = len(checking_nodes) * self.max_n_children
 
-            if not satisfy_nodes:
+            intersect_nodes = []
+
+            for node in checking_nodes:
+                if node.compare_with_boundaries(boundaries) == 1:
+                    intersect_nodes.append(node)
+                if node.compare_with_boundaries(boundaries) == 2:
+                    in_range_nodes.append(node)
+
+            if not in_range_nodes and not intersect_nodes:
                 return
 
-            if satisfy_nodes[0].isLeaf:
-                break
+            checking_nodes = intersect_nodes
 
-            if len(satisfy_nodes)/expected > 0.7 or satisfy_nodes[0].isLeaf:
-                break
+            # if len(satisfy_nodes)/expected > 0.7 or satisfy_nodes[0].isLeaf:
+            #     break
 
-            checking_nodes = list(map(lambda node: node.children_inside_boundary(boundaries), satisfy_nodes))
-            checking_nodes = [c for child in checking_nodes for c in child]
-
-        return satisfy_nodes
+        return in_range_nodes + checking_nodes
