@@ -73,9 +73,9 @@ class Filterer:
                     # queue_contexts.put(child.inited_contexts)
                     queue_contexts.put([copy.copy(context) for context in updated_contexts])
 
-                if not root_node.link_children:
-                    for context in updated_contexts:
-                        print(str(context))
+                # if not root_node.link_children:
+                #     for context in updated_contexts:
+                #         print(str(context))
             else:
                 _l.info(str(root_node) + ' not OK')
                 log_node_filter_status(root_node, _l.info)
@@ -86,7 +86,6 @@ class Filterer:
         self.total_time = end_filtering - start_filtering
         self.log_all_status(_l.info)
         print(self.total_time)
-
 
     def init_link(self, flt_node: XMLNode):
         _l = logging.getLogger("Init Link: "+str(flt_node))
@@ -106,7 +105,9 @@ class Filterer:
                 return True, {}, {}, {}
 
             tables = sorted(list(ancestor_link_sql.keys()), key=lambda tbl: len(tbl), reverse=True)
+
             link_sql = {}
+
             _l.verbose('\t' * f_n_idx + 'Init join boundary with table: ' + tables[0])
             join_boundaries = []
 
@@ -133,11 +134,8 @@ class Filterer:
 
                 else:
                     join_boundaries_e = set(list(join_boundaries[0].keys()))
-                    table_e_as_set = set(table_e)
-                    common_e = join_boundaries_e.intersection(table_e_as_set)
+                    common_e = join_boundaries_e.intersection(set(table_e))
                     not_in_tbl_e = join_boundaries_e.difference(common_e)
-
-                    common_e = set(table_e).intersection(set(list(join_boundaries[0].keys())))
 
                     for join_b in join_boundaries:
                         boundaries = [None] * len(table_e)
@@ -323,16 +321,12 @@ class Filterer:
             _l.debug('\n')
             return False, None
 
-        updated_contexts = []
-        for context in contexts:
-            context.boundaries[flt_node.name] = value_boundary_intersection(context.boundaries[flt_node.name],
-                                                                            flt_node.v_boundary)
-            if context.boundaries[flt_node.name] is not None:
-                updated_contexts.append(context)
+        ori_len_contexts = len(contexts)
+        contexts = [context for context in contexts if
+                    context.check_intersection_and_update_boundary(flt_node.name, flt_node.v_boundary)]
 
-        _l.timer('%s %.3f', '\t' * f_n_idx + 'Filter ' + str(len(contexts)) + '->' + str(len(updated_contexts)) +
+        _l.timer('%s %.3f', '\t' * f_n_idx + 'Filter ' + str(ori_len_contexts) + '->' + str(len(contexts)) +
                  ' contexts based on node v took: ', timeit.default_timer() - start_flt_w_c)
-        contexts = updated_contexts
 
         if not contexts:
             _l.debug('\t' * f_n_idx + 'None of contexts interX with node v_boundary')
@@ -349,6 +343,7 @@ class Filterer:
                 return False, None
 
         # update context
+        ori_len_contexts = len(contexts)
         remaining_contexts = []
         for context in contexts:
             context_ok = True

@@ -6,8 +6,8 @@ from core.main.operation.Joiner import initialization
 
 set_up_logger()
 
-folder_name = "simple_small"
-max_n_children = 2
+folder_name = "orderline_price_asin_small"
+max_n_children = 10
 method = 'str'
 
 
@@ -21,7 +21,7 @@ while log_path.exists():
     file_name = method + '_' + str(max_n_children) + '_try' + str(n_try) + '.log'
     log_path = core_io_out_path() / folder_name / file_name
 
-logging.basicConfig(filename=str(log_path), level=logging.INFO)
+logging.basicConfig(filename=str(log_path), level=logging.DEBUG)
 # logging.basicConfig(filename="./io/" + folder_name + "/" + "result_" + str(max_n_children) + '_' + method
 #                              + '_try' + str(n_try) + ".log", level=logging.INFO)
 # logging.getLogger("Filterer").setLevel(logging.INFO)
@@ -33,16 +33,6 @@ logging.basicConfig(filename=str(log_path), level=logging.INFO)
 # logging.getLogger("Filter With Context").disabled = True
 
 loader = Loader(folder_name, max_n_children, method)
-
-# path = data_path() / folder_name / 'data.pkl'
-# with path.open('wb') as f:
-#     pickle.dump(loader, f)
-
-# path = data_path() / folder_name / 'data.pkl'
-# with path.open('rb') as f:
-#     loader = pickle.load(f)
-
-# log_loader(loader,print)
 
 initial_limit_range = initialization(loader)
 filterer = Filterer(loader, initial_limit_range)

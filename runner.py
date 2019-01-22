@@ -1,7 +1,8 @@
+import logging
+from pathlib import Path
+
 from core.main.operation import Loader
 from core.main.operation.Joiner import Joiner
-from pathlib import Path
-import logging
 
 folder_name = "simple_small"
 max_n_children = 10

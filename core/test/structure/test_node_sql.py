@@ -17,5 +17,4 @@ def test_range_search():
     print('Results:', root_a_b_d.range_search([[6, 79], [550, 600], [13, 19]]))
     print('Expect:', root_a_b_d.children[0].children[1])
 
-
 test_range_search()

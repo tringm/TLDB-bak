@@ -1,0 +1,10 @@
+{
+    "from": [
+      "invoices",
+      "products"
+    ],
+    "perform": {"$join": {
+        "how": "intersection",
+        "by": ["products.id"]
+    }}
+}

@@ -1,6 +1,7 @@
 from pathlib import Path
 import logging
 
+
 def root_path():
     return Path(__file__)
 
@@ -16,8 +17,10 @@ def core_path():
 def core_io_path():
     return core_path() / 'io'
 
+
 def core_io_out_path():
     return core_io_path() / 'out'
+
 
 def set_up_logger():
     logging.VERBOSE = 5
