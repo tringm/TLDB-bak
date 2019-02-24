@@ -1,5 +1,5 @@
 # Helper library for logging
-from core.main.operation.Loader import Loader
+from core.main.operator.Loader import Loader
 from core.main.structure.Node import XMLNode
 
 

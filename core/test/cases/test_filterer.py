@@ -1,4 +1,4 @@
-from core.main.operation import Filterer
+from core.main.operator import Filterer
 from core.main.io_support.logger_support import *
 import logging
 

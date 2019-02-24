@@ -1,8 +1,8 @@
 from config import *
 
 from core.main.io_support.logger_support import *
-from core.main.operation.FiltererContextBased import Filterer
-from core.main.operation.Joiner import initialization
+from core.main.operator.FiltererContextBased import Filterer
+from core.main.operator.Joiner import initialization
 
 set_up_logger()
 
@@ -21,7 +21,7 @@ while log_path.exists():
     file_name = method + '_' + str(max_n_children) + '_try' + str(n_try) + '.log'
     log_path = core_io_out_path() / folder_name / file_name
 
-logging.basicConfig(filename=str(log_path), level=logging.INFO)
+logging.basicConfig(filename=str(log_path), level=logging.VERBOSE)
 # logging.basicConfig(filename="./io/" + folder_name + "/" + "result_" + str(max_n_children) + '_' + method
 #                              + '_try' + str(n_try) + ".log", level=logging.INFO)
 # logging.getLogger("Filterer").setLevel(logging.INFO)
