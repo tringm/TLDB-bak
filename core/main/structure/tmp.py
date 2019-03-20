@@ -1,4 +1,4 @@
-from core.main.structure import Entry
+from core.main.structure import entry
 from core.main.structure import SQLNode
 from math import ceil
 
@@ -38,8 +38,8 @@ max_n_children = 2
 dimension = 1
 n_dimension = 3
 dimension_order = [dimension] + [d for d in range(n_dimension) if d != dimension]
-entries = [Entry([23, 39, 88]), Entry([34, 86, 52]), Entry([30, 84, 80]), Entry([84, 17, 23]), Entry([74, 19, 9]),
-           Entry([22, 38, 100]), Entry([38, 88, 70]), Entry([38, 45, 38]), Entry([94, 87, 94]), Entry([80, 22, 15])]
+entries = [entry([23, 39, 88]), entry([34, 86, 52]), entry([30, 84, 80]), entry([84, 17, 23]), entry([74, 19, 9]),
+           entry([22, 38, 100]), entry([38, 88, 70]), entry([38, 45, 38]), entry([94, 87, 94]), entry([80, 22, 15])]
 
 # First partition entries into nodes
 # Number of slicing step = n_dimension - 1

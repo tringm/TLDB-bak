@@ -1,6 +1,6 @@
 # Helper library for logging
-from core.main.operator.Loader import Loader
-from core.main.structure.Node import XMLNode
+from core.main.operator.loader import Loader
+from core.main.structure.node import XMLNode
 
 
 def log_loader(loader: Loader, logger_function, n_prefix_tab=0, only_unfiltered=False):

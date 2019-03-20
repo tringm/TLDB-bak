@@ -1,4 +1,4 @@
-from core.main.operator import Filterer
+from core.main.operator import filterer
 from core.main.io_support.logger_support import *
 import logging
 
@@ -16,6 +16,6 @@ logging.Logger.verbose = lambda inst, msg, *args, **kwargs: inst.log(logging.VER
 logging.verbose = lambda msg, *args, **kwargs: logging.log(logging.VERBOSE, msg, *args, **kwargs)
 
 
-filterer = Filterer(loader, initial_limit_range)
+filterer = filterer(loader, initial_limit_range)
 filterer.perform()
 filterer.node_value_filter_str(filterer.roots[filterer.elements[0]])

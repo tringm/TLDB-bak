@@ -3,10 +3,10 @@ import logging
 import queue
 import timeit
 
-from .Filterer import Filterer
+from .filterer import Filterer
 from .filterer_stripe import full_filtering
-from .Loader import get_index_highest_element
-from .Validator import node_validation
+from .loader import get_index_highest_element
+from .validator import node_validation
 from core.main.io_support.logger_support import *
 
 

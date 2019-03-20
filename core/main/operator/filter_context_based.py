@@ -6,9 +6,9 @@ from typing import List
 
 from core.main.io_support.logger_support import *
 from core.main.lib.boundary import value_boundaries_union, value_boundary_intersection
-from core.main.structure.Context import Context
-from core.main.structure.Node import SQLNode
-from core.main.lib.Nodes import sql_nodes_range_search
+from core.main.structure.context import Context
+from core.main.structure.node import SQLNode
+from core.main.lib.nodes import sql_nodes_range_search
 
 
 # TODO: Init context of children based on join_boundary

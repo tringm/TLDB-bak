@@ -1,5 +1,5 @@
 from core.main.io_support.logger_support import *
-from core.main.structure.DeweyID import DeweyID
+from core.main.structure.dewey_id import DeweyID
 
 
 def test_desc_range_search():

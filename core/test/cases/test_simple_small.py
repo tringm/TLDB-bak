@@ -1,8 +1,8 @@
 from config import *
 
 from core.main.io_support.logger_support import *
-from core.main.operator.FiltererContextBased import Filterer
-from core.main.operator.Joiner import initialization
+from core.main.operator.filter_context_based import Filterer
+from core.main.operator.joiner import initialization
 
 set_up_logger()
 

@@ -3,10 +3,10 @@ from math import ceil, log
 import timeit
 from queue import Queue
 
-from core.main.lib.Entries import get_boundaries_from_entries
-from core.main.lib.Nodes import get_boundaries_from_nodes
-from core.main.structure.Entry import Entry
-from .Node import *
+from core.main.lib.entries import get_boundaries_from_entries
+from core.main.lib.nodes import get_boundaries_from_nodes
+from core.main.structure.entry import Entry
+from .node import *
 
 
 class RTree(ABC):

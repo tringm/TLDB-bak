@@ -1,9 +1,9 @@
 from pathlib import Path
 from config import data_path
-from core.main.structure.RTree import XMLRTree
-from core.main.structure.RTree import SQLRTree
-from core.main.structure.Entry import Entry
-from core.main.structure.DeweyID import DeweyID
+from core.main.structure.rtree import XMLRTree
+from core.main.structure.rtree import SQLRTree
+from core.main.structure.entry import Entry
+from core.main.structure.dewey_id import DeweyID
 
 import numpy as np
 import logging

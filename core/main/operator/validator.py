@@ -3,11 +3,11 @@ import timeit
 
 from typing import List, Dict
 
-from core.main.structure import Entry
-from core.main.structure import Node
+from core.main.structure import entry
+from core.main.structure import node
 
 
-def match_entry(entry1: Entry, elements1: [str], entry2: Entry, elements2: [str]):
+def match_entry(entry1: entry, elements1: [str], entry2: entry, elements2: [str]):
     """
     This is an adhoc function that check if entry2 matches with entry1 assuming that entry2 always has less elements
     than entry 1
@@ -51,7 +51,7 @@ def entries_value_validation(validating_node, all_elements_name):
 
     remaining_entries = []
     cursors = {}
-    table_entries = {}  # type: Dict[str, List[Entry]]
+    table_entries = {}  # type: Dict[str, List[entry]]
     table_dimension = {}  # type: Dict[str, int]
     table_elements = {}
 
@@ -82,7 +82,7 @@ def entries_value_validation(validating_node, all_elements_name):
             elements = table_elements[table_name]
             dimension = table_dimension[table_name]
 
-            this_table_matching_v_e = []  # type: List[Entry] 
+            this_table_matching_v_e = []  # type: List[entry]
 
             # if entry does not match a table -> ignore this entry
             while cursors[table_name] < len(table_entries[table_name]):
@@ -228,7 +228,7 @@ def entries_value_validation(validating_node, all_elements_name):
 #     validating_node.structure_validation_time = end_structure_validation_time - start_structure_validation_time
 
 
-def node_validation(node: Node, all_elements_name: [str], relationship_matrix: [[int]]):
+def node_validation(node: node, all_elements_name: [str], relationship_matrix: [[int]]):
     logger = logging.getLogger("Node Validator")
     logger.debug('Start validating node ' + str(node))
     if node.validated:

@@ -4,12 +4,12 @@ from typing import List
 
 from numpy import mean
 
-from core.main.lib.DeweyID import get_center_index
-from core.main.lib.Entries import get_boundaries_from_entries
-from core.main.lib.Nodes import get_boundaries_from_nodes
+from core.main.lib.dewey_id import get_center_index
+from core.main.lib.entries import get_boundaries_from_entries
+from core.main.lib.nodes import get_boundaries_from_nodes
 from core.main.lib.boundary import update_boundary_from_entry, update_boundary_from_node, value_boundary_intersection, \
     index_boundary_can_be_ancestor, boundary_is_inside
-from core.main.structure.DeweyID import DeweyID
+from core.main.structure.dewey_id import DeweyID
 
 
 # TODO: id (basically Dewey ID for fast traversal)

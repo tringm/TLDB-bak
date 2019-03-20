@@ -1,8 +1,8 @@
 import logging
 from pathlib import Path
 
-from core.main.operator import Loader
-from core.main.operator.Joiner import Joiner
+from core.main.operator import loader
+from core.main.operator.joiner import Joiner
 
 folder_name = "simple_small"
 max_n_children = 10
@@ -37,7 +37,7 @@ logging.getLogger("Full Filterer").setLevel(logging.VERBOSE)
 # logging.getLogger("Entries Value Validator").setLevel(logging.DEBUG)
 # logging.getLogger("Entries Structure Validator").setLevel(logging.DEBUG)
 
-loader = Loader(folder_name, max_n_children, method)
+loader = loader(folder_name, max_n_children, method)
 joiner = Joiner(loader, method)
 
 logger = logging.getLogger("Main")

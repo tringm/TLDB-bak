@@ -4,10 +4,10 @@ This module contains helper function for list of Entry [Entry]
     get_boundaries_from_entries ([Entry]): Return MBR of list of entries
 """
 
-from core.main.structure import Entry
+from core.main.structure import entry
 
 
-def quick_sort_entries(entries: [Entry], dimension: int) -> [Entry]:
+def quick_sort_entries(entries: [entry], dimension: int) -> [entry]:
     """Summary
     Quick sort list of entries according to value of a dimension
 
@@ -16,7 +16,7 @@ def quick_sort_entries(entries: [Entry], dimension: int) -> [Entry]:
     :return: sorted entries
     """
 
-    def partition(entries: [Entry], low: int, high: int, dimension: int) -> int:
+    def partition(entries: [entry], low: int, high: int, dimension: int) -> int:
         pivot = entries[low]
         i = low + 1
         j = high
@@ -48,7 +48,7 @@ def quick_sort_entries(entries: [Entry], dimension: int) -> [Entry]:
     return entries
 
 
-def get_boundaries_from_entries(entries: [Entry]) -> [[int]]:
+def get_boundaries_from_entries(entries: [entry]) -> [[int]]:
     """Summary
     Find the MBR of list of Entries
 

@@ -3,7 +3,7 @@ import logging
 import timeit
 from typing import Dict, List
 
-from core.main.structure import Node
+from core.main.structure import node
 from core.main.io_support.logger_support import *
 
 # TODO:
@@ -47,7 +47,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
     # TODO: This is usually not needed since it's already done when init
     logger.verbose('\t' * filtering_node_index + 'Begin Pre-Filter')
     for table_name in table_names:
-        table_nodes = filtering_node.link_sql[table_name]  # type: [Node]
+        table_nodes = filtering_node.link_sql[table_name]  # type: [node]
         if not table_nodes:
             filtering_node.filtered = True
             filtering_node.reason_of_filtered = 'Value Filter: ' + table_name + ' is empty'
@@ -81,7 +81,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
     # init intersected_value_boundary
     intersected_value_boundary = []  # type: List[Dict[str, List[int]]]
     first_table_name = table_names[0]
-    first_table_nodes = filtering_node.link_sql[first_table_name]  # type: List[Node]
+    first_table_nodes = filtering_node.link_sql[first_table_name]  # type: List[node]
     first_table_elements = first_table_name.split('_')  # type: [str]
     for node in first_table_nodes:
         intersected_value_boundary.append(dict(zip(first_table_elements, node.boundary)))
@@ -91,7 +91,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
     for table_name in table_names:
         if table_name != first_table_name:
             table_elements = table_name.split('_')
-            table_nodes = filtering_node.link_sql[table_name]  # type: List[Node]
+            table_nodes = filtering_node.link_sql[table_name]  # type: List[node]
             logger.verbose('\t' * filtering_node_index + 'Checking ' + table_name + ' Nodes: '
                          + str([node.boundary for node in table_nodes]))
             remaining_nodes = []
@@ -100,7 +100,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
             updated_intersected_value_boundary = []
 
             while table_cursor < len(table_nodes) and boundary_cursor < len(intersected_value_boundary):
-                current_table_node = table_nodes[table_cursor]  # type: Node
+                current_table_node = table_nodes[table_cursor]  # type: node
                 current_boundary = intersected_value_boundary[boundary_cursor]  # type: {str, List[int]}
                 logger.verbose('\t' * (filtering_node_index + 1) + 'current_table_node: ' + str(current_table_node))
                 logger.verbose('\t' * (filtering_node_index + 1) + 'current_value_boundary: ' + str(current_boundary))
@@ -202,7 +202,7 @@ def value_filtering(filtering_node: XMLNode, all_elements_name: [str]):
     filtering_node.value_filtering_time = end_value_filtering - start_value_filtering
 
 
-def connected_element_filtering(filtering_node: Node, all_elements_name: [str], limit_range: Dict[str, List[int]]):
+def connected_element_filtering(filtering_node: node, all_elements_name: [str], limit_range: Dict[str, List[int]]):
     """
     This function check filtering_node connected element nodes if they can statisfy the limit range and structure
     requirement (ancestor, descendant)
@@ -278,7 +278,7 @@ def connected_element_filtering(filtering_node: Node, all_elements_name: [str], 
     filtering_node.connected_element_filtering_time = end_ce_filtering - start_ce_filtering
 
 
-def check_lower_level(filtering_node: Node, all_elements_name: [str], limit_range: Dict[str, List[int]]) -> [] or None:
+def check_lower_level(filtering_node: node, all_elements_name: [str], limit_range: Dict[str, List[int]]) -> [] or None:
     """
     This function traverse to lower level of the XML Query to filter descendants
     Result:
@@ -404,7 +404,7 @@ def initialize_children_link(filtering_node, all_elements_name, limit_range):
     logger.verbose('\t' * filtering_node_index +
                    'Init sql_link and check if connected_element_node_child can satisfy limit range')
     logger.verbose('\t' * filtering_node_index + 'limit_range ' + str(limit_range))
-    children_link_sql = {}  # type: Dict[str, List[Node]]
+    children_link_sql = {}  # type: Dict[str, List[node]]
     for table_name in filtering_node.link_sql:
         children_link_sql[table_name] = []
         table_elements = table_name.split('_')
@@ -489,7 +489,7 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
     logger.verbose('\t' * filtering_node_index + 'allowed_value_boundary: ' + str(allowed_value_boundary))
 
     while children_cursor < len(filtering_node.children) and value_boundary_cursor < len(allowed_value_boundary):
-        current_children_node = filtering_node.children[children_cursor]  # type: Node
+        current_children_node = filtering_node.children[children_cursor]  # type: node
         current_value_boundary = allowed_value_boundary[value_boundary_cursor]  # type: List[int]
 
         logger.verbose('\t' * (filtering_node_index + 1) + 'current_child: ' + str(current_children_node))
@@ -580,7 +580,7 @@ def filter_children(filtering_node, all_elements_name, limit_range, link_xml, li
             # TODO: Intergrate with the intersection range using allow_boundary_index
             # When moving to new node, if previous node already reach the end of table -> always check last node
             while cursor[table_name] < len(link_sql[table_name]):
-                node = link_sql[table_name][cursor[table_name]]  # type: Node
+                node = link_sql[table_name][cursor[table_name]]  # type: node
                 logger.verbose('\t' * (filtering_node_index + 3) + 'cursor: ' + str(cursor[table_name]) +
                                ' current table node: ' + str(node))
                 if node.boundary[node.dimension][1] < filtering_node_child.boundary[1][0]:
@@ -636,7 +636,7 @@ def full_filtering(filtering_node: XMLNode, all_elements_name: [str], limit_rang
     :return: updated limit range or None if this node is filtered
     """
 
-    def check_if_filtered(_filtering_node: Node, _logger, _start_time):
+    def check_if_filtered(_filtering_node: node, _logger, _start_time):
         if filtering_node.filtered:
             _logger.debug('\t' * filtering_node_index + '###')
             _logger.debug('\t' * filtering_node_index + 'FILTERED: ' + filtering_node.reason_of_filtered)

@@ -1,5 +1,5 @@
 from core.main.io_support.logger_support import *
-from core.main.lib.Nodes import *
+from core.main.lib.nodes import *
 
 # TODO: Install/Implement expect
 

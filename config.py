@@ -3,23 +3,7 @@ import logging
 
 
 def root_path():
-    return Path(__file__)
-
-
-def data_path():
-    return Path(__file__).parent / 'data'
-
-
-def core_path():
-    return Path(__file__).parent / 'core'
-
-
-def core_io_path():
-    return core_path() / 'io'
-
-
-def core_io_out_path():
-    return core_io_path() / 'out'
+    return Path(__file__).parent
 
 
 def set_up_logger():

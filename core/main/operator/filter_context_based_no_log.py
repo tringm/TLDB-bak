@@ -5,7 +5,7 @@ import timeit
 from typing import List
 
 # from core.io_support.logger_support import *
-from core.main.structure.Context import Context
+from core.main.structure.context import Context
 from core.main.structure import SQLNode, XMLNode
 
 
