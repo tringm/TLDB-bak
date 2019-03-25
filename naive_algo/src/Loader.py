@@ -1,11 +1,14 @@
 from pathlib import Path
-from config import data_path
+from config import root_path
 from core.main.structure.entry import Entry
 from core.main.structure.dewey_id import DeweyID
 
 import numpy as np
 import logging
 import timeit
+
+
+data_path = root_path() / 'core' / 'io' / 'in' / 'test' / 'cases'
 
 
 def get_index_highest_element(all_elements_name: [str], table_name: str) -> int:

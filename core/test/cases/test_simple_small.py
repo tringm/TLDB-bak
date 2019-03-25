@@ -1,5 +1,6 @@
-from config import *
+from config import root_path, set_up_logger
 
+import logging
 from core.main.io_support.logger_support import *
 from core.main.operator.filter_context_based import Filterer
 from core.main.operator.joiner import initialization
@@ -14,12 +15,13 @@ method = 'str'
 n_try = 0
 
 file_name = method + '_' + str(max_n_children) + '_try' + str(n_try) + '.log'
-log_path = core_io_out_path() / folder_name / file_name
+folder_path = root_path() / 'core' / 'io' / 'out' / 'test' / 'cases' / folder_name
+log_path = folder_path / file_name
 
 while log_path.exists():
     n_try += 1
     file_name = method + '_' + str(max_n_children) + '_try' + str(n_try) + '.log'
-    log_path = core_io_out_path() / folder_name / file_name
+    log_path = folder_path / file_name
 
 logging.basicConfig(filename=str(log_path), level=logging.VERBOSE)
 # logging.basicConfig(filename="./io/" + folder_name + "/" + "result_" + str(max_n_children) + '_' + method
