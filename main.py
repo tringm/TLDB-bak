@@ -1,7 +1,7 @@
 import argparse
 import unittest
 
-from core.test.tests import get_suites, TestResultCompareFileMeld
+from tldb.core import get_suites, TestResultCompareFileMeld
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TLDB')

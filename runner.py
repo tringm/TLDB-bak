@@ -1,8 +1,8 @@
 import logging
 from pathlib import Path
 
-from core.main.operator import loader
-from core.main.operator.joiner import Joiner
+from tldb.core.main.operator import loader
+from tldb.core.main.operator import Joiner
 
 folder_name = "simple_small"
 max_n_children = 10

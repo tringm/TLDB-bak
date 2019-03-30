@@ -83,6 +83,7 @@ def filter_nodes(tables, attributes):
 # join by multiple indexes
 # input tables -> table -> header(attribute name) rows(data)
 # output join result
+
 def join_by_result(tables,joining_orders):
 
     dfs = []
