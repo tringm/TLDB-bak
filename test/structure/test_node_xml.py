@@ -1,4 +1,4 @@
-from tldb.core.main.structure.dewey_id import DeweyID
+from tldb.core.structure import DeweyID
 
 
 def test_desc_range_search():

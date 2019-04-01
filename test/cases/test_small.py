@@ -1,7 +1,7 @@
 from config import *
 
-from tldb.core.main.operator import Filterer
-from tldb.core.main.operator import initialization
+from tldb.core.operator import Filterer
+from tldb.core.operator import initialization
 
 set_up_logger()
 

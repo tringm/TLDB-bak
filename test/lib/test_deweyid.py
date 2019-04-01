@@ -1,50 +1,49 @@
-import json
-from collections import OrderedDict
-import unittest
-from pprint import pprint
-from config import root_path
-from tldb.core.main import generate_dewey_id_from_dict
-import xmltodict
 import filecmp
+import json
+import unittest
+from collections import OrderedDict
+
+import xmltodict
+
+from config import root_path
+from tldb.core.lib.dewey_id import generate_dewey_id_from_dict
+from test.tests import TestCaseCompare
 
 
-class TestGenerateDeweyFromJSON(unittest.TestCase):
+class TestGenerateDewey(TestCaseCompare):
     def setUp(self):
-        self.in_file = root_path() / 'core' / 'io' / 'in' / 'test' / 'lib' / 'messages.json'
-        self.out_file = root_path() / 'core' / 'io' / 'out' / 'test' / 'lib' / 'dewey_id_from_json_out.txt'
-        self.exp_file = root_path() / 'core' / 'io' / 'out' / 'test' / 'lib' / 'dewey_id_from_json_exp.txt'
+        self.in_file = {}
+        self.out_file = {}
+        self.exp_file = {}
 
     def test_generate_dewey_id_from_json(self):
         """
         test description
         :return:
         """
-        with self.in_file.open() as f:
+        method_id = self.id().split('.')[-1]
+        self.in_file[method_id] = root_path() / 'test' / 'io' / 'in' / 'lib' / 'messages.json'
+        self.out_file[method_id] = root_path() / 'test' / 'io' / 'out' / 'lib' / 'dewey_id_from_json_out.txt'
+        self.exp_file[method_id] = root_path() / 'test' / 'io' / 'out' / 'lib' / 'dewey_id_from_json_exp.txt'
+        with self.in_file[method_id].open() as f:
             json_dict = json.load(f, object_pairs_hook=OrderedDict)
         elements = generate_dewey_id_from_dict(json_dict)
-        with self.out_file.open(mode='w') as f:
-            res = [['DeweyID', 'attribute', 'value']]
+        with self.out_file[method_id].open(mode='w') as f:
+            f.write(', '.join(['DeweyID', 'attribute', 'value']) + '\n')
             for e in elements:
-                res.append(list(e))
-            pprint(res, stream=f)
-        self.assertTrue(filecmp.cmp(str(self.out_file), str(self.exp_file), shallow=False),
-                        'out file does not match exp file')
-
-
-class TestGenerateDeweyFromXML(unittest.TestCase):
-    def setUp(self):
-        self.in_file = root_path() / 'core' / 'io' / 'in' / 'test' / 'lib' / 'messages.xml'
-        self.out_file = root_path() / 'core' / 'io' / 'out' / 'test' / 'lib' / 'dewey_id_from_xml_out.txt'
-        self.exp_file = root_path() / 'core' / 'io' / 'out' / 'test' / 'lib' / 'dewey_id_from_xml_exp.txt'
+                f.write(', '.join([str(comp) for comp in e]) + '\n')
+        self.file_compare(self.out_file[method_id], self.exp_file[method_id])
 
     def test_generate_dewey_id_from_xml(self):
-        with self.in_file.open() as f:
+        method_id = self.id().split('.')[-1]
+        self.in_file[method_id] = root_path() / 'test' / 'io' / 'in' / 'lib' / 'messages.xml'
+        self.out_file[method_id] = root_path() / 'test' / 'io' / 'out' / 'lib' / 'dewey_id_from_xml_out.txt'
+        self.exp_file[method_id] = root_path() / 'test' / 'io' / 'out' / 'lib' / 'dewey_id_from_xml_exp.txt'
+        with self.in_file[method_id].open() as f:
             xml_dict = xmltodict.parse(f.read())
         elements = generate_dewey_id_from_dict(xml_dict)
-        with self.out_file.open(mode='w') as f:
-            res = [['DeweyID', 'attribute', 'value']]
+        with self.out_file[method_id].open(mode='w') as f:
+            f.write(', '.join(['DeweyID', 'attribute', 'value']) + '\n')
             for e in elements:
-                res.append(list(e))
-            pprint(res, stream=f)
-        self.assertTrue(filecmp.cmp(str(self.out_file), str(self.exp_file), shallow=False),
-                        'out file does not match exp file')
+                f.write(', '.join([str(comp) for comp in e]) + '\n')
+        self.file_compare(self.out_file[method_id], self.exp_file[method_id])

@@ -1,8 +1,9 @@
 from config import root_path, set_up_logger
 
 import logging
-from tldb.core.main.operator import Filterer
-from tldb.core.main.operator import initialization
+from tldb.core.operator import Filterer
+from tldb.core.operator import initialization
+from tldb.core.operator import Loader
 
 set_up_logger()
 
@@ -14,7 +15,7 @@ method = 'str'
 n_try = 0
 
 file_name = method + '_' + str(max_n_children) + '_try' + str(n_try) + '.log'
-folder_path = root_path() / 'core' / 'io' / 'out' / 'test' / 'cases' / folder_name
+folder_path = root_path() / 'test' / 'io' / 'out' / 'cases' / folder_name
 log_path = folder_path / file_name
 
 while log_path.exists():

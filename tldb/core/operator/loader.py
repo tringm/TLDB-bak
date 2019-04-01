@@ -1,14 +1,16 @@
 from pathlib import Path
 from config import root_path
-from tldb.core.structure import Entry
-from tldb.core.structure import DeweyID
+from tldb.core.index_structure.rtree import RTree
+from tldb.core.structure.entry import Entry
+from tldb.core.structure.dewey_id import DeweyID
+from tldb.core.structure.node import XMLNode
 
 import numpy as np
 import logging
 import timeit
 
 
-data_path = root_path() / 'core' / 'io' / 'in' / 'test' / 'cases'
+data_path = root_path() / 'test' / 'io' / 'in' / 'cases'
 
 
 def get_index_highest_element(all_elements_name: [str], table_name: str) -> int:
@@ -51,8 +53,8 @@ def load_xml_entries(folder_name: str, element_name: str) -> [Entry]:
     :param element_name
     :return: list of loaded entries
     """
-    id_file_path = data_path() / folder_name / (element_name + '_id.dat')
-    value_file_path = data_path() / folder_name / (element_name + '_v.dat')
+    id_file_path = data_path / folder_name / (element_name + '_id.dat')
+    value_file_path = data_path / folder_name / (element_name + '_v.dat')
     ids = load_text_file(id_file_path)
     values = load_text_file(value_file_path)
     if len(ids) != len(values):
@@ -67,23 +69,25 @@ def load_sql_entries(file_path: Path) -> [Entry]:
     """Summary
     This function load contents of the SQL table file and put them as coordinate in Entry
 
-    :param file_path: name of file containing table (e.g: "A_B_table.dat")
+    :param file_path
     :return: loaded entries
     """
     content = load_text_file(file_path)
     entries = []
     for i in range(len(content)):
-        entries.append(Entry([float(x) for x in content[i].split()]))
+        entries.append(Entry([float(x) for x in content[i].split()]))  # Convert list of string -> list of int
     return entries
 
 
-def load_elements(folder_name: str, all_elements_name: [str]):
+def load_elements(folder_name: str, all_elements_name: [str], max_n_children: int, load_method: str):
     """Summary
-    Load elements table
+    Load elements and return list of root node of each element's R_Tree
 
     :param folder_name:
     :param all_elements_name:list of name of elements in XML query
-    :return: dict with key is name of element and value is list of entries
+    :param max_n_children: maximum number of children in a node
+    :param load_method: name of bulk loading method
+    :return: dict with key is name of element and value is corresponding root node of RTree_XML
     """
     logger = logging.getLogger("Loader")
     all_elements_root = {}
@@ -92,18 +96,25 @@ def load_elements(folder_name: str, all_elements_name: [str]):
 
         start_loading = timeit.default_timer()
 
-        all_elements_root[element_name] = sorted(load_xml_entries(folder_name, element_name), key=lambda e: e.coordinates[1])
+        element_entries = load_xml_entries(folder_name, element_name)
+        rtree_xml = RTree()
+        rtree_xml.load(element_entries, load_method, 1, XMLNode, max_n_children)
+        # rtree_xml.load(element_entries, element_name, max_n_children)
+        all_elements_root[element_name] = rtree_xml.root
 
         end_loading = timeit.default_timer()
         logger.debug('%s %d', 'Loading element took:', end_loading - start_loading)
     return all_elements_root
 
 
-def load_tables(folder_name, all_elements_name):
+def load_tables(folder_name, all_elements_name, max_n_children, load_method):
     """Summary
     Load all tables inside a folder (files that end with _table.dat)
 
     :param folder_name:
+    :param all_elements_name:
+    :param max_n_children:
+    :param load_method
     :return: dict with key is name of table and value is corresponding root node of SQLRTree
     """
     """
@@ -117,12 +128,17 @@ def load_tables(folder_name, all_elements_name):
     """
     logger = logging.getLogger("Loader")
     all_tables_root = {}
-    path = data_path() / folder_name
+    path = data_path / folder_name
     for file_path in path.glob('*_table.dat'):
         table_name = file_path.name[:-10]
         logger.debug('%s %s', 'Loading table:', table_name)
         start_loading = timeit.default_timer()
-        all_tables_root[table_name] = sorted(load_sql_entries(file_path), key=lambda e: e.coordinates[get_index_highest_element(all_elements_name, table_name)])
+        table_entries = load_sql_entries(file_path)
+        # dimension = get_index_highest_element(all_elements_name, table_name)
+        rtree_sql = RTree()
+        rtree_sql.load(entries=table_entries, method=load_method, dimension=1, max_n_children=max_n_children)
+        all_tables_root[table_name] = rtree_sql.root
+
         end_loading = timeit.default_timer()
         logger.debug('%s %d', 'Loading table:', end_loading - start_loading)
     return all_tables_root
@@ -141,7 +157,7 @@ def load_xml_query(folder_name: str) -> ([str], [[int]]):
     :return: element names and relationship matrix
     """
 
-    xml_query_file_path = data_path() / folder_name / "XML_query.dat"
+    xml_query_file_path = data_path / folder_name / "XML_query.dat"
     with xml_query_file_path.open() as f:
         content = f.readlines()
     content = [x.strip() for x in content]
@@ -164,19 +180,22 @@ class Loader:
     It will then load all elements root given that each element will have a element_v.dat for elemnt value and element_id.dat for element Dewey index
     It will load all tables (files that contains "tables" in its name)
     Attributes:
+        max_n_children (int): maximum number of children in a RTree Node
         all_elements_name ([str]): list of element names of the XML query in level order
         all_elements_root ([Node]): list of root nodes of each element in the XML query
         all_tables_root ([Node]): list of root nodes of each table
 
     """
 
-    def __init__(self, folder_name: str):
+    def __init__(self, folder_name: str, max_n_children: int, load_method: str):
         logger = logging.getLogger("Loader")
         logger.info("Loader started")
         start_loading = timeit.default_timer()
+        self.method = load_method
+        self.max_n_children = max_n_children
         self.all_elements_name, self.relationship_matrix = load_xml_query(folder_name)
-        self.all_elements = load_elements(folder_name, self.all_elements_name)
-        self.all_tables = load_tables(folder_name, self.all_elements_name)
+        self.all_elements_root = load_elements(folder_name, self.all_elements_name, self.max_n_children, load_method)
+        self.all_tables_root = load_tables(folder_name, self.all_elements_name, self.max_n_children, load_method)
         end_loading = timeit.default_timer()
         self.total_loading_time = end_loading - start_loading
         logger.info('%s %.3f', "Total loading time:", self.total_loading_time)
