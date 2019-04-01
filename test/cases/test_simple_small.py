@@ -48,4 +48,6 @@ loader = Loader(folder_name, max_n_children, method)
 
 initial_limit_range = initialization(loader)
 filterer = Filterer(loader, initial_limit_range)
+initial_context = Context(self.elements)
+initial_context.boundaries = self.query_given_range
 filterer.perform()

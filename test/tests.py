@@ -1,8 +1,10 @@
 import filecmp
 import os
 import unittest
+from abc import abstractmethod
 
 from config import root_path
+from pathlib import Path
 
 
 class TestResultCompareFileMeld(unittest.TextTestResult):
@@ -26,16 +28,26 @@ class TestResultCompareFileMeld(unittest.TextTestResult):
 
 
 class TestCaseCompare(unittest.TestCase):
-    def file_compare(self, f1, f2, msg=None):
-        if not f1.exists() or not f2.exists():
-            raise ValueError("Either %s or %s does not exist" % (str(f1), str(f2)))
-        if not f1.is_file() or not f2.is_file():
-            raise ValueError("Either %s or %s is not a file" % (str(f1), str(f2)))
+    @classmethod
+    def setUpClass(cls):
+        cls.output_folder = root_path() / 'test' / 'io' / 'out'
+        cls.out_file = {}
+        cls.exp_file = {}
+
+    def file_compare(self, out_f: Path, exp_f: Path, msg=None):
+        if not out_f.exists() or not exp_f.exists():
+            raise ValueError("Either %s or %s does not exist" % (str(out_f), str(exp_f)))
+        if not out_f.is_file() or not exp_f.is_file():
+            raise ValueError("Either %s or %s is not a file" % (str(out_f), str(exp_f)))
         if not msg:
-            self.assertTrue(filecmp.cmp(str(f1), str(f2), shallow=False),
-                            f"out file {str(f1)} does not match exp file {str(f2)}")
+            self.assertTrue(filecmp.cmp(str(out_f), str(exp_f), shallow=False),
+                            f"out file {str(out_f)} does not match exp file {str(exp_f)}")
         else:
-            self.assertTrue(filecmp.cmp(str(f1), str(f2), shallow=False), msg)
+            self.assertTrue(filecmp.cmp(str(out_f), str(exp_f), shallow=False), msg)
+
+    def prepare_compare_files(self, methods_id):
+        self.out_file[methods_id] = self.output_folder / (methods_id + '_out.txt')
+        self.exp_file[methods_id] = self.output_folder / (methods_id + '_exp.txt')
 
 
 def get_suites():

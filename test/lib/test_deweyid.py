@@ -1,20 +1,20 @@
-import filecmp
 import json
-import unittest
 from collections import OrderedDict
 
 import xmltodict
 
 from config import root_path
-from tldb.core.lib.dewey_id import generate_dewey_id_from_dict
 from test.tests import TestCaseCompare
+from tldb.core.lib.dewey_id import generate_dewey_id_from_dict
 
 
 class TestGenerateDewey(TestCaseCompare):
-    def setUp(self):
-        self.in_file = {}
-        self.out_file = {}
-        self.exp_file = {}
+    @classmethod
+    def setUpClass(cls):
+        super(TestGenerateDewey, cls).setUpClass()
+        cls.input_folder = root_path() / 'test' / 'io' / 'in' / 'lib'
+        cls.in_file = {}
+        cls.output_folder = cls.output_folder / 'lib' / 'dewey_id'
 
     def test_generate_dewey_id_from_json(self):
         """
@@ -22,9 +22,9 @@ class TestGenerateDewey(TestCaseCompare):
         :return:
         """
         method_id = self.id().split('.')[-1]
-        self.in_file[method_id] = root_path() / 'test' / 'io' / 'in' / 'lib' / 'messages.json'
-        self.out_file[method_id] = root_path() / 'test' / 'io' / 'out' / 'lib' / 'dewey_id_from_json_out.txt'
-        self.exp_file[method_id] = root_path() / 'test' / 'io' / 'out' / 'lib' / 'dewey_id_from_json_exp.txt'
+        self.prepare_compare_files(method_id)
+        self.in_file[method_id] = self.input_folder / 'messages.json'
+
         with self.in_file[method_id].open() as f:
             json_dict = json.load(f, object_pairs_hook=OrderedDict)
         elements = generate_dewey_id_from_dict(json_dict)
@@ -36,9 +36,9 @@ class TestGenerateDewey(TestCaseCompare):
 
     def test_generate_dewey_id_from_xml(self):
         method_id = self.id().split('.')[-1]
-        self.in_file[method_id] = root_path() / 'test' / 'io' / 'in' / 'lib' / 'messages.xml'
-        self.out_file[method_id] = root_path() / 'test' / 'io' / 'out' / 'lib' / 'dewey_id_from_xml_out.txt'
-        self.exp_file[method_id] = root_path() / 'test' / 'io' / 'out' / 'lib' / 'dewey_id_from_xml_exp.txt'
+        self.prepare_compare_files(method_id)
+        self.in_file[method_id] = self.input_folder / 'messages.xml'
+
         with self.in_file[method_id].open() as f:
             xml_dict = xmltodict.parse(f.read())
         elements = generate_dewey_id_from_dict(xml_dict)

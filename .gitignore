@@ -9,3 +9,6 @@ __pycache__/
 
 #log files
 *.log
+
+#cases data
+test/io/in/cases/

@@ -8,6 +8,8 @@ from tldb.core.lib.boundary import value_boundaries_union, value_boundary_inters
 from tldb.core.structure import Context
 from tldb.core.structure import XMLNode
 from tldb.core.lib.nodes import nodes_range_search
+from tldb.core.tldb import TLDB
+from .operator import Operator
 
 
 # TODO: Init context of children based on join_boundary
@@ -17,16 +19,17 @@ from tldb.core.lib.nodes import nodes_range_search
 # TODO: Better Node range search (not intersection but actually inside)
 # TODO: Check performance of filtering link_sql based on join_b
 
-class Filterer:
-    def __init__(self, loader, query_given_range):
+class Filterer(Operator):
+    def __init__(self, tldb: TLDB, context: Context):
+        super().__init__('filterer', tldb, context)
         self.total_time = -1
-        self.loader = loader
-        self.query_given_range = query_given_range
-        self.elements = loader.all_elements_name
-        self.roots = loader.all_elements_root
-        self.logger = logging.getLogger('Filterer')
+        self.logger = logging.getLogger('Operator: ' + self.name)
 
-        self.status = {'n_processed': 0, 'n_filtered': 0}
+        # self.loader = loader
+        # self.query_given_range = query_given_range
+        # self.elements = loader.all_elements_name
+        # self.roots = loader.all_elements_root
+        # self.status = {'n_processed': 0, 'n_filtered': 0}
 
     def mark_node_as_filtered(self, node: XMLNode, filter_type: str, reason: str, _l=logging.getLogger('Filter')):
         possible_filter_types = ['init_link']
