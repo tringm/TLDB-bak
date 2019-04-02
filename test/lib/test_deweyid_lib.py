@@ -12,8 +12,7 @@ class TestGenerateDewey(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
         super(TestGenerateDewey, cls).setUpClass()
-        cls.input_folder = root_path() / 'test' / 'io' / 'in' / 'lib'
-        cls.in_file = {}
+        cls.input_folder = cls.input_folder / 'lib'
         cls.output_folder = cls.output_folder / 'lib' / 'dewey_id'
 
     def test_generate_dewey_id_from_json(self):

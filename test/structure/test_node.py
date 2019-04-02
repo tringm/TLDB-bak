@@ -1,20 +1,21 @@
 import unittest
 
-from config import root_path
-from tldb.core.tldb import TLDB
+from test.tests import TestCaseCompare
+from tldb.core.client import TLDB
 
 
-class TestRangeSearch(unittest.TestCase):
+class TestNodeRangeSearch(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super(TestRangeSearch, cls).setUpClass()
+        super(TestNodeRangeSearch, cls).setUpClass()
         cls.tldb = TLDB('local')
-        cls.input_folder = root_path() / 'test' / 'io' / 'in' / 'cases' / 'simple_small'
+        cls.input_folder = cls.input_folder / 'cases' / 'simple_small'
         cls.tldb.load_object_from_csv('table',
                                       cls.input_folder / 'A_B_D_table.dat',
                                       delimiter=' ',
                                       headers=['A', 'B', 'D'])
-        cls.table = cls.tldb.objects['table']
+
+        cls.table = cls.tldb.get_object('table')
 
     def test_out_of_range_below(self):
         r = [[6.0, 118.0], [15, 16], [13.0, 72.0]]

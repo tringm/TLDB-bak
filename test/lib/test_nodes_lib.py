@@ -1,20 +1,19 @@
-import unittest
-from config import root_path
-from tldb.core.tldb import TLDB
+from test.tests import TestCaseCompare
+from tldb.core.client import TLDB
 from tldb.core.lib.nodes import nodes_range_search
 
 
-class TestMultiNodesRangeSearch(unittest.TestCase):
+class TestMultiNodesRangeSearch(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
         super(TestMultiNodesRangeSearch, cls).setUpClass()
         cls.tldb = TLDB('local')
-        cls.input_folder = root_path() / 'test' / 'io' / 'in' / 'cases' / 'simple_small'
+        cls.input_folder = cls.input_folder / 'cases' / 'simple_small'
         cls.tldb.load_object_from_csv('table',
                                       cls.input_folder / 'A_B_D_table.dat',
                                       delimiter=' ',
                                       headers=['A', 'B', 'D'])
-        cls.table = cls.tldb.objects['table']
+        cls.table = cls.tldb.get_object('table')
 
     def test_gap(self):
         root_children = self.table.index_structure.root.children

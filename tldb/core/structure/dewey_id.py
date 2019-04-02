@@ -1,7 +1,7 @@
 class DeweyID:
     def __init__(self, string_id=''):
         self._id = string_id
-        self._components = [int(component) for component in self._id.split('.')]
+        self._divisions = [int(div) for div in self._id.split('.')]
 
     @property
     def id(self):
@@ -10,28 +10,28 @@ class DeweyID:
     @id.setter
     def id(self, value):
         self._id = value
-        self._components = [int(component) for component in value.split('.')]
+        self._divisions = [int(div) for div in value.split('.')]
 
     @property
-    def components(self):
-        return self._components
+    def divisions(self):
+        return self._divisions
 
     def __lt__(self, other):
-        min_length = min(len(self.components), len(other.components))
+        min_length = min(len(self.divisions), len(other.divisions))
         for i in range(min_length):
-            if self.components[i] < other.components[i]:
+            if self.divisions[i] < other.divisions[i]:
                 return True
-            if self.components[i] > other.components[i]:
+            if self.divisions[i] > other.divisions[i]:
                 return False
-        if len(self.components) < len(other.components):
+        if len(self.divisions) < len(other.divisions):
             return True
         return False
 
     def __eq__(self, other):
-        if len(self.components) != len(other.components):
+        if len(self.divisions) != len(other.divisions):
             return False
-        for i in range(len(self.components)):
-            if self.components[i] != other.components[i]:
+        for i in range(len(self.divisions)):
+            if self.divisions[i] != other.divisions[i]:
                 return False
         return True
 
@@ -60,11 +60,11 @@ class DeweyID:
         :return: True if id1 is an ancestor of id2
         """
         # id2 is shorter -> can't be descendant
-        if len(self.components) >= len(another_id.components):
+        if len(self.divisions) >= len(another_id.divisions):
             return False
         # Compare element wise
-        for i in range(len(self.components)):
-            if self.components[i] != another_id.components[i]:
+        for i in range(len(self.divisions)):
+            if self.divisions[i] != another_id.divisions[i]:
                 return False
         return True
 
@@ -74,11 +74,11 @@ class DeweyID:
         :param another_id:
         :return: True if id1 is the parent of id2
         """
-        if len(another_id.components) != (len(self.components) + 1):
+        if len(another_id.divisions) != (len(self.divisions) + 1):
             return False
         # Compare element wise
-        for i in range(len(self.components)):
-            if self.components[i] != another_id.components[i]:
+        for i in range(len(self.divisions)):
+            if self.divisions[i] != another_id.divisions[i]:
                 return False
         return True
 

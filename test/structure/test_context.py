@@ -7,9 +7,9 @@ class TestRangeContext(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
         super(TestRangeContext, cls).setUpClass()
-        cls.output_folder = cls.output_folder / 'structure' / 'context'
         cls.out_file = {}
         cls.exp_file = {}
+        cls.output_folder = cls.output_folder / 'structure' / 'context' / 'range_context'
 
     def test_str(self):
         method_id = self.id().split('.')[-1]

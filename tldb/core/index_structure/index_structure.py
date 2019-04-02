@@ -21,3 +21,7 @@ class IndexStructure(ABC):
         :type entries: list(Entry)
         """
         pass
+
+    @abstractmethod
+    def range_search(self, boundaries):
+        pass

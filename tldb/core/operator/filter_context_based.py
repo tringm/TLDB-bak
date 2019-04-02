@@ -8,8 +8,8 @@ from tldb.core.lib.boundary import value_boundaries_union, value_boundary_inters
 from tldb.core.structure import Context
 from tldb.core.structure import XMLNode
 from tldb.core.lib.nodes import nodes_range_search
-from tldb.core.tldb import TLDB
-from .operator import Operator
+from tldb.core.client import TLDB
+from .op import Operator
 
 
 # TODO: Init context of children based on join_boundary

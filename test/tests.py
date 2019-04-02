@@ -30,9 +30,11 @@ class TestResultCompareFileMeld(unittest.TextTestResult):
 class TestCaseCompare(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.input_folder = root_path() / 'test' / 'io' / 'in'
         cls.output_folder = root_path() / 'test' / 'io' / 'out'
         cls.out_file = {}
         cls.exp_file = {}
+        cls.in_file = {}
 
     def file_compare(self, out_f: Path, exp_f: Path, msg=None):
         if not out_f.exists() or not exp_f.exists():

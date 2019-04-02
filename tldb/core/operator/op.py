@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from tldb.core.tldb import TLDB
+from tldb.core.client import TLDB
 from tldb.core.structure.context import Context
 
 

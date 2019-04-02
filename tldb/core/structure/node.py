@@ -286,7 +286,7 @@ class XMLNode(Node):
         in_range_nodes = []
 
         while checking_nodes:
-            if checking_nodes[0].isLeaf:
+            if checking_nodes[0].is_leaf:
                 break
 
             checking_nodes = [child for node in checking_nodes for child in node.children]

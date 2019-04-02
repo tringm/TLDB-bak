@@ -55,14 +55,11 @@ def get_boundaries_from_entries(entries: [entry]) -> [[int]]:
     :param entries: list of input entries
     :return: list of size Entry.dimension contains boundaries of each dimension
     """
-    boundary = []
-
     # init boundaries
     first_entry_coordinates = entries[0].coordinates.copy()
     n_dimensions = entries[0].n_dimensions
 
-    for dimension in range(n_dimensions):
-        boundary.append([first_entry_coordinates[dimension], first_entry_coordinates[dimension]])
+    boundary = [[first_entry_coordinates[d], first_entry_coordinates[d]] for d in range(n_dimensions)]
 
     for entries_index in range(1, len(entries)):
         entry_coordinates = entries[entries_index].coordinates
