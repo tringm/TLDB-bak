@@ -1,3 +1,26 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:81ac5b84d4d995c808400d5090cde240e00c6aa195257056f2f53cd3f7a8690a
-size 1313
+JOIN RDB NAIVE RESULTS:  1157
+JOIN RDB NAIVE TIME  66.67385857699992
+
+Final matches
+{'asin': [1.2042.25.2, 60662.0], 'price': [1.2042.25.4, 119639.0], 'join_rslt_idx': 75, 'Orderline': [1.2042.25, 8550.0]}
+{'asin': [1.1601.10.2, 76469.0], 'price': [1.1601.10.4, 38736.0], 'join_rslt_idx': 988, 'Orderline': [1.1601.10, 43749.0]}
+{'asin': [1.1745.20.2, 40727.0], 'price': [1.1745.20.4, 61171.0], 'join_rslt_idx': 999, 'Orderline': [1.1745.20, 44106.0]}
+{'asin': [1.1851.15.2, 31739.0], 'price': [1.1851.15.4, 176505.0], 'join_rslt_idx': 1026, 'Orderline': [1.1851.15, 45088.0]}
+JOIN XML TIME:  1.605031292001513
+TOTAL TIME NAIVE:  68.27892519600209
+###
+###
+###
+BUILD TABLES TOOK 0.02178558599916869
+JOIN RDB PANDAS RESULTS:  1157
+JOIN RDB PANDAS TIME  0.0077343539996945765
+
+Build table took:  0.06548919399938313
+CHECK RLS TOOK:  0.0023400110003422014
+FINAL RESULT:
+<bound method DataFrame.to_string of    Orderline     asin     price   asin_index Orderline_index  price_index
+0     8550.0  60662.0  119639.0  1.2042.25.2       1.2042.25  1.2042.25.4
+2    43749.0  76469.0   38736.0  1.1601.10.2       1.1601.10  1.1601.10.4
+3    44106.0  40727.0   61171.0  1.1745.20.2       1.1745.20  1.1745.20.4
+4    45088.0  31739.0  176505.0  1.1851.15.2       1.1851.15  1.1851.15.4>
+TOTAL TIME PANDAS:  0.10350522400040063
