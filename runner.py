@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from tldb.core.operator import loader
+from tldb.core.operator.bak import loader
 from tldb.core.operator import Joiner
 
 folder_name = "simple_small"

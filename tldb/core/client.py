@@ -11,6 +11,12 @@ from typing import List
 
 
 class TLDB:
+    # TODO: Change boundary to tuple
+    # TODO: Change list to set if possible (desc_range_search, ancestor link, link_xml, link_sql)
+    # TODO: Fix node.add_child_node (in case > max n_child) => insert
+    # TODO: node contains set of entry => does not allow duplicate entry
+    # TODO: should node be hashable as well? (hash = tuple(name, boundary))
+
     """
     The TLDB client
     """
@@ -71,7 +77,7 @@ class TLDB:
 
         def row_to_entry(row):
             # TODO: handle text?
-            cells = list(map(lambda x: float(x), row.split(delimiter)))
+            cells = tuple(map(lambda x: float(x), row.split(delimiter)))
             return Entry(cells)
 
         for par in (obj_name, file_path):
@@ -79,7 +85,7 @@ class TLDB:
                 raise Exception("Empty value passed for a required argument.")
         if index_type not in INDEX_STRUCTURE_MAPPER:
             raise Exception("Unsupported index_type. The index structure should be: ",
-                             '|'.join(list(INDEX_STRUCTURE_MAPPER.keys())))
+                            '|'.join(list(INDEX_STRUCTURE_MAPPER.keys())))
         with file_path.open() as f:
             contents = [line.rstrip() for line in f]
 
@@ -134,7 +140,7 @@ class TLDB:
                 attr_v = [line.rstrip() for line in f]
             # TODO: Text and null?
             attr_v = [float(v) for v in attr_v]
-            entries = [Entry([DeweyID(id_v[0]), id_v[1]]) for id_v in zip(attr_id, attr_v)]
+            entries = [Entry((DeweyID(id_v[0]), id_v[1])) for id_v in zip(attr_id, attr_v)]
             index_structure = INDEX_STRUCTURE_MAPPER[index_type](attr)
             index_structure.load(entries, node_type=XMLNode)
             xml_object.add_attribute(TLDBAttribute(attr, xml_object, index_structure))

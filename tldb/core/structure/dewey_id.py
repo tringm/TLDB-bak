@@ -1,7 +1,8 @@
 class DeweyID:
     def __init__(self, string_id=''):
         self._id = string_id
-        self._divisions = [int(div) for div in self._id.split('.')]
+        self._divisions = tuple([int(div) for div in self._id.split('.')])
+        self._n_division = len(self._divisions)
 
     @property
     def id(self):
@@ -10,14 +11,19 @@ class DeweyID:
     @id.setter
     def id(self, value):
         self._id = value
-        self._divisions = [int(div) for div in value.split('.')]
+        self._divisions = tuple([int(div) for div in value.split('.')])
+        self._n_division = len(self._divisions)
 
     @property
     def divisions(self):
         return self._divisions
 
+    @property
+    def n_division(self):
+        return self._n_division
+
     def __lt__(self, other):
-        min_length = min(len(self.divisions), len(other.divisions))
+        min_length = min(self.n_division, other.n_division)
         for i in range(min_length):
             if self.divisions[i] < other.divisions[i]:
                 return True
@@ -30,10 +36,7 @@ class DeweyID:
     def __eq__(self, other):
         if len(self.divisions) != len(other.divisions):
             return False
-        for i in range(len(self.divisions)):
-            if self.divisions[i] != other.divisions[i]:
-                return False
-        return True
+        return self.divisions == other.divisions
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -53,6 +56,9 @@ class DeweyID:
     def __repr__(self):
         return self._id
 
+    def __hash__(self):
+        return hash(self.divisions)
+
     def is_ancestor(self, another_id) -> bool:
         """
         This function checks if this Dewey ID is an ancestor of another Dewey ID
@@ -60,7 +66,7 @@ class DeweyID:
         :return: True if id1 is an ancestor of id2
         """
         # id2 is shorter -> can't be descendant
-        if len(self.divisions) >= len(another_id.divisions):
+        if self.n_division >= another_id.n_division:
             return False
         # Compare element wise
         for i in range(len(self.divisions)):
@@ -74,7 +80,7 @@ class DeweyID:
         :param another_id:
         :return: True if id1 is the parent of id2
         """
-        if len(another_id.divisions) != (len(self.divisions) + 1):
+        if (self.n_division + 1) != another_id.n_division:
             return False
         # Compare element wise
         for i in range(len(self.divisions)):

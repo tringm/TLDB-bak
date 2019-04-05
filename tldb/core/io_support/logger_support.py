@@ -1,5 +1,5 @@
 # Helper library for logging
-from tldb.core.operator.loader import Loader
+from tldb.core.operator.bak.loader import Loader
 from tldb.core.structure.node import XMLNode
 
 
@@ -69,6 +69,7 @@ def log_node_link_sql(node: XMLNode, logger_function, n_prefix_tab=0):
 def log_node_all_link(node: XMLNode, logger_function, n_prefix_tab=0):
     if not isinstance(node, XMLNode):
         raise ValueError('Cannot log link xml and sql of  ' + str(node) + ' if is not XMLNode')
+    logger_function(f"{node} links:")
     log_node_link_xml(node, logger_function, n_prefix_tab)
     log_node_link_sql(node, logger_function, n_prefix_tab)
 

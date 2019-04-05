@@ -17,11 +17,11 @@ def get_center_index(id1: DeweyID, id2: DeweyID) -> str:
     if id1 > id2:
         id1, id2 = id2, id1
 
-    min_length = min(len(id1.components), len(id2.components))
+    min_length = min(len(id1.divisions), len(id2.divisions))
     mean_index = []
     remember = False
     for i in range(min_length):
-        mean_diff = (id2.components[i] - id1.components[i])/2
+        mean_diff = (id2.divisions[i] - id1.divisions[i])/2
         if mean_diff < 0 and not remember:
             mean_index[len(mean_index) - 1] -= 1
         if remember:
@@ -29,7 +29,7 @@ def get_center_index(id1: DeweyID, id2: DeweyID) -> str:
         if (mean_diff * 2) % 2 != 0:
             mean_diff = floor(mean_diff)
             remember = True
-        mean_index.append(int(id1.components[i] + mean_diff))
+        mean_index.append(int(id1.divisions[i] + mean_diff))
     if remember:
         mean_index.append(5)
     return '.'.join(str(num) for num in mean_index)

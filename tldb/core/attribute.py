@@ -11,3 +11,8 @@ class TLDBAttribute:
         rep_string = 'TLDBAttribute' + ':' + self.tldb_object.name + '.' + self.name + '\n'
         rep_string += 'INDEX STRUCTURE: \n' + str(self.index_structure)
         return rep_string
+
+    def ordered_str(self):
+        rep_string = 'TLDBAttribute' + ':' + self.tldb_object.name + '.' + self.name + '\n'
+        rep_string += f"INDEX STRUCTURE: \n{self.index_structure.ordered_str() if self.index_structure else None}"
+        return rep_string

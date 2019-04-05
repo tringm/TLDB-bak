@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import List
+from tldb.core.structure.entry import Entry
+import logging
 
 
 class IndexStructure(ABC):
@@ -15,12 +18,9 @@ class IndexStructure(ABC):
         return self._object_name
 
     @abstractmethod
-    def load(self, entries):
-        """
-
-        :type entries: list(Entry)
-        """
-        pass
+    def load(self, entries: List[Entry]):
+        logger = logging.getLogger(f"Indexer:{self.name}")
+        logger.debug(f"Start loading {self.object_name} with method {method}")
 
     @abstractmethod
     def range_search(self, boundaries):

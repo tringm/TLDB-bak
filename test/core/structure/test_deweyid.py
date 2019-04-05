@@ -6,9 +6,8 @@ class TestDeweyID(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
         super(TestDeweyID, cls).setUpClass()
-        cls.in_file = {}
-        cls.input_folder = cls.input_folder / 'cases' / 'simple_smalle'
-        cls.output_folder = cls.output_folder / 'structure' / 'dewey_id'
+        cls.input_folder = cls.input_folder / 'cases' / 'simple_small'
+        cls.output_folder = cls.output_folder / 'core' / 'structure' / 'dewey_id'
 
     def test_equal(self):
         self.assertEqual(DeweyID('1.1.1'), DeweyID('1.1.1'))

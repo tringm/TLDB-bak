@@ -1,4 +1,7 @@
-from typing import List
+from typing import List, Union, Tuple
+
+from tldb.core.lib.interval import intersect_two_intervals
+from tldb.core.structure.interval import Interval
 
 
 class Context:
@@ -8,76 +11,78 @@ class Context:
 
 class RangeContext(Context):
     """
-    TODO Text range(?) Range should be its own class
+    TODO Text range(?)
     """
-    def __init__(self, attributes: List[str], boundaries: List[List[float]], nodes=None):
+    def __init__(self,
+                 attributes: Union[List[str], Tuple[str, ...]],
+                 intervals: Union[List[Interval], Tuple[Interval, ...]],
+                 nodes=None):
         """
         RangeContext contains
-        :param attributes: name of the attributes to be search
-        :param boundaries: range boundary as require
+        :param attributes: name of the attributes
+        :param intervals: Tuple of intervals
         :param nodes: Checking node
         """
-        context_len = len(attributes)
-        if context_len != len(boundaries):
-            raise ValueError("Attributes length %d is different from boundaries length %d" %
-                             (context_len, len(boundaries)))
+        if not (isinstance(intervals, List) or isinstance(intervals, Tuple)):
+            raise ValueError(f"intervals must be of type list or tuple")
+        if isinstance(intervals, List):
+            intervals = tuple(intervals)
+        if not (isinstance(attributes, List) or isinstance(attributes, Tuple)):
+            raise ValueError(f"attributes must be of type list or tuple")
+        if isinstance(attributes, List):
+            attributes = tuple(attributes)
+        if len(attributes) != len(intervals):
+            raise ValueError(f"Attributes size({len(attributes)}) != boundaries size({len(intervals)})")
         super().__init__(attributes)
-        self.boundaries = dict(zip(self.attributes, boundaries))
-
+        self.n_dimension = len(attributes)
+        self.intervals = intervals
         if not nodes:
-            self.nodes = dict(zip(self.attributes, [None] * context_len))
+            self.nodes = [None] * self.n_dimension
         else:
-            self.nodes = dict(zip(self.attributes, nodes))
+            self.nodes = nodes
 
     def __str__(self):
         rep_string = ''
-        for attr in self.attributes:
-            rep_string += 'Attribute: ' + attr + ':\n'
-            rep_string += '\tBoundaries: ' + str(self.boundaries[attr]) + '\n'
-            rep_string += '\tNodes: ' + str(self.nodes[attr]) + '\n'
+        rep_string += f"Attribute: {self.attributes}\n"
+        rep_string += 'Intervals: ' + str(self.intervals) + '\n'
+        rep_string += 'Nodes: ' + str(self.nodes) + '\n'
         return rep_string
 
     def __repr__(self):
-        rep = dict.fromkeys(self.attributes)
-        for attr in rep:
-            rep[attr] = 'Boundaries:' + str(self.boundaries[attr][0]) + '...' + \
-                        ' Nodes:' + str(self.nodes[attr][0]) + '...'
-        return str(rep)
+        rep = f"a: {self.attributes} i: {self.intervals[:2]}... n:  {self.nodes[:2]}..."
+        return rep
 
     def __copy__(self):
-        copy_attributes = self.attributes[:]
-        copy_boundaries = [self.boundaries[attr][:] for attr in copy_attributes]
-        if not self.nodes:
-            copy_nodes = [self.nodes[attr][:] for attr in copy_attributes]
-        else:
-            copy_nodes = self.nodes
-        return RangeContext(copy_attributes, copy_boundaries, copy_nodes)
+        return RangeContext(self.attributes, self.intervals, self.nodes)
 
     def __eq__(self, other):
-        if len(self.attributes) != len(other.attributes):
-            return False
-        for idx, attr in enumerate(self.attributes):
-            if attr != other.attributes[idx]:
-                return False
-            if self.boundaries[attr] != other.boundaries[attr]:
-                return False
-            if self.nodes[attr] != other.nodes[attr]:
-                return False
-        return True
+        return self.attributes == other.attributes and self.intervals == other.intervals
 
-    def check_intersection_and_update_boundary(self, attr: str, boundary):
+    def __hash__(self):
+        return hash((self.attributes, self.intervals))
+
+    def check_intersection_and_update_boundaries(self, other_context):
         """
-        Check if context boundary at element attr intersect with boundary
+        Check attr wise if this context interval intersect with other context
             - Not intersect -> Return False
             - Intersect -> Update boundary and return True
-        :param attr: An attribute name
-        :param boundary:
-        :return:
+        :param other_context: RangeContext
+        :return: False if one or all of attr does not intersect, True and update this context boundary otherwise
         """
-        self_b = self.boundaries[attr]
-        if self_b is None or boundary is None:
-            raise ValueError('either context boundary %s or given boundary %s is None' % (str(self_b), str(boundary)))
-        if (self_b[1] < boundary[0]) or (self_b[0] > boundary[1]):
-            return False
-        self.boundaries[attr] = [max(self_b[0], boundary[0]), min(self_b[1], boundary[1])]
+        self_intv = self.intervals
+        self_attr = self.attributes
+        self_attr_to_idx = {self_attr[idx]: idx for idx in range(len(self_attr))}
+        other_intv = other_context.intervals
+        other_attr = other_context.attributes
+        other_attr_to_idx = {other_attr[idx]: idx for idx in range(len(other_attr))}
+
+        common_att = list(set(self_attr_to_idx.keys()).intersection(other_attr_to_idx.keys()))
+
+        for idx, attr in enumerate(common_att):
+            res = intersect_two_intervals(self_intv[self_attr_to_idx[attr]], other_intv[other_attr_to_idx[attr]])
+            if not res:
+                return False
+            common_att[idx] = (attr, res)
+        for attr, res in common_att:
+            self_intv[self_attr_to_idx[attr]].update(res.interval)
         return True

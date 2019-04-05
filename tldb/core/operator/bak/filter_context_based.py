@@ -9,7 +9,8 @@ from tldb.core.structure import Context
 from tldb.core.structure import XMLNode
 from tldb.core.lib.nodes import nodes_range_search
 from tldb.core.client import TLDB
-from .op import Operator
+from tldb.core.structure.context import RangeContext
+from tldb.core.operator.op import Operator
 
 
 # TODO: Init context of children based on join_boundary
@@ -18,6 +19,7 @@ from .op import Operator
 # TODO: Implement Sort for join boudnary and check for intersection instead of linear n^2 search
 # TODO: Better Node range search (not intersection but actually inside)
 # TODO: Check performance of filtering link_sql based on join_b
+
 
 class Filterer(Operator):
     def __init__(self, tldb: TLDB, context: Context):
@@ -49,6 +51,8 @@ class Filterer(Operator):
     def perform(self):
         _l = self.logger
         start_filtering = timeit.default_timer()
+
+        initial_context = RangeContext()
 
         initial_context = Context(self.elements)
         initial_context.boundaries = self.query_given_range
@@ -318,7 +322,7 @@ class Filterer(Operator):
         _l.verbose('\t'+ 'Contexts: ' + str(contexts))
 
         if flt_node.filtered:
-            _l.debug('\t'+ 'Node already filtered')
+            _l.debug('\t' + 'Node already filtered')
             _l.timer('%s %.3f', '\t'+ 'Filter with context took: ', timeit.default_timer() - start_flt_w_c)
             _l.debug('\n')
             return False, None
@@ -391,7 +395,7 @@ class Filterer(Operator):
                      ' contexts based on ' + str(len(flt_node.link_xml[c_e])) + ' '+ c_e + ' nodes took: ',
                      timeit.default_timer() - start_flt_w_c)
             if not updated_contexts:
-                _l.debug('\t'+ 'Cannot find any node of ' + c_e + ' that satisfy contexts')
+                _l.debug('\t'+ '')
                 _l.timer('%s %.3f', '\t'+ 'Filter with context took: ',
                          timeit.default_timer() - start_flt_w_c)
                 _l.debug('\n')

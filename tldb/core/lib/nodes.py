@@ -1,4 +1,8 @@
 import copy
+from typing import Set
+
+from tldb.core.lib.interval import union_two_intervals
+from tldb.core.structure.boundary import Boundary
 
 """
 This module contains helper function for list of Entry [Entry]
@@ -15,10 +19,10 @@ def quick_sort_nodes(nodes, dimension: int):
     :return: sorted entries
     """
 
-    def partition(low: int, high: int) -> int:
-        pivot = nodes[low]
-        i = low + 1
-        j = high
+    def partition(l: int, h: int) -> int:
+        pivot = nodes[l]
+        i = l + 1
+        j = h
         while 1:
             while i <= j and nodes[i].get_center_coord()[dimension] <= pivot.get_center_coord()[dimension]:
                 i += 1
@@ -28,7 +32,7 @@ def quick_sort_nodes(nodes, dimension: int):
                 break
             nodes[i], nodes[j] = nodes[j], nodes[i]
 
-        nodes[low], nodes[j] = nodes[j], nodes[low]
+        nodes[l], nodes[j] = nodes[j], nodes[l]
         return j
 
     temp_stack = []
@@ -47,7 +51,7 @@ def quick_sort_nodes(nodes, dimension: int):
     return nodes
 
 
-def get_boundaries_from_nodes(nodes) -> [[int]]:
+def nodes_to_boundary(nodes: Set) -> Boundary:
     """Summary
     Find the MBR of list of Nodes
 
@@ -56,17 +60,16 @@ def get_boundaries_from_nodes(nodes) -> [[int]]:
     """
     # init boundaries
     if not nodes:
-        return None
+        raise ValueError("nodes is empty")
+    first_node = nodes.pop()
+    nodes.add(first_node)
+    boundary: Boundary = copy.copy(first_node.boundary)
+    n_dimension = boundary.n_dimension
 
-    n_dimensions = len(nodes[0].boundary)
-    boundary = copy.deepcopy(nodes[0].boundary)
-
-    for idx in range(1, len(nodes)):
-        node_boundary = nodes[idx].boundary
-        for dimension in range(n_dimensions):
-            boundary[dimension][0] = min(boundary[dimension][0], node_boundary[dimension][0])
-            boundary[dimension][1] = max(boundary[dimension][1], node_boundary[dimension][1])
-
+    for node in nodes:
+        node_intervals = node.boundary.intervals
+        intervals = boundary.intervals
+        boundary.intervals = [union_two_intervals(intervals[d], node_intervals[d]) for d in range(n_dimension)]
     return boundary
 
 
@@ -76,4 +79,4 @@ def nodes_range_search(nodes, boundary):
         nodes_in_range = node.range_search(boundary)
         if nodes_in_range is not None:
             results = results.union(set(nodes_in_range))
-    return list(results)
+    return results

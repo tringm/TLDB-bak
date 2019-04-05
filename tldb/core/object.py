@@ -21,6 +21,15 @@ class TLDBObject:
             rep_string += '\n'
         return rep_string
 
+    def ordered_str(self):
+        rep_string = 'TLDBObject' + ':' + self.type + ':' + self.name + '\n'
+        rep_string += f"INDEX STRUCTURE: \n{self.index_structure.ordered_str() if self.index_structure else None}\n"
+        rep_string += 'ATTRIBUTES\n'
+        for attr in self.all_attributes_name:
+            rep_string += self.get_attribute(attr).ordered_str()
+            rep_string += '\n'
+        return rep_string
+
     def __repr__(self):
         return 'TLDBObject' + ':' + self.type + ':' + self.name
 
@@ -54,7 +63,7 @@ class TLDBObject:
         self._all_attributes[attribute.name] = attribute
         self._all_attributes_names.append(attribute.name)
 
-    def get_attribute(self, attr_name):
+    def get_attribute(self, attr_name: str) -> TLDBAttribute:
         return self._all_attributes[attr_name]
 
 

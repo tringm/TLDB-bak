@@ -5,10 +5,9 @@ from tldb.core.structure.context import Context
 
 
 class Operator(ABC):
-    def __init__(self, name: str, tldb: TLDB, context: Context):
+    def __init__(self, name: str, tldb: TLDB):
         self.name = name
         self.tldb = tldb
-        self.context = context
 
     @abstractmethod
     def perform(self):
