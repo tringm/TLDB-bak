@@ -176,7 +176,7 @@ class Node:
         if not self.n_dimension == boundary.n_dimension:
             raise ValueError('Boundary mismatch')
 
-        if self.boundary.compare(boundary) == 0:
+        if self.boundary.check_intersect(boundary) == 0:
             return set()
 
         checking_nodes = {self}
@@ -194,7 +194,7 @@ class Node:
             intersect_nodes = set()
 
             for node in checking_nodes:
-                compare_res = node.boundary.compare(boundary)
+                compare_res = node.boundary.check_intersect(boundary)
                 if compare_res == 1:
                     intersect_nodes.add(node)
                 if compare_res == 2:
@@ -288,27 +288,25 @@ class XMLNode(Node):
         :param v_interval:
         :return:
         """
-        self_idx_interval = self.idx_interval.interval
-
+        self_idx_interval = self.idx_interval
         if not idx_interval and not v_interval:
-            return 2
+            raise ValueError("Either idx_interval or v_interval must be not empty")
+        idx_res = 2
         if idx_interval:
-            compare_idx_interval = idx_interval.interval
-            if self_idx_interval[1] <= compare_idx_interval[0]:
+            idx_res = self_idx_interval.check_is_descendant(idx_interval)
+            if idx_res == 0:
                 return 0
-            if self_idx_interval[0] > compare_idx_interval[1]:
-                if not compare_idx_interval[1].is_ancestor(self_idx_interval[0]):
-                    return 0
+        v_res = 2
         if v_interval:
-            return self.v_interval.compare(v_interval)
-        #     if self_v_interval[1] < v_interval[0] or self_v_interval[0] > v_interval[1]:
-        #         return 0
-        #     if not (self_v_interval[0] >= v_interval[0] and self_v_interval[1] <= v_interval[1]):
-        #         return 1
-        #
-        # return 2
+            v_res = self.v_interval.check_intersect(v_interval)
+            if v_res == 0:
+                return 0
+        if idx_res == 2 and v_res == 2:
+            return 2
+        else:
+            return 1
 
-    def desc_range_search(self, idx_interval: Tuple, v_interval: Tuple):
+    def desc_range_search(self, idx_interval: Interval, v_interval: Interval):
         if self.compare_with_idx_and_v_boundary(idx_interval, v_interval) == 0:
             return set()
 
@@ -326,9 +324,10 @@ class XMLNode(Node):
             intersect_nodes = set()
 
             for node in checking_nodes:
-                if node.compare_with_idx_and_v_boundary(idx_interval, v_interval) == 1:
+                compare_res = node.compare_with_idx_and_v_boundary(idx_interval, v_interval)
+                if compare_res == 1:
                     intersect_nodes.add(node)
-                if node.compare_with_idx_and_v_boundary(idx_interval, v_interval) == 2:
+                elif compare_res == 2:
                     in_range_nodes.add(node)
 
             if not in_range_nodes and not intersect_nodes:

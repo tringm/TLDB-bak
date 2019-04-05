@@ -13,7 +13,10 @@ class Boundary:
         return Boundary(self._intervals)
 
     def __str__(self):
-        return f"B:{self._intervals}"
+        return f"{self._intervals}"
+
+    def __repr__(self):
+        return str(self)
 
     def __eq__(self, other):
         return self._intervals == other.intervals
@@ -67,7 +70,7 @@ class Boundary:
         extend_intervals = self.check_interval_types_and_convert(extend_intervals)
         self._intervals = self._intervals + extend_intervals
 
-    def compare(self, other_boundary):
+    def check_intersect(self, other_boundary):
         """
         Compare pairwise the 2 boundary's intervals. Check if this boundary:
             - 0 : Not intersect with other boundary (One of the interval does not intersect)
@@ -83,7 +86,7 @@ class Boundary:
         self_intervals = self.intervals
         for idx, c_interval in enumerate(other_intervals):
             if c_interval:
-                compare_res = self_intervals[idx].compare(other_intervals[idx])
+                compare_res = self_intervals[idx].check_intersect(other_intervals[idx])
                 if compare_res == 0:
                     return 0
                 elif compare_res == 1:

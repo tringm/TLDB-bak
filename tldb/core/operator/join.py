@@ -12,7 +12,6 @@ from tldb.core.lib.nodes import nodes_range_search
 from tldb.core.object import HierarchyObject
 from tldb.core.structure.boundary import Boundary
 from tldb.core.structure.context import RangeContext
-from tldb.core.structure.interval import Interval
 from tldb.core.structure.node import XMLNode
 from tldb.server.query.xml_query import XMLQuery
 from .op import Operator
@@ -50,8 +49,10 @@ class ComplexXMLSQLJoin(Operator):
             table_attributes = sorted(table.split('_'), key=lambda e: self.xml_query.traverse_order.index(e))
             xml_object.get_attribute(table_attributes[0]).index_structure.root.link_sql[table] = [table_root]
 
+        self.logger.debug(f"LINKS INITIALIZED")
         for attr in attributes:
             log_node_all_link(xml_object.get_attribute(attr).index_structure.root, self.logger.debug)
+        self.logger.debug(f"{'-' * 20}")
 
     def mark_node_as_filtered(self, node: XMLNode, reason: str):
         node.filtered = True
@@ -92,11 +93,12 @@ class ComplexXMLSQLJoin(Operator):
 
         _l = self.logger
         _l.debug(f"Filter {flt_node} with {len(contexts)} contexts")
-        _l.verbose(f"Contexts: {contexts}")
+        _l.debug(f"Contexts: {contexts}")
         start_filter_with_context = timeit.default_timer()
 
         if flt_node.filtered:
             _l.debug('Node already filtered')
+            _l.debug(f"{'-' * 20}")
             return
         try:
             ori_len_contexts = len(contexts)
@@ -144,7 +146,10 @@ class ComplexXMLSQLJoin(Operator):
             _l.debug(f"Filter {flt_node} with contexts took {(timeit.default_timer() - start_filter_with_context):.3f}")
             _l.debug('=====\n')
         except Exception as e:
+            self.mark_node_as_filtered(flt_node, e)
+            _l.debug(f"node is FILTERED: {e}")
             raise Exception(e)
+        _l.debug(f"node OK: {e}")
         return contexts
 
     def init_link(self, flt_node: XMLNode):
@@ -161,7 +166,8 @@ class ComplexXMLSQLJoin(Operator):
             :return: true if success, false if error
             """
 
-            _l.debug(f"\t Init Link SQL")
+            _l.debug(f"{'-' * 20}")
+            _l.debug(f"Init Link SQL {flt_node}")
             ancestor_link_sql = flt_node.link_sql_first_ancestor()
 
             if not ancestor_link_sql:
@@ -266,13 +272,15 @@ class ComplexXMLSQLJoin(Operator):
             for i in range(len(join_boundaries_attributes)):
                 join_intervals_combined.append(union_multiple_intervals([intv[i] for intv in join_intervals]))
             flt_node.join_intervals_combined = tuple(join_intervals_combined)
+            _l.debug(f"{'-' * 20}")
 
         def init_link_children():
             """
             Link this flt_node with children that satisfy the join boundaries
             :return: True if success, false if faile
             """
-            _l.debug(f"\t Init Link Children")
+            _l.debug(f"{'-' * 20}")
+            _l.debug(f"Init Link Children {flt_node}")
 
             if flt_node.is_leaf:
                 _l.debug('\t' * 2 + 'is leaf node')
@@ -297,13 +305,15 @@ class ComplexXMLSQLJoin(Operator):
                 # self.mark_node_as_filtered(flt_node, 'No descendant node satisfy join boundaries')
                 raise Exception(f"link_children: No descendant node satisfy join intervals")
             flt_node.link_children = link_children
+            _l.debug(f"{'-' * 20}")
 
         def init_link_xml():
             """
             Link this flt_node with descendant XML attribute nodes that satisfy the join_b
             :return:
             """
-            _l.debug(f"\tInit Link XML")
+            _l.debug(f"{'-' * 20}")
+            _l.debug(f"Init Link XML {flt_node}")
             ancestor_link_xml = flt_node.link_xml_first_ancestor()
             if not ancestor_link_xml:
                 _l.debug(f"\t Ancestor Link XML is empty")
@@ -315,7 +325,7 @@ class ComplexXMLSQLJoin(Operator):
 
             for c_e in child_elements:
                 _l.verbose(f"\t Checking: {c_e}")
-                starter_nodes = ancestor_link_xml[c_e] # type: List[XMLNode]
+                starter_nodes = ancestor_link_xml[c_e]# type: List[XMLNode]
 
                 join_attributes = flt_node.join_boundaries_attributes
                 join_intervals_combined = flt_node.join_intervals_combined
@@ -342,19 +352,27 @@ class ComplexXMLSQLJoin(Operator):
 
                 link_xml[c_e] = c_e_nodes
             flt_node.link_xml = link_xml
+            _l.debug(f"{'-' * 20}")
             return
 
         # TODO: refactor this to raise error
         try:
             init_link_sql()
-            _l.debug(f"Init link sql success")
-            _l.debug(f"Link sql: {flt_node.link_sql}")
+            _l.debug(f"Init link sql OK")
+            _l.debug(f"Link sql results: {flt_node.link_sql}")
+            _l.debug(f"Join Boundaries Attributes: {flt_node.join_boundaries_attributes}")
+            _l.debug(f"Join intervals: {flt_node.join_intervals}")
+            _l.debug(f"Join intervals combined: {flt_node.join_intervals_combined}")
+            _l.debug(f"{'-' * 20}")
             init_link_children()
-            _l.debug(f"Init link children success")
-            _l.debug(f"Link children: {flt_node.children}")
+            _l.debug(f"Init link children OK")
+            _l.debug(f"Link children results: {flt_node.children}")
+            _l.debug(f"{'-' * 20}")
             init_link_xml()
-            _l.debug(f"Init link xml success")
-            _l.debug(f"Link xml: {flt_node.link_xml}")
+            _l.debug(f"Init link xml OK")
+            _l.debug(f"Link xml results: {flt_node.link_xml}")
+            _l.debug(f"{'-' * 20}")
         except Exception as e:
+            _l.debug(f"Init link FAILED {e}")
             raise Exception(e)
 

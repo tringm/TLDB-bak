@@ -78,10 +78,19 @@ class TestCaseCompare(unittest.TestCase):
 
 
 def get_suites():
-    suites_dir = [d for d in (root_path() / 'test').iterdir() if d.is_dir()]
+    checking_dirs = {d for d in (root_path() / 'test').iterdir() if d.is_dir()}
+    suites_dir = set()
+    while checking_dirs:
+        checking_d = checking_dirs.pop()
+        sub_dirs = {d for d in checking_d.iterdir() if d.is_dir() and d.stem != '__pycache__'}
+        if not sub_dirs:
+            suites_dir.add(checking_d)
+        else:
+            checking_dirs = checking_dirs.union(sub_dirs)
     suites = {}
     for d in suites_dir:
         tests = unittest.TestLoader().discover(d)
         if tests.countTestCases() > 0:
-            suites[d.stem] = tests
+            parent = d.parent.stem
+            suites[f"{parent}.{d.stem}"] = tests
     return suites

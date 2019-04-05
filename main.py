@@ -1,8 +1,7 @@
 import argparse
-import unittest
 import importlib
+import unittest
 
-from config import root_path
 from test.tests import get_suites, TestResultCompareFileMeld
 
 if __name__ == '__main__':
@@ -30,7 +29,7 @@ if __name__ == '__main__':
     else:
         result_class = unittest.TextTestResult
 
-    runner = unittest.TextTestRunner(verbosity=2, resultclass=result_class)
+    runner = unittest.TextTestRunner(verbosity=1, resultclass=result_class)
 
     if args.test:
         if args.test == 'all':
@@ -38,7 +37,7 @@ if __name__ == '__main__':
                 runner.run(suites[s])
         else:
             if args.test in list(suites.keys()):
-                runner = unittest.TextTestRunner(verbosity=2, resultclass=result_class).run(suites[args.test])
+                runner.run(suites[args.test])
             else:
                 try:
                     test_path = args.test.split('.')

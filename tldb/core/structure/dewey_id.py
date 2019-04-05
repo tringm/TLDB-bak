@@ -1,7 +1,22 @@
 class DeweyID:
-    def __init__(self, string_id=''):
-        self._id = string_id
-        self._divisions = tuple([int(div) for div in self._id.split('.')])
+    def __init__(self, id):
+        """
+        Load a DeweyID, either from string or list
+        >>> DeweyID('1.2.3')
+        '1.2.3'
+        >>> DeweyID(division=(1, 2, 3))
+        '1.2.3'
+        :param kwargs:
+        """
+        if isinstance(id, str):
+            self._id = id
+            self._divisions = tuple([int(div) for div in self._id.split('.')])
+        else:
+            try:
+                self._divisions = tuple(id)
+                self._id = '.'.join(map(str, self._divisions))
+            except TypeError:
+                raise TypeError('Dewey must be of string or divisions')
         self._n_division = len(self._divisions)
 
     @property
@@ -101,3 +116,9 @@ class DeweyID:
             return self.is_parent(another_id)
         if relationship == 2:
             return self.is_ancestor(another_id)
+
+    def plus_one_last_divison(self):
+        new_divisions = list(self.divisions)
+        new_divisions[-1] += 1
+        return DeweyID(new_divisions)
+
