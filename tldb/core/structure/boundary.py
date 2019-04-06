@@ -2,6 +2,7 @@ from typing import Tuple, Union, List
 
 from tldb.core.lib.interval import union_two_intervals
 from tldb.core.structure.interval import Interval
+import copy
 
 
 class Boundary:
@@ -10,7 +11,7 @@ class Boundary:
         self._n_dimension = len(intervals)
 
     def __copy__(self):
-        return Boundary(self._intervals)
+        return Boundary(copy.deepcopy(self._intervals))
 
     def __str__(self):
         return f"{self._intervals}"

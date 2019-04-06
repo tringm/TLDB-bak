@@ -135,14 +135,14 @@ class TestXMLNode(TestCaseCompare):
 
     @unittest.SkipTest
     def test_descendant_range_search_only_v(self):
-        root = self.tldb.get_object('A_B_C_D').get_attribute('C').index_structure.root
+        root = self.tldb.get_object('A_B_C_D_xml').get_attribute('C').index_structure.root
         result = root.desc_range_search(idx_interval=None, v_interval=Interval((5, 15)))
         expected_boundary = Boundary((Interval((DeweyID('2.3'), DeweyID('2.6'))), Interval((13, 30))))
         self.assertEqual(1, len(result))
         self.assertEqual(result.pop().boundary, expected_boundary)
 
     def test_descendant_range_search_only_idx(self):
-        root = self.tldb.get_object('A_B_C_D').get_attribute('C').index_structure.root
+        root = self.tldb.get_object('A_B_C_D_xml').get_attribute('C').index_structure.root
         result = root.desc_range_search(idx_interval=Interval((DeweyID('2.8'), DeweyID('2.9'))), v_interval=None)
         expected_boundary = Boundary((Interval((DeweyID('2.7'), DeweyID('2.9.4'))), Interval((17, 24))))
         self.assertEqual(1, len(result))
@@ -150,7 +150,7 @@ class TestXMLNode(TestCaseCompare):
 
     @unittest.SkipTest
     def test_descendant_range_search(self):
-        root = self.tldb.get_object('A_B_C_D').get_attribute('C').index_structure.root
+        root = self.tldb.get_object('A_B_C_D_xml').get_attribute('C').index_structure.root
         result = root.desc_range_search(idx_interval=Interval((DeweyID('2.3'), DeweyID('2.5'))),
                                         v_interval=Interval((5, 15)))
         expected_boundary = Boundary((Interval((DeweyID('2.3'), DeweyID('2.6'))), Interval((13, 30))))

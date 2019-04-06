@@ -132,7 +132,7 @@ class TLDB:
         xml_element_files = folder_path.glob('*_id.dat')
         attributes = sorted([f.stem.split('_')[0] for f in xml_element_files])
         attributes = dict.fromkeys(attributes)
-        xml_object = HierarchyObject('_'.join(list(attributes.keys())))
+        xml_object = HierarchyObject('_'.join(list(attributes.keys())) + '_xml')
         for attr in attributes:
             with (folder_path / (attr + '_id.dat')).open() as f:
                 attr_id = [line.rstrip() for line in f]

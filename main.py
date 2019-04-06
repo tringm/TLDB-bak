@@ -12,10 +12,15 @@ if __name__ == '__main__':
                         f"or a specific test cases",
                         type=str,
                         required=False)
+    parser.add_argument('--verbosity',
+                        help=f"Test verbosity (1 or 2)",
+                        type=int,
+                        required=False,
+                        default=2)
     parser.add_argument('--meld',
                         help='Use meld to compare out and exp file',
                         type=bool,
-                        default=False,
+                        default=True,
                         required=False)
 
     try:
@@ -29,7 +34,7 @@ if __name__ == '__main__':
     else:
         result_class = unittest.TextTestResult
 
-    runner = unittest.TextTestRunner(verbosity=1, resultclass=result_class)
+    runner = unittest.TextTestRunner(verbosity=args.verbosity, resultclass=result_class)
 
     if args.test:
         if args.test == 'all':

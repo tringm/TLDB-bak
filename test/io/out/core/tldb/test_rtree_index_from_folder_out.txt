@@ -1,8 +1,8 @@
-TLDBObject:hierarchy:A_B_C_D
+TLDBObject:hierarchy:A_B_C_D_xml
 INDEX STRUCTURE: 
 None
 ATTRIBUTES
-TLDBAttribute:A_B_C_D.A
+TLDBAttribute:A_B_C_D_xml.A
 INDEX STRUCTURE: 
 A:((1.1, 5.7.4), (0.0, 100.0))
 	A:((1.1, 2.9), (0.0, 45.0))
@@ -34,7 +34,7 @@ A:((1.1, 5.7.4), (0.0, 100.0))
 				(4.9, 87.0)
 				(5.7.4, 100.0)
 
-TLDBAttribute:A_B_C_D.B
+TLDBAttribute:A_B_C_D_xml.B
 INDEX STRUCTURE: 
 B:((1.4, 5.6), (12.0, 82.0))
 	B:((1.4, 2.9.2), (12.0, 31.0))
@@ -52,7 +52,7 @@ B:((1.4, 5.6), (12.0, 82.0))
 			(5.2, 82.0)
 			(5.6, 36.0)
 
-TLDBAttribute:A_B_C_D.C
+TLDBAttribute:A_B_C_D_xml.C
 INDEX STRUCTURE: 
 C:((2.3, 3.7.3), (13.0, 79.0))
 	C:((2.3, 2.9.4), (13.0, 30.0))
@@ -70,7 +70,7 @@ C:((2.3, 3.7.3), (13.0, 79.0))
 			(3.6, 64.0)
 			(3.7.3, 79.0)
 
-TLDBAttribute:A_B_C_D.D
+TLDBAttribute:A_B_C_D_xml.D
 INDEX STRUCTURE: 
 D:((1.8.2, 4.12), (3.0, 54.0))
 	D:((1.8.2, 2.16.3), (26.0, 54.0))

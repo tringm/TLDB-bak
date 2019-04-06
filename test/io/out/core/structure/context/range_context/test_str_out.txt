@@ -1,3 +1,2 @@
 Attribute: ('A', 'B', 'D')
 Intervals: ((6.0, 118.0), (17.0, 600.0), (13.0, 72.0))
-Nodes: [None, None, None]
