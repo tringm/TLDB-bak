@@ -1,22 +1,23 @@
 from numpy import mean
 
+from tldb.core.structure.dewey_id import DeweyID
+from typing import List, Tuple, Union
+
 
 class Interval:
-    def __init__(self, interval):
+    def __init__(self, interval: Union[List, Tuple]):
         """
         An interval can be load from
          list           : a list of 2 values
          tuple          : a tuple of 2 values
          low, high      : two parameter for lower and higher
-        :param kwargs:
+        :param interval:
         """
-        if isinstance(interval, tuple):
-            self._interval = interval
-        elif isinstance(interval, list):
-            self._interval = tuple(interval)
-        else:
-            print(f"error interval {interval}")
-            raise ValueError(f"interval {interval} must be either tuple or list")
+        try:
+            interval = tuple(interval)
+        except TypeError:
+            raise TypeError("other_tuple must be of type tuple or can be convert to tuple")
+        self._interval = interval
         # else:
         #     if not kwargs:
         #         raise ValueError("Must init interval by either 'list', 'tuple', or 'low' and 'high' pair")
@@ -61,7 +62,7 @@ class Interval:
         return self._interval[1]
 
     def __str__(self):
-        return f"I:{self._interval}"
+        return f"{self._interval}"
 
     def __repr__(self):
         return str(self)
@@ -91,26 +92,50 @@ class Interval:
             raise ValueError("new interval must be a tuple")
         self._interval = new_interval
 
-    def compare(self, other_interval):
+    def check_intersect(self, compare_interval):
         """
-        Check if this inter is:
+        Check if this interval is:
             - 0 : Not intersect with other interval
             - 1 : Intersect but not inside other boundary
             - 2 : Is inside other boundary
-        :param other_interval:
+        :param compare_interval:
         :return:
         """
         s_interval = self.interval
-        c_interval = other_interval.interval
+        c_interval = compare_interval.interval
         if s_interval[1] < c_interval[0] or s_interval[0] > c_interval[1]:
             return 0
-        if not (s_interval[0] >= c_interval[0] and s_interval[1] <= c_interval[1]):
-            return 1
-        return 2
+        if s_interval[0] >= c_interval[0] and s_interval[1] <= c_interval[1]:
+            return 2
+        return 1
+
+    def check_is_descendant(self, compare_interval):
+        """
+        Check if this DeweyID interval is:
+            - 0 : cannot be descendant
+            - 1 : can be descendant with some intersection
+            - 2 : can be descendant and is completely inside
+        :param compare_interval:
+        :return:
+        """
+        s_interval = self.interval
+        c_interval = compare_interval.interval
+        if not isinstance(s_interval[0], DeweyID):
+            raise ValueError("This is not an interval of DeweyID")
+        if not isinstance(c_interval[0], DeweyID):
+            raise ValueError("Comparing interval is not an interval of DeweyID")
+        if c_interval[0] > s_interval[1]:
+            return 0
+        c_interval_upper = c_interval[1].plus_one_last_divison()
+        if s_interval[0] >= c_interval_upper:
+            return 0
+        if s_interval[0] >= c_interval[0] and s_interval[1] < c_interval_upper:
+            return 2
+        return 1
 
     def extend_interval(self, other_interval):
         try:
             other_interval = tuple(other_interval)
         except TypeError:
-            raise TypeError("other_tuple must be of type tuple or list")
+            raise TypeError("other_tuple must be of type tuple or can be convert to tuple")
         self._interval = self._interval + other_interval

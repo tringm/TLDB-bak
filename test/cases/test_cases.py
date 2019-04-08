@@ -21,12 +21,40 @@ class TestCaseSimpleSmall(TestCaseCompare):
         self.set_up_compare_files(method_id)
         self.set_up_logger(method_id, logging.VERBOSE)
         self.tldb.load_from_folder(self.input_folder)
-        xml_query = XMLQuery('A_B_C_D')
+        xml_query = XMLQuery('A_B_C_D_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'XML_query.dat')
 
         attributes = xml_query.traverse_order
         initial_range = RangeContext(attributes,
-                                     [self.tldb.get_object('A_B_C_D').get_attribute(a).index_structure.root.v_interval
+                                     [self.tldb.get_object('A_B_C_D_xml').get_attribute(a).index_structure.root.v_interval
+                                      for a in attributes])
+        tables_name = []
+        for obj_name in self.tldb.all_objects_name:
+            if isinstance(self.tldb.get_object(obj_name), TableObject):
+                tables_name.append(obj_name)
+        join_op = ComplexXMLSQLJoin(self.tldb, xml_query=xml_query, tables=tables_name, initial_range_context=initial_range)
+        join_op.perform()
+
+
+class TestCaseOrderlineSmall(TestCaseCompare):
+    @classmethod
+    def setUpClass(cls):
+        super(TestCaseOrderlineSmall, cls).setUpClass()
+        cls.tldb = TLDB('local')
+        cls.input_folder = cls.input_folder / 'cases' / 'orderline_price_asin_small'
+        cls.output_folder = cls.output_folder / 'cases'
+
+    def test_orderline_price_asin_small(self):
+        method_id = self.id().split('.')[-1]
+        self.set_up_compare_files(method_id)
+        self.set_up_logger(method_id, logging.VERBOSE)
+        self.tldb.load_from_folder(self.input_folder)
+        xml_query = XMLQuery('asin_orderline_price_xml')
+        xml_query.load_from_matrix_file(self.input_folder / 'XML_query.dat')
+
+        attributes = xml_query.traverse_order
+        initial_range = RangeContext(attributes,
+                                     [self.tldb.get_object('asin_orderline_price_xml').get_attribute(a).index_structure.root.v_interval
                                       for a in attributes])
         tables_name = []
         for obj_name in self.tldb.all_objects_name:

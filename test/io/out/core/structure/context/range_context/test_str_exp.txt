@@ -1,3 +1,2 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0b889d073cba539c037052d55f834f2da24778b5a9789d9d94e303e346669c13
-size 108
+Attribute: ('A', 'B', 'D')
+Intervals: ((6.0, 118.0), (17.0, 600.0), (13.0, 72.0))

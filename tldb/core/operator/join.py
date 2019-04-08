@@ -6,16 +6,22 @@ import timeit
 from typing import List
 
 from tldb.core.client import TLDB
-from tldb.core.io_support.logger_support import log_node_filter_status, log_node_all_link
+from tldb.core.io_support.logger_support import log_node_all_link
 from tldb.core.lib.interval import union_multiple_intervals
 from tldb.core.lib.nodes import nodes_range_search
 from tldb.core.object import HierarchyObject
 from tldb.core.structure.boundary import Boundary
 from tldb.core.structure.context import RangeContext
-from tldb.core.structure.interval import Interval
 from tldb.core.structure.node import XMLNode
 from tldb.server.query.xml_query import XMLQuery
 from .op import Operator
+
+
+class NodeFilteredException(Exception):
+    pass
+
+# TODO: BUG (is leaf)
+# TODO: saved children nodes path (context.nodes)
 
 
 class ComplexXMLSQLJoin(Operator):
@@ -26,7 +32,7 @@ class ComplexXMLSQLJoin(Operator):
                  # on: List[str],
                  initial_range_context: RangeContext):
         super().__init__(name='complex_xml_sql_join', tldb=tldb)
-        self.timer = {'perform': -1, 'filter_with_context': []}
+        self.timer = {'filter_with_context': []}
         self.status = {'n_filtered': 0}
         # self.xml_objects = xml_objects
         self.xml_query = xml_query
@@ -50,14 +56,16 @@ class ComplexXMLSQLJoin(Operator):
             table_attributes = sorted(table.split('_'), key=lambda e: self.xml_query.traverse_order.index(e))
             xml_object.get_attribute(table_attributes[0]).index_structure.root.link_sql[table] = [table_root]
 
+        self.logger.debug(f"LINKS INITIALIZED")
         for attr in attributes:
             log_node_all_link(xml_object.get_attribute(attr).index_structure.root, self.logger.debug)
+        self.logger.debug(f"{'-' * 20}")
 
     def mark_node_as_filtered(self, node: XMLNode, reason: str):
         node.filtered = True
         node.reason_of_filtered = reason
         self.status['n_filtered'] += 1
-        log_node_filter_status(node, self.logger.debug, self.xml_query.traverse_order.index(node.name))
+        raise NodeFilteredException(reason)
 
     def perform(self):
         start_perform = timeit.default_timer()
@@ -68,88 +76,116 @@ class ComplexXMLSQLJoin(Operator):
         traverse_queue = queue.Queue()
         traverse_queue.put((root_attr_index_structure.root, [self.initial_range_context]))
 
+        results = []
+
         while not traverse_queue.empty():
             attr_node, contexts = traverse_queue.get()
             try:
                 reduced_contexts = self.filter_with_context(attr_node, contexts)
-                _l.info(f"\tFilter {str(attr_node)} SUCCESS, returned {str(len(reduced_contexts))} reduced contexts")
-                _l.debug(f"\tReduced contexts: {str(reduced_contexts)}")
-                _l.debug(f"\tAssign this node children to queue with the reduced contexts: {str(attr_node.children)}")
+                #_l.info(f"\tFilter {str(attr_node)} SUCCESS, returned {str(len(reduced_contexts))} reduced contexts")
+                #_l.debug(f"\tReduced contexts: {str(reduced_contexts)}")
+                #_l.debug(f"\tAssign this node children to queue with the reduced contexts: {str(attr_node.children)}")
+                if attr_node.is_leaf:
+                    results.append((attr_node, reduced_contexts))
                 for child in attr_node.children:
                     traverse_queue.put((child, [copy.copy(c) for c in reduced_contexts]))
-            except Exception:
-                _l.info(f"\tFilter {str(attr_node)} FAILED")
-                _l.info(f"\t{attr_node.reason_of_filtered}")
-            _l.info('-----\n')
-        self.timer['perform'] = timeit.default_timer() - start_perform
+            except NodeFilteredException:
+                pass
+                #_l.info(f"\tFilter {str(attr_node)} FAILED")
+                #_l.info(f"\t{attr_node.reason_of_filtered}")
+            #_l.debug("END STEP")
+            #_l.debug(f"{'=' * 20}\n")
 
-    def filter_with_context(self, flt_node: XMLNode, contexts: List[RangeContext]) -> List[RangeContext]:
-        def filter_node_and_raise_exception(msg):
-            _l.debug(f"\t {msg}")
-            self.mark_node_as_filtered(flt_node, msg)
+        #_l.info(f"Results {results}")
+        #_l.info(f"Join operation took: {timeit.default_timer() - start_perform}")
+        #_l.debug(f"Filter {len(self.timer['filter_with_context'])} nodes with contexts")
+        # for node, time in self.timer['filter_with_context']:
+            #_l.verbose(f"Node:{node} - time:{time:.3f}")
+
+    def filter_with_context(self, flt_node: XMLNode, contexts: List[RangeContext]):
+        def filter_node(msg):
             self.timer['filter_with_context'].append((flt_node, timeit.default_timer() - start_filter_with_context))
-            raise Exception(msg)
+            self.mark_node_as_filtered(flt_node, f"filter_w_context: {msg}")
 
         _l = self.logger
-        _l.debug(f"Filter {flt_node} with {len(contexts)} contexts")
-        _l.verbose(f"Contexts: {contexts}")
+        #_l.debug(f"{'-'*5} FILTER WITH CONTEXT {'-' * 5}")
+        #_l.debug(f"Filter {flt_node} with {len(contexts)} contexts")
+        #_l.debug(f"Contexts: {contexts}")
         start_filter_with_context = timeit.default_timer()
 
         if flt_node.filtered:
-            _l.debug('Node already filtered')
+            #_l.debug('Node already filtered')
+            #_l.debug(f"{'-' * 20}")
             return
         try:
             ori_len_contexts = len(contexts)
-            contexts = [c for c in contexts
-                        if c.check_intersection_and_update_boundaries(RangeContext([flt_node.name], [flt_node.v_interval]))]
-            _l.debug(f"\tFilter {ori_len_contexts} -> {len(contexts)} contexts based on node v_boundary took "
-                     f"{(timeit.default_timer() - start_filter_with_context):.3f}")
+            v_interval_range_context = RangeContext([flt_node.name], [flt_node.v_interval])
+
+            contexts = [c for c in contexts if c.check_intersection_and_update_boundaries(v_interval_range_context)]
+            #_l.debug(f"\tFilter {ori_len_contexts} -> {len(contexts)} contexts based on node v_boundary took {(timeit.default_timer() - start_filter_with_context):.3f}")
             if not contexts:
-                filter_node_and_raise_exception('None of contexts interX with node v_boundary')
+                filter_node(f"None of contexts interX with v_interval {flt_node.v_interval}")
+
+            #_l.debug(f"{'-' * 20}")
 
             if not flt_node.inited_link:
                 self.init_link(flt_node)
 
-            start_filter_ctx_join_b = timeit.default_timer()
-            ori_len_contexts = len(contexts)
-            compare_context = RangeContext(flt_node.join_boundaries_attributes, flt_node.join_intervals_combined)
-            contexts = [c for c in contexts if c.check_intersection_and_update_boundaries(compare_context)]
-            _l.debug(f"\tFilter {ori_len_contexts} -> {len(contexts)} contexts based on join boundaries combined took "
-                     f"{(timeit.default_timer() - start_filter_ctx_join_b):.3f}")
-            _l.verbose(f"Updated contexts based on join_b: {contexts}")
-            if not contexts:
-                filter_node_and_raise_exception('None of contexts interX with node join boundaries')
+            #_l.debug(f"{'-' * 20}")
+            #_l.debug("Filter by join intervals combined")
+            if flt_node.join_intervals_combined:
+                start_flt_join_intv = timeit.default_timer()
+                ori_len_contexts = len(contexts)
+                compare_context = RangeContext(flt_node.join_boundaries_attributes, flt_node.join_intervals_combined)
+                contexts = [c for c in contexts if c.check_intersection_and_update_boundaries(compare_context)]
+                #_l.debug("Filter context based on join intervals combined")
+                #_l.debug(f"\tFilter {ori_len_contexts} -> {len(contexts)} took {(timeit.default_timer() - start_flt_join_intv):.3f}")
+                #_l.verbose(f"Updated contexts based on join_b: {contexts}")
+                if not contexts:
+                    filter_node('None of contexts interX with node join boundaries')
+            else:
+                #_l.debug("No join interval combined")
+                pass
 
-            children_attributes = self.xml_query.relationships[flt_node.name]
-            for c_attr in children_attributes:
+            #_l.debug(f"{'-' * 20}")
+
+            #_l.debug("Traverse to children attributes")
+            children_relationships = self.xml_query.relationships[flt_node.name]
+            for c_rel in children_relationships:
+                c_attr = c_rel[0]
                 updated_contexts = []
                 start_filter_child_attr = timeit.default_timer()
-                _l.verbose(f"\t Check linked attribute {c_attr}")
+                #_l.debug(f"Check {len(flt_node.link_xml[c_attr])} child attribute {c_attr}")
                 for c_node in flt_node.link_xml[c_attr]:
-                    _l.verbose(f"\t Check linked attribute node {c_node}")
+                    #_l.debug(f"Check child attribute node {c_node}")
                     try:
                         c_node_contexts = self.filter_with_context(c_node, [copy.copy(c) for c in contexts])
-                    except Exception:
+                    except NodeFilteredException:
                         continue
                     updated_contexts.append(c_node_contexts)
-                updated_contexts = itertools.chain(*updated_contexts)
-                _l.debug(f"Filter {c_attr} children attribute {len(contexts)} -> {len(updated_contexts)} took "
-                         f"{(timeit.default_timer() - start_filter_child_attr):.3f}")
-                _l.verbose(f"Updated contexts based on {c_attr} children attribute: {updated_contexts}")
+                updated_contexts = list(itertools.chain(*updated_contexts))
+                #_l.debug(f"Filter {c_attr} children attribute {len(contexts)} -> {len(updated_contexts)} took {(timeit.default_timer() - start_filter_child_attr):.3f}")
+                #_l.verbose(f"Updated contexts based on {c_attr} children attribute: {updated_contexts}")
                 if not updated_contexts:
-                    filter_node_and_raise_exception(f"Cannot find any node of {c_attr} that satisfy contexts")
+                    filter_node(f"None of child attribute {c_attr} satisfy contexts")
                 contexts = updated_contexts
-
-            _l.debug(f"\t Results context: {contexts}")
-            _l.debug(f"Filter {flt_node} with contexts took {(timeit.default_timer() - start_filter_with_context):.3f}")
-            _l.debug('=====\n')
-        except Exception as e:
-            raise Exception(e)
+                #_l.debug(f"{'-' * 20}")
+            #_l.debug(f"{'-' * 20}")
+        except NodeFilteredException as e:
+            #_l.info(f"Filter with context {flt_node} FAILED")
+            #_l.info(f"\tReason: {flt_node.reason_of_filtered}")
+            raise e
+        flt_time = timeit.default_timer() - start_filter_with_context
+        self.timer['filter_with_context'].append((flt_node, flt_time))
+        #_l.debug(f"Filter with context OK")
+        #_l.debug(f"\t Results contexts: {contexts}")
+        #_l.debug(f"Filter {flt_node} with contexts took {flt_time:.3f}")
+        #_l.debug('=====\n')
         return contexts
 
     def init_link(self, flt_node: XMLNode):
         _l = self.logger
-        _l.debug(f"Init link {flt_node}")
+        #_l.debug(f"Init link {flt_node}")
 
         flt_node.inited_link = True
 
@@ -161,24 +197,25 @@ class ComplexXMLSQLJoin(Operator):
             :return: true if success, false if error
             """
 
-            _l.debug(f"\t Init Link SQL")
+            #_l.debug(f"{'-' * 20}")
+            #_l.debug(f"Init Link SQL {flt_node}")
             ancestor_link_sql = flt_node.link_sql_first_ancestor()
 
             if not ancestor_link_sql:
-                _l.debug('\t' * 2 + 'Ancestor Link SQL is empty')
+                #_l.debug('\t' * 2 + 'Ancestor Link SQL is empty')
                 return
 
             tables = sorted(list(ancestor_link_sql.keys()), key=lambda tbl: len(tbl), reverse=True)
             link_sql = {}
 
-            _l.verbose('\t' + 'Init join boundary with table: ' + tables[0])
+            #_l.verbose('\t' + 'Init join boundary with table: ' + tables[0])
 
             join_intervals = set()
             join_boundaries_attributes = None
 
             for table in tables:
                 # Find nodes in table that match with v_range
-                _l.verbose(f"\tChecking table: {table}")
+                #_l.verbose(f"\tChecking table: {table}")
                 table_attributes = table.split('_')
                 starter_nodes = ancestor_link_sql[table]  # type: List[SQLNode]
 
@@ -209,8 +246,7 @@ class ComplexXMLSQLJoin(Operator):
                             search_intervals[comm_attr_to_tbl_idx[attr]] = join_intv[comm_attr_to_join_b_idx[attr]]
                         search_boundary = Boundary(search_intervals)
                         nodes_in_range = nodes_range_search(starter_nodes, search_boundary)
-                        _l.verbose(f"\t Nodes in range join interval {join_intv}: "
-                                   f"{[str(n.boundary) for n in nodes_in_range]}")
+                        #_l.verbose(f"\t Nodes in range join interval {join_intv}: {[str(n.boundary) for n in nodes_in_range]}")
 
                         for node in nodes_in_range:
                             new_join_interval = node.boundary.intervals
@@ -224,44 +260,19 @@ class ComplexXMLSQLJoin(Operator):
                 link_sql[table] = updated_table_nodes
                 join_intervals = updated_join_intervals
 
-                _l.verbose(f"\t Updated join interval: {updated_join_intervals}")
-                _l.verbose(f"\t Link to {table} nodes: {[str(n.boundary) for n in link_sql[table]]}")
+                #_l.verbose(f"\t Updated join interval: {updated_join_intervals}")
+                #_l.verbose(f"\t Linked {table} nodes: {[str(n.boundary) for n in link_sql[table]]}")
 
                 if not link_sql[table]:
                     if join_intervals:
                         raise ValueError('Something wrong: has no remaining nodes but some interx boundaries')
-                    # self.mark_node_as_filtered(flt_node, )
-                    raise Exception(f"link_sql: {table} does not intersect with other")
+                    self.mark_node_as_filtered(flt_node, f"link_sql: {table} does not intersect with other")
             if not join_intervals:
-                # self.mark_node_as_filtered(flt_node, 'No join results between table')
-                raise Exception(f"link_sql: No join results between table")
-
-            # _l.verbose('\t'+ 'Update link sql based on join boundaries')
-            # for table in tables:
-            #     _l.verbose('\t' * 2 + 'Table ' + table)
-            #
-            #     remaining_nodes = []
-            #     table_e = table.split('_')
-            #     for node in link_sql[table]:
-            #         node_ok = False
-            #         for join_b in join_boundaries:
-            #             all_e_ok = True
-            #             for d, e in enumerate(table_e):
-            #                 if value_boundary_intersection(node.boundary[d], join_b[e]) is None:
-            #                     all_e_ok = False
-            #                     break
-            #             if all_e_ok:
-            #                 node_ok = True
-            #                 break
-            #         if node_ok:
-            #             remaining_nodes.append(node)
-            #     _l.verbose('\t' * 2 + 'Remaining: ' + str([node.boundary for node in remaining_nodes]))
-            #     link_sql[table] = remaining_nodes
-            #     if not remaining_nodes:
-            #         self.mark_node_as_filtered(flt_node, 'init_link', table + ' not join with others', _l)
+                self.mark_node_as_filtered(flt_node, f"link_sql: No join results between table")
 
             flt_node.join_boundaries_attributes = join_boundaries_attributes
             flt_node.join_intervals = join_intervals
+            flt_node.link_sql = link_sql
             join_intervals_combined = []
             for i in range(len(join_boundaries_attributes)):
                 join_intervals_combined.append(union_multiple_intervals([intv[i] for intv in join_intervals]))
@@ -272,14 +283,15 @@ class ComplexXMLSQLJoin(Operator):
             Link this flt_node with children that satisfy the join boundaries
             :return: True if success, false if faile
             """
-            _l.debug(f"\t Init Link Children")
+            # #_l.debug(f"{'-' * 20}")
+            # #_l.debug(f"Init Link Children {flt_node}")
 
             if flt_node.is_leaf:
-                _l.debug('\t' * 2 + 'is leaf node')
+                # #_l.debug('\t' * 2 + 'is leaf node')
                 return
 
             if not flt_node.join_intervals:
-                _l.debug('\t' * 2 + 'is leaf node')
+                # #_l.debug('\t' * 2 + 'is leaf node')
                 return
 
             link_children = set()
@@ -294,8 +306,7 @@ class ComplexXMLSQLJoin(Operator):
                     node.inited_contexts.add(init_context)
 
             if not link_children:
-                # self.mark_node_as_filtered(flt_node, 'No descendant node satisfy join boundaries')
-                raise Exception(f"link_children: No descendant node satisfy join intervals")
+                self.mark_node_as_filtered(flt_node, f"link_children: No descendant node satisfy join boundaries")
             flt_node.link_children = link_children
 
         def init_link_xml():
@@ -303,10 +314,11 @@ class ComplexXMLSQLJoin(Operator):
             Link this flt_node with descendant XML attribute nodes that satisfy the join_b
             :return:
             """
-            _l.debug(f"\tInit Link XML")
+            # #_l.debug(f"{'-' * 20}")
+            # #_l.debug(f"Init Link XML {flt_node}")
             ancestor_link_xml = flt_node.link_xml_first_ancestor()
             if not ancestor_link_xml:
-                _l.debug(f"\t Ancestor Link XML is empty")
+                # #_l.debug(f"\t Ancestor Link XML is empty")
                 return
 
             link_xml = {}
@@ -314,47 +326,43 @@ class ComplexXMLSQLJoin(Operator):
             child_elements.sort(key=lambda e: self.xml_query.traverse_order.index(e))
 
             for c_e in child_elements:
-                _l.verbose(f"\t Checking: {c_e}")
-                starter_nodes = ancestor_link_xml[c_e] # type: List[XMLNode]
+                # #_l.verbose(f"\t Checking: {c_e}")
+                starter_nodes = ancestor_link_xml[c_e]  # type: List[XMLNode]
 
                 join_attributes = flt_node.join_boundaries_attributes
                 join_intervals_combined = flt_node.join_intervals_combined
-                join_attr_to_idx = {a: join_attributes.index(a) for a in join_attributes}
-                if c_e in join_attributes:
-                    c_e_boundary = join_intervals_combined[join_attr_to_idx[c_e]]
-                else:
+                try:
+                    c_e_boundary = join_intervals_combined[join_attributes.index(c_e)]
+                except ValueError:
                     c_e_boundary = None
 
                 c_e_nodes = []
                 for node in starter_nodes:
                     nodes_in_range = node.desc_range_search(flt_node.idx_interval, c_e_boundary)
-
-                    if not nodes_in_range:
+                    if nodes_in_range:
                         c_e_nodes.extend(nodes_in_range)
-
                 c_e_nodes = [node for node in c_e_nodes if not node.filtered]
 
-                _l.verbose(f"\t Linked {c_e} nodes: {c_e_nodes}")
+                # #_l.verbose(f"\t Linked {c_e} nodes: {c_e_nodes}")
 
                 if not c_e_nodes:
-                    # self.mark_node_as_filtered(flt_node, f"None of {c_e} satisfy join boundaries")
-                    raise Exception(f"None of {c_e} satisfy join boundaries")
+                    self.mark_node_as_filtered(flt_node, f"link_xml: None descendant {c_e}")
 
                 link_xml[c_e] = c_e_nodes
             flt_node.link_xml = link_xml
             return
 
-        # TODO: refactor this to raise error
-        try:
-            init_link_sql()
-            _l.debug(f"Init link sql success")
-            _l.debug(f"Link sql: {flt_node.link_sql}")
-            init_link_children()
-            _l.debug(f"Init link children success")
-            _l.debug(f"Link children: {flt_node.children}")
-            init_link_xml()
-            _l.debug(f"Init link xml success")
-            _l.debug(f"Link xml: {flt_node.link_xml}")
-        except Exception as e:
-            raise Exception(e)
+        init_link_sql()
+        # #_l.verbose(f"Link sql results: {flt_node.link_sql}")
+        # #_l.verbose(f"Join Boundaries Attributes: {flt_node.join_boundaries_attributes}")
+        # #_l.verbose(f"Join intervals: {flt_node.join_intervals}")
+        # #_l.verbose(f"Join intervals combined: {flt_node.join_intervals_combined}")
+        # #_l.debug(f"Init link sql OK")
+        init_link_children()
+        # #_l.verbose(f"Link children results: {flt_node.children}")
+        # #_l.debug(f"Init link children OK")
+        init_link_xml()
+        # #_l.verbose(f"Link xml results: {flt_node.link_xml}")
+        # #_l.debug(f"Init link xml OK")
+        # #_l.debug(f"{'-' * 20}")
 

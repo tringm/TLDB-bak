@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0b884f16c3de8dbe64c37c67d34a5b072a8c8720698c3ad8ccdda02fa306a9a9
-size 704
+JOIN RDB NAIVE RESULTS:  1
+JOIN RDB NAIVE TIME  56.64537711199955
+
+Final matches
+{'orderline': [1.12.20, 26120.0], 'price': [1.12.20.4, 102810.0], 'join_rslt_idx': 0, 'asin': [1.12.20.2, 50234.0]}
+JOIN XML TIME:  0.0108708999978262
+TOTAL TIME NAIVE:  56.656281301999115
+###
+###
+###
+BUILD TABLES TOOK 0.037196261997451074
+JOIN RDB PANDAS RESULTS:  1
+JOIN RDB PANDAS TIME  0.019947405999118928
+
+Build table took:  0.06261994499800494
+CHECK RLS TOOK:  0.0025991729999077506
+FINAL RESULT:
+<bound method DataFrame.to_string of       asin  orderline     price orderline_index price_index asin_index
+0  50234.0    26120.0  102810.0         1.12.20   1.12.20.4  1.12.20.2>
+TOTAL TIME PANDAS:  0.12821328599966364

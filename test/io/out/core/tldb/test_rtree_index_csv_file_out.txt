@@ -1,3 +1,28 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e621082ec6d178e32d86aa14e598e0d5787eca5c9c5608e5fe0ecfde23bb61cb
-size 803
+TLDBObject:table:table
+INDEX STRUCTURE: 
+table:((6.0, 118.0), (17.0, 600.0), (13.0, 72.0))
+	table:((6.0, 94.0), (69.0, 600.0), (13.0, 72.0))
+		table:((6.0, 18.0), (69.0, 600.0), (13.0, 27.0))(leaf)
+			(6.0, 69.0, 13.0)
+			(18.0, 600.0, 27.0)
+		table:((72.0, 94.0), (85.0, 500.0), (19.0, 72.0))(leaf)
+			(72.0, 500.0, 19.0)
+			(94.0, 85.0, 72.0)
+	table:((10.0, 118.0), (17.0, 51.0), (26.0, 54.0))
+		table:((10.0, 79.0), (31.0, 51.0), (26.0, 41.0))(leaf)
+			(10.0, 31.0, 26.0)
+			(79.0, 51.0, 41.0)
+		table:((86.0, 118.0), (17.0, 18.0), (40.0, 54.0))(leaf)
+			(86.0, 17.0, 54.0)
+			(118.0, 18.0, 40.0)
+
+ATTRIBUTES
+TLDBAttribute:table.A
+INDEX STRUCTURE: 
+None
+TLDBAttribute:table.B
+INDEX STRUCTURE: 
+None
+TLDBAttribute:table.D
+INDEX STRUCTURE: 
+None

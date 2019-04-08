@@ -1,3 +1,59 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:44a53326f4ec6e6ba5eb0015d1493ee4a12aa1c83b4560284cddc11e59a51e4c
-size 1567
+DeweyID, attribute, value
+1.3, menu, None
+1.3.3, header, Adobe SVG Viewer
+1.3.5, item, None
+1.3.5.3.3, @action, Open
+1.3.5.3.5, @id, Open
+1.3.5.3.7, #text, Open
+1.3.5.5.3, @action, OpenNew
+1.3.5.5.5, @id, OpenNew
+1.3.5.5.7, #text, Open New
+1.3.5.7.3, @action, ZoomIn
+1.3.5.7.5, @id, ZoomIn
+1.3.5.7.7, #text, Zoom In
+1.3.5.9.3, @action, ZoomOut
+1.3.5.9.5, @id, ZoomOut
+1.3.5.9.7, #text, Zoom Out
+1.3.5.11.3, @action, OriginalView
+1.3.5.11.5, @id, OriginalView
+1.3.5.11.7, #text, Original View
+1.3.5.13.3, @action, Quality
+1.3.5.13.5, @id, Quality
+1.3.5.13.7, #text, Quality
+1.3.5.15.3, @action, Pause
+1.3.5.15.5, @id, Pause
+1.3.5.15.7, #text, Pause
+1.3.5.17.3, @action, Mute
+1.3.5.17.5, @id, Mute
+1.3.5.17.7, #text, Mute
+1.3.5.19.3, @action, Find
+1.3.5.19.5, @id, Find
+1.3.5.19.7, #text, Find...
+1.3.5.21.3, @action, FindAgain
+1.3.5.21.5, @id, FindAgain
+1.3.5.21.7, #text, Find Again
+1.3.5.23.3, @action, Copy
+1.3.5.23.5, @id, Copy
+1.3.5.23.7, #text, Copy
+1.3.5.25.3, @action, CopyAgain
+1.3.5.25.5, @id, CopyAgain
+1.3.5.25.7, #text, Copy Again
+1.3.5.27.3, @action, CopySVG
+1.3.5.27.5, @id, CopySVG
+1.3.5.27.7, #text, Copy SVG
+1.3.5.29.3, @action, ViewSVG
+1.3.5.29.5, @id, ViewSVG
+1.3.5.29.7, #text, View SVG
+1.3.5.31.3, @action, ViewSource
+1.3.5.31.5, @id, ViewSource
+1.3.5.31.7, #text, View Source
+1.3.5.33.3, @action, SaveAs
+1.3.5.33.5, @id, SaveAs
+1.3.5.33.7, #text, Save As
+1.3.5.35.3, @action, Help
+1.3.5.35.5, @id, Help
+1.3.5.35.7, #text, Help
+1.3.5.37.3, @action, About
+1.3.5.37.5, @id, About
+1.3.5.37.7, #text, About Adobe CVG Viewer...
+1.3.7, separator, None

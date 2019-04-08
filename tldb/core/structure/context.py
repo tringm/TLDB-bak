@@ -3,6 +3,8 @@ from typing import List, Union, Tuple
 from tldb.core.lib.interval import intersect_two_intervals
 from tldb.core.structure.interval import Interval
 
+import copy
+
 
 class Context:
     def __init__(self, attributes):
@@ -15,8 +17,7 @@ class RangeContext(Context):
     """
     def __init__(self,
                  attributes: Union[List[str], Tuple[str, ...]],
-                 intervals: Union[List[Interval], Tuple[Interval, ...]],
-                 nodes=None):
+                 intervals: Union[List[Interval], Tuple[Interval, ...]]):
         """
         RangeContext contains
         :param attributes: name of the attributes
@@ -24,11 +25,11 @@ class RangeContext(Context):
         :param nodes: Checking node
         """
         if not (isinstance(intervals, List) or isinstance(intervals, Tuple)):
-            raise ValueError(f"intervals must be of type list or tuple")
+            raise ValueError(f"{intervals} is not of type list or tuple")
         if isinstance(intervals, List):
             intervals = tuple(intervals)
         if not (isinstance(attributes, List) or isinstance(attributes, Tuple)):
-            raise ValueError(f"attributes must be of type list or tuple")
+            raise ValueError(f"{attributes} is not of type list or tuple")
         if isinstance(attributes, List):
             attributes = tuple(attributes)
         if len(attributes) != len(intervals):
@@ -36,24 +37,21 @@ class RangeContext(Context):
         super().__init__(attributes)
         self.n_dimension = len(attributes)
         self.intervals = intervals
-        if not nodes:
-            self.nodes = [None] * self.n_dimension
-        else:
-            self.nodes = nodes
 
     def __str__(self):
         rep_string = ''
         rep_string += f"Attribute: {self.attributes}\n"
         rep_string += 'Intervals: ' + str(self.intervals) + '\n'
-        rep_string += 'Nodes: ' + str(self.nodes) + '\n'
         return rep_string
 
     def __repr__(self):
-        rep = f"a: {self.attributes} i: {self.intervals[:2]}... n:  {self.nodes[:2]}..."
-        return rep
+        rep = dict(zip(self.attributes, self.intervals))
+        return str(rep)
 
     def __copy__(self):
-        return RangeContext(self.attributes, self.intervals, self.nodes)
+        attributes = copy.deepcopy(self.attributes)
+        intervals = copy.deepcopy(self.intervals)
+        return RangeContext(attributes, intervals)
 
     def __eq__(self, other):
         return self.attributes == other.attributes and self.intervals == other.intervals

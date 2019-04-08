@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:3b8f38aafb37ccc6be360634f05e62325241b9e57a8ad233e368582eb165a88b
-size 261
+Loading element:  S
+Loaded  153270 entries
+S
+sorting took:  1.5421849220000468
+Loading element:  NP
+Loaded  435689 entries
+NP
+sorting took:  5.731939379000096
+Loading element:  VP
+Loaded  154298 entries
+VP
+sorting took:  1.644434734000015
+Loading element:  NNS

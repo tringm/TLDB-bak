@@ -1,3 +1,22 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:82f887c274e75fd7d98be7f68c9726585d0990175d64447496aa2e32a292db01
-size 710
+JOIN RDB NAIVE RESULTS:  1
+JOIN RDB NAIVE TIME  6.079699960537255e-05
+
+Final matches
+{'B': [2.9.2, 31.0], 'A': [2.9, 10.0], 'D': [2.9.4.2, 26.0], 'C': [2.9.4, 24.0], 'join_rslt_idx': 0}
+JOIN XML TIME:  6.109199966886081e-05
+TOTAL TIME NAIVE:  0.0001454599987482652
+###
+###
+###
+BUILD TABLES TOOK 0.0017780080015654676
+JOIN RDB PANDAS RESULTS:  1
+JOIN RDB PANDAS TIME  0.006832815000962
+
+Build table took:  0.012145292999775847
+CHECK RLS TOOK:  0.0021430730012070853
+FINAL RESULT:
+<bound method DataFrame.to_string of       A     B     D     C B_index  D_index C_index A_index
+0  10.0  31.0  26.0  24.0   2.9.2  2.9.4.2   2.9.4     2.9>
+TOTAL TIME PANDAS:  0.02981824899688945
+
+Process finished with exit code 0
