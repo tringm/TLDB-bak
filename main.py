@@ -11,16 +11,16 @@ if __name__ == '__main__':
                         help=f"Test all or a specific suite among: {'|'.join(list(suites.keys()) + ['all'])} "
                         f"or a specific test cases",
                         type=str,
-                        required=False)
+                        required=True)
     parser.add_argument('--verbosity',
                         help=f"Test verbosity (1 or 2)",
                         type=int,
                         required=False,
                         default=2)
     parser.add_argument('--meld',
-                        help='Use meld to compare out and exp file',
-                        type=bool,
-                        default=True,
+                        help='Use meld to compare out and exp file (True or False_',
+                        type=str,
+                        default='true',
                         required=False)
 
     try:
@@ -29,7 +29,11 @@ if __name__ == '__main__':
         parser.print_help()
         exit()
 
-    if args.meld:
+    if args.meld.lower() == 'true':
+        use_meld = True
+    else:
+        use_meld = False
+    if use_meld:
         result_class = TestResultCompareFileMeld
     else:
         result_class = unittest.TextTestResult
@@ -51,5 +55,5 @@ if __name__ == '__main__':
                     suite = unittest.defaultTestLoader.loadTestsFromTestCase(test_case_class)
                     runner.run(suite)
                 except ValueError:
-                    print("Suite or test case not found")
+                    print(f"Suite or test case {args.test} not found")
 
