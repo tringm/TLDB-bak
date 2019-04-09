@@ -1,5 +1,6 @@
 import argparse
 import importlib
+import sys
 import unittest
 
 from test.tests import get_suites, TestResultCompareFileMeld
@@ -40,20 +41,24 @@ if __name__ == '__main__':
 
     runner = unittest.TextTestRunner(verbosity=args.verbosity, resultclass=result_class)
 
+    result = False
     if args.test:
         if args.test == 'all':
+            results = set()
             for s in suites:
-                runner.run(suites[s])
+                results.add(runner.run(suites[s]).wasSuccessful())
+            result = all(results)
         else:
             if args.test in list(suites.keys()):
-                runner.run(suites[args.test])
+                result = runner.run(suites[args.test]).wasSuccessful()
             else:
                 try:
                     test_path = args.test.split('.')
                     module = importlib.import_module('.'.join(test_path[:-1]))
                     test_case_class = getattr(module, test_path[-1])
                     suite = unittest.defaultTestLoader.loadTestsFromTestCase(test_case_class)
-                    runner.run(suite)
+                    result = runner.run(suite).wasSuccessful()
                 except ValueError:
                     print(f"Suite or test case {args.test} not found")
-
+    if not result:
+        sys.exit("Some tests failed")

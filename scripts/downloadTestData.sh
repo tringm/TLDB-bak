@@ -1,5 +1,5 @@
 #!/bin/bash
-mkdir -p test/io/in/cases && rm -r test/io/in/cases/*
+cd .. && mkdir -p test/io/in/cases && rm -r test/io/in/cases/*
 cd test/io/in/cases
 FILENAME="cases.tar.gz"
 FILEID="11Zamj_r2cnXVTXivRclgCV-_0MZqENxU"

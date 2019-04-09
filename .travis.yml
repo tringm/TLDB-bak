@@ -1,12 +1,14 @@
-matrix:
-  include:
-    - language: bash
-      script:
-        ./downloadData.sh
-    - language: python
-      python: "3.6"
-      install:
-        - pip install pipenv
-        - pipenv install
-      script:
-        - python main.py --test all --meld false
+language: python
+sudo: required
+python: "3.6"
+install:
+  - pip install pipenv
+  - pipenv install
+  - cd scripts
+  - chmod +x downloadTestData.sh
+  - sh downloadTestData.sh
+  - cd ..
+script:
+  - coverage run main.py --test all --meld false
+after_script:
+  - coverage report
