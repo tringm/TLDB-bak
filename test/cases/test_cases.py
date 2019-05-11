@@ -48,7 +48,7 @@ class TestCaseOrderlineSmall(TestCaseCompare):
         method_id = self.id().split('.')[-1]
         self.set_up_compare_files(method_id)
         self.set_up_logger(method_id, logging.DEBUG)
-        self.tldb.load_from_folder(self.input_folder, index_type='rtree', max_n_children=10)
+        self.tldb.load_from_folder(self.input_folder, index_type='rtree', max_n_children=50)
         xml_query = XMLQuery('asin_orderline_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'XML_query.dat')
 

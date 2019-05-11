@@ -16,7 +16,7 @@ class RTree(IndexStructure):
         self.max_n_children = max_n_children
         if self.max_n_children < 2:
             raise ValueError('Maximum number of children nodes must be >= 2')
-        self.max_n_children = 2
+        self.max_n_children = max_n_children
 
     def __str__(self):
         tree_to_string = ''

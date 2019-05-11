@@ -82,23 +82,24 @@ class ComplexXMLSQLJoin(Operator):
             attr_node = traverse_queue.get()
             try:
                 self.filter_with_context(attr_node)
-                _l.debug(f"\tAssign this node children to queue with the reduced contexts: {str(attr_node.children)}")
+                _l.info(f"\tFinished filter_with_context {attr_node}")
                 if attr_node.is_leaf:
+                    _l.info(f"\t\tis leaf -> add to results")
                     results.append(attr_node)
                 for child in attr_node.children:
+                    _l.info(f"\t\tAssign children {child} to traverse queue")
                     traverse_queue.put(child)
             except NodeFilteredException:
-                pass
-                _l.info(f"\tFilter {str(attr_node)} FAILED")
-                _l.info(f"\t{attr_node.reason_of_filtered}")
-            _l.debug("END STEP")
-            _l.debug(f"{'=' * 20}\n")
+                _l.info(f"\tFinished filter_with_context {attr_node}")
+                _l.info(f"\t\t{attr_node} FILTERED: {attr_node.reason_of_filtered}")
+            _l.info("END STEP")
+            _l.info(f"{'=' * 20}\n")
 
         _l.info(f"Results {results}")
         _l.info(f"Join operation took: {timeit.default_timer() - start_perform}")
-        _l.debug(f"Filter {len(self.timer['filter_with_context'])} nodes with contexts")
+        _l.info(f"Filter {len(self.timer['filter_with_context'])} nodes with contexts")
         for node, time in self.timer['filter_with_context']:
-            _l.verbose(f"Node:{node} - time:{time:.3f}")
+            _l.debug(f"Node:{node} - time:{time:.3f}")
 
     def filter_with_context(self, flt_node: XMLNode):
         def filter_node(msg):
@@ -114,10 +115,6 @@ class ComplexXMLSQLJoin(Operator):
             _l.debug(f"{'-' * 20}")
             return
         try:
-            v_interval_range_context = RangeContext([flt_node.name], [flt_node.v_interval])
-
-            _l.debug(f"{'-' * 20}")
-
             if not flt_node.inited_link:
                 self.init_link(flt_node)
 
@@ -179,8 +176,6 @@ class ComplexXMLSQLJoin(Operator):
             tables = sorted(list(ancestor_link_sql.keys()), key=lambda tbl: len(tbl), reverse=True)
             link_sql = {}
 
-            _l.verbose('\t' + 'Init join boundary with table: ' + tables[0])
-
             join_intervals = set()
             join_boundaries_attributes = None
 
@@ -189,17 +184,21 @@ class ComplexXMLSQLJoin(Operator):
                 _l.debug(f"\tChecking table: {table}")
                 table_attributes = table.split('_')
                 starter_nodes = ancestor_link_sql[table]  # type: List[SQLNode]
+                _l.debug(f"\t\t Got {len(starter_nodes)} starter nodes")
+                _l.verbose(f"\t\tStarter_nodes: {starter_nodes}")
 
                 updated_table_nodes = set()
                 updated_join_intervals = set()
 
                 if not join_intervals:
-                    search_intervals = [None] * len(table_attributes)
-                    search_intervals[table_attributes.index(flt_node.name)] = flt_node.v_interval
-                    search_boundary = Boundary(search_intervals)
+                    _l.verbose(f"\t\tInit join boundary with table {table}")
+                    # search_intervals = [None] * len(table_attributes)
+                    # search_intervals[table_attributes.index(flt_node.name)] = flt_node.v_interval
+                    # search_boundary = Boundary(search_intervals)
                     join_boundaries_attributes = table_attributes
-                    nodes_in_range = nodes_range_search(starter_nodes, search_boundary)
-                    for node in nodes_in_range:
+                    # nodes_in_range = nodes_range_search(starter_nodes, search_boundary)
+                    # _l.verbose(f"\t\tSearch for node in boundary {search_boundary} -> {[str(n) for n in nodes_in_range]}")
+                    for node in starter_nodes:
                         updated_join_intervals.add(node.boundary.intervals)
                         updated_table_nodes.add(node)
                 else:
@@ -212,37 +211,58 @@ class ComplexXMLSQLJoin(Operator):
                     only_join_b_attr_to_idx = {a: join_boundaries_attributes.index(a) for a in only_join_b_attr}
 
                     for join_intv in join_intervals:
-                        search_intervals = [None] * len(table_attributes)
-                        for attr in common_attr:
-                            search_intervals[comm_attr_to_tbl_idx[attr]] = join_intv[comm_attr_to_join_b_idx[attr]]
-                        search_boundary = Boundary(search_intervals)
-                        nodes_in_range = nodes_range_search(starter_nodes, search_boundary)
+                        # search_intervals = [None] * len(table_attributes)
+                        # for attr in common_attr:
+                        #     search_intervals[comm_attr_to_tbl_idx[attr]] = join_intv[comm_attr_to_join_b_idx[attr]]
+                        # search_boundary = Boundary(search_intervals)
+                        # nodes_in_range = nodes_range_search(starter_nodes, search_boundary)
+                        # _l.verbose(f"\t\tBased on join interval {join_intv} search for node in boundary {search_boundary}")
 
-                        for node in nodes_in_range:
+                        for node in starter_nodes:
                             new_join_interval = node.boundary.intervals
                             only_join_b_boundaries = [join_intv[only_join_b_attr_to_idx[a]] for a in only_join_b_attr]
                             new_join_interval = new_join_interval + tuple(only_join_b_boundaries)
+                            _l.verbose(f"\t\t\tFound node {node} -> new interval: {new_join_interval}")
                             updated_join_intervals.add(new_join_interval)
                             updated_table_nodes.add(node)
                     join_boundaries_attributes = table_attributes
                     join_boundaries_attributes.extend(list(only_join_b_attr))
 
-                _l.debug(f"Found {len(join_intervals)} -> {len(updated_join_intervals)} join intervals")
-                link_sql[table] = updated_table_nodes
+                _l.debug(f"\t\tFound {len(join_intervals)} -> {len(updated_join_intervals)} join intervals")
+                # link_sql[table] = updated_table_nodes
                 join_intervals = updated_join_intervals
 
-                _l.verbose(f"\t Updated join interval: {updated_join_intervals}")
-                _l.verbose(f"\t Linked {table} nodes: {[str(n.boundary) for n in link_sql[table]]}")
+                _l.verbose(f"\t\tUpdated join attributes: {join_boundaries_attributes}")
+                _l.verbose(f"\t\tUpdated join interval: {updated_join_intervals}")
+                # _l.verbose(f"\t\tLinked {table} nodes: {[str(n.boundary) for n in link_sql[table]]}")
+
+                # if not link_sql[table]:
+                #     if join_intervals:
+                #         raise ValueError('Something wrong: has no remaining nodes but some interx boundaries')
+                #     self.mark_node_as_filtered(flt_node, f"link_sql: {table} does not intersect with other")
+                if not join_intervals:
+                    self.mark_node_as_filtered(flt_node, f"link_sql: No join results between table {table} and others")
+            flt_node.join_boundaries_attributes = join_boundaries_attributes
+
+            join_attr_to_idx = {attr: join_boundaries_attributes.index(attr) for attr in join_boundaries_attributes}
+            for table in tables:
+                link_sql[table] = set()
+                starter_nodes = ancestor_link_sql[table]  # type: List[SQLNode]
+                table_attributes = table.split('_')
+                for join_intv in join_intervals:
+                    search_boundary = Boundary([join_intv[join_attr_to_idx[attr]] for attr in table_attributes])
+                    nodes_in_range = nodes_range_search(starter_nodes, search_boundary)
+                    for node in nodes_in_range:
+                        link_sql[table].add(node)
 
                 if not link_sql[table]:
                     if join_intervals:
                         raise ValueError('Something wrong: has no remaining nodes but some interx boundaries')
-                    self.mark_node_as_filtered(flt_node, f"link_sql: {table} does not intersect with other")
-            if not join_intervals:
-                self.mark_node_as_filtered(flt_node, f"link_sql: No join results between table")
+                    self.mark_node_as_filtered(flt_node, f"link_sql: Cannot find any {table} node")
 
-            flt_node.join_boundaries_attributes = join_boundaries_attributes
-            flt_node.join_intervals = join_intervals
+                _l.debug(f"\t\t {len(join_intervals)} join intervals -> {len(link_sql[table])} {table} table nodes")
+
+            # flt_node.join_intervals = join_intervals
             flt_node.link_sql = link_sql
             join_intervals_combined = []
             # TODO: combine join interval can be done by just combine the initial linked nodes
@@ -267,13 +287,20 @@ class ComplexXMLSQLJoin(Operator):
                 _l.debug('\t' * 2 + 'is leaf node')
                 return
 
-            link_children = set()
             join_b_attributes = flt_node.join_boundaries_attributes
             join_b_attr_to_index = {a: join_b_attributes.index(a) for a in join_b_attributes}
-            for join_intv in flt_node.join_intervals:
-                nodes_in_range = flt_node.range_search(join_intv[join_b_attr_to_index[flt_node.name]])
-                for node in nodes_in_range:
-                    link_children.add(node)
+
+            link_children = set()
+            nodes_in_range = flt_node.range_search(flt_node.join_intervals_combined[join_b_attr_to_index[flt_node.name]])
+            for node in nodes_in_range:
+                link_children.add(node)
+
+            # search_intervals = {join_intv[join_b_attr_to_index[flt_node.name]] for join_intv in flt_node.join_intervals}
+            # _l.debug(f"Find children from {len(search_intervals)} intervals")
+            # for join_intv in search_intervals:
+            #     nodes_in_range = flt_node.range_search(join_intv)
+            #     for node in nodes_in_range:
+            #         link_children.add(node)
 
             if not link_children:
                 self.mark_node_as_filtered(flt_node, f"link_children: No descendant node satisfy join boundaries")
