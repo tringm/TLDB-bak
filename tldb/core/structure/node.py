@@ -26,13 +26,13 @@ class Node:
         entries ([Entry])           : list of entries if this node is a leaf node, empty if not leaf node
     """
 
-    def __init__(self, max_n_children, name, parent=None, children=None, entries=None, is_leaf=False):
+    def __init__(self, max_n_children, name, parent=None, children=None, entries=None, is_leaf=False, boundary=None):
         self._max_n_children = max_n_children
         self.parent = parent
         self._name = name
         self._children = set() if children is None else self.check_if_iterable_and_convert_to_set(children)
         self._entries = set() if entries is None else self.check_if_iterable_and_convert_to_set(entries)
-        self._boundary = None
+        self._boundary = boundary
         self.init_boundary()
         self.is_leaf = is_leaf
         self.leaf_entries = None
@@ -221,8 +221,8 @@ class XMLNode(Node):
         link_sql {[str, [Node]}     : key is table name, value is list of Node connected
                                         for the element. It is initiated in value filtering
     """
-    def __init__(self, max_n_children, name, parent=None, children=None, entries=None, is_leaf=False):
-        super().__init__(max_n_children, name, parent, children, entries, is_leaf)
+    def __init__(self, max_n_children, name, parent=None, children=None, entries=None, is_leaf=False, boundary=None):
+        super().__init__(max_n_children, name, parent, children, entries, is_leaf, boundary)
 
         # TODO: This should only be initiated when filtering. Migrate this to able to run multiple query
         self.filtered = False
@@ -335,6 +335,32 @@ class XMLNode(Node):
 
             checking_nodes = intersect_nodes
 
+        return in_range_nodes.union(checking_nodes)
+
+    def range_search(self, v_interval: Interval):
+        if self.v_interval.check_intersect(v_interval) == 0:
+            return set()
+        checking_nodes = set()
+        checking_nodes.add(self)
+        in_range_nodes = set()
+        while checking_nodes:
+            n = checking_nodes.pop()
+            checking_nodes.add(n)
+            if n.is_leaf:
+                break
+            checking_nodes = {child for node in checking_nodes for child in node.children}
+            intersect_nodes = set()
+
+            for node in checking_nodes:
+                compare_res = node.v_interval.check_intersect(v_interval)
+                if compare_res == 1:
+                    intersect_nodes.add(node)
+                elif compare_res == 2:
+                    in_range_nodes.add(node)
+            if not in_range_nodes and not intersect_nodes:
+                return set()
+
+            checking_nodes = intersect_nodes
         return in_range_nodes.union(checking_nodes)
 
     def link_sql_first_ancestor(self):

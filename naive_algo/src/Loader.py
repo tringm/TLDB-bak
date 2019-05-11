@@ -1,14 +1,14 @@
 from pathlib import Path
 from config import root_path
-from tldb.core.structure import Entry
-from tldb.core.structure import DeweyID
+from tldb.core.structure.entry import Entry
+from tldb.core.structure.dewey_id import DeweyID
 
 import numpy as np
 import logging
 import timeit
 
 
-data_path = root_path() / 'core' / 'io' / 'in' / 'test' / 'cases'
+data_path = root_path() / 'test' / 'io' / 'in' / 'cases'
 
 
 def get_index_highest_element(all_elements_name: [str], table_name: str) -> int:
@@ -51,15 +51,15 @@ def load_xml_entries(folder_name: str, element_name: str) -> [Entry]:
     :param element_name
     :return: list of loaded entries
     """
-    id_file_path = data_path() / folder_name / (element_name + '_id.dat')
-    value_file_path = data_path() / folder_name / (element_name + '_v.dat')
+    id_file_path = data_path / folder_name / (element_name + '_id.dat')
+    value_file_path = data_path / folder_name / (element_name + '_v.dat')
     ids = load_text_file(id_file_path)
     values = load_text_file(value_file_path)
     if len(ids) != len(values):
         raise ValueError('Id and value files have different size')
     entries = []
     for i in range(len(ids)):
-        entries.append(Entry([DeweyID(ids[i]), float(values[i])]))  # Convert value from string to int
+        entries.append(Entry((DeweyID(ids[i]), float(values[i]))))  # Convert value from string to int
     return entries
 
 
@@ -73,7 +73,7 @@ def load_sql_entries(file_path: Path) -> [Entry]:
     content = load_text_file(file_path)
     entries = []
     for i in range(len(content)):
-        entries.append(Entry([float(x) for x in content[i].split()]))
+        entries.append(Entry(tuple([float(x) for x in content[i].split()])))
     return entries
 
 
@@ -117,7 +117,7 @@ def load_tables(folder_name, all_elements_name):
     """
     logger = logging.getLogger("Loader")
     all_tables_root = {}
-    path = data_path() / folder_name
+    path = data_path / folder_name
     for file_path in path.glob('*_table.dat'):
         table_name = file_path.name[:-10]
         logger.debug('%s %s', 'Loading table:', table_name)
@@ -141,7 +141,7 @@ def load_xml_query(folder_name: str) -> ([str], [[int]]):
     :return: element names and relationship matrix
     """
 
-    xml_query_file_path = data_path() / folder_name / "XML_query.dat"
+    xml_query_file_path = data_path / folder_name / "XML_query.dat"
     with xml_query_file_path.open() as f:
         content = f.readlines()
     content = [x.strip() for x in content]

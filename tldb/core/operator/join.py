@@ -299,8 +299,9 @@ class ComplexXMLSQLJoin(Operator):
             join_b_attr_to_index = {a: join_b_attributes.index(a) for a in join_b_attributes}
             for join_intv in flt_node.join_intervals:
                 init_context = RangeContext(join_b_attributes, join_intv)
-                nodes_in_range = flt_node.desc_range_search(flt_node.idx_interval,
-                                                            join_intv[join_b_attr_to_index[flt_node.name]])
+                nodes_in_range = flt_node.range_search(join_intv[join_b_attr_to_index[flt_node.name]])
+                # nodes_in_range = flt_node.desc_range_search(flt_node.idx_interval,
+                #                                             join_intv[join_b_attr_to_index[flt_node.name]])
                 for node in nodes_in_range:
                     link_children.add(node)
                     node.inited_contexts.add(init_context)

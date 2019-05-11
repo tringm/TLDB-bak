@@ -8,6 +8,8 @@ from tldb.core.structure.entry import Entry
 from tldb.core.structure.node import XMLNode
 from .utils import SKIP_IN_PATH, INDEX_STRUCTURE_MAPPER
 from typing import List
+import logging
+import timeit
 
 
 class TLDB:
@@ -25,6 +27,7 @@ class TLDB:
         # TODO: REPLACE map by some hashmap?
         self._all_objects = {}
         self._all_objects_names = []
+        self.logger = logging.getLogger('Client')
 
     @property
     def all_objects(self):
@@ -63,7 +66,7 @@ class TLDB:
 
     # TODO: think about flexible change file path to an url
     def load_object_from_csv(self, obj_name, file_path, index_type='rtree', delimiter=',',
-                             headers_first_line=True, headers=None):
+                             headers_first_line=True, headers=None, **kwargs):
         """
 
         :param obj_name:
@@ -79,6 +82,8 @@ class TLDB:
             # TODO: handle text?
             cells = tuple(map(lambda x: float(x), row.split(delimiter)))
             return Entry(cells)
+
+        start = timeit.default_timer()
 
         for par in (obj_name, file_path):
             if par in SKIP_IN_PATH:
@@ -99,15 +104,23 @@ class TLDB:
         if len(headers) != len(entries[0].coordinates):
             raise Exception(f"Number of headers {headers} is different from first entry {str(entries[0])}")
 
-        index_structure = INDEX_STRUCTURE_MAPPER[index_type](obj_name)
-        index_structure.load(entries)
+        if 'max_n_children' in kwargs:
+            index_structure = INDEX_STRUCTURE_MAPPER[index_type](obj_name, kwargs['max_n_children'])
+        else:
+            index_structure = INDEX_STRUCTURE_MAPPER[index_type](obj_name)
+        if 'method' in kwargs:
+            index_structure.load(entries, method=kwargs['method'])
+        else:
+            index_structure.load(entries)
         table_object = TableObject(obj_name, index_structure)
         table_object.attributes = {}
         for h in headers:
             table_object.add_attribute(TLDBAttribute(h, table_object))
         self.add_object(table_object)
+        self.logger.info(f"Load {obj_name} from {file_path.stem} took {timeit.default_timer() - start}")
 
-    def load_object_from_xml(self, obj_name, file_path, index_type='rtree'):
+    def load_object_from_xml(self, obj_name, file_path, index_type='rtree', **kwargs):
+        start = timeit.default_timer()
         with file_path.open() as f:
             xml_dict = xmltodict.parse(f.read())
         elements = generate_dewey_id_from_dict(xml_dict)
@@ -120,15 +133,22 @@ class TLDB:
                 attributes[e[1]].append(id_value_pair)
         xml_object = HierarchyObject(obj_name)
         for attr in attributes:
-            index_structure = INDEX_STRUCTURE_MAPPER[index_type](attr)
-            # TODO: handle null and text
-            entries = [Entry([DeweyID(id_v[0]), float(id_v[1])]) for id_v in attributes[attr]]
-            index_structure.load(entries, node_type=XMLNode)
+            if 'max_n_children' in kwargs:
+                index_structure = INDEX_STRUCTURE_MAPPER[index_type](attr, kwargs['max_n_children'])
+            else:
+                index_structure = INDEX_STRUCTURE_MAPPER[index_type](attr)
+            entries = [Entry((DeweyID(id_v[0]), float(id_v[1]))) for id_v in attributes[attr]]
+            if 'method' in kwargs:
+                index_structure.load(entries, method=kwargs['method'], node_type=XMLNode)
+            else:
+                index_structure.load(entries, node_type=XMLNode)
             xml_object.add_attribute(TLDBAttribute(attr, xml_object, index_structure))
         self.add_object(xml_object)
+        self.logger.info(f"Load {obj_name} from {file_path.stem} took {timeit.default_timer() - start}")
 
     # TODO: This is very bad adhoc, used for previous data format
-    def load_from_folder(self, folder_path, index_type='rtree'):
+    def load_from_folder(self, folder_path, index_type='rtree', **kwargs):
+        start = timeit.default_timer()
         xml_element_files = folder_path.glob('*_id.dat')
         attributes = sorted([f.stem.split('_')[0] for f in xml_element_files])
         attributes = dict.fromkeys(attributes)
@@ -141,11 +161,20 @@ class TLDB:
             # TODO: Text and null?
             attr_v = [float(v) for v in attr_v]
             entries = [Entry((DeweyID(id_v[0]), id_v[1])) for id_v in zip(attr_id, attr_v)]
-            index_structure = INDEX_STRUCTURE_MAPPER[index_type](attr)
-            index_structure.load(entries, node_type=XMLNode)
+            if 'max_n_children' in kwargs:
+                index_structure = INDEX_STRUCTURE_MAPPER[index_type](attr, kwargs['max_n_children'])
+            else:
+                index_structure = INDEX_STRUCTURE_MAPPER[index_type](attr)
+            if 'method' in kwargs:
+                index_structure.load(entries, method=kwargs['method'], node_type=XMLNode)
+            else:
+                index_structure.load(entries, node_type=XMLNode)
             xml_object.add_attribute(TLDBAttribute(attr, xml_object, index_structure))
         self.add_object(xml_object)
+        self.logger.info(f"Load {xml_object.name} took {timeit.default_timer() - start}")
         table_files = folder_path.glob('*_table.dat')
         for table_f in sorted(table_files):
             table_name = table_f.stem.replace('_table', '')
-            self.load_object_from_csv(table_name, table_f, delimiter=' ', headers=table_name.split('_'))
+            self.load_object_from_csv(table_name, table_f, delimiter=' ', headers=table_name.split('_'), **kwargs)
+
+        self.logger.info(f"Load from folder {folder_path} took {timeit.default_timer() - start}")
