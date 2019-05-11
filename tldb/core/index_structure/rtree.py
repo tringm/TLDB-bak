@@ -10,7 +10,7 @@ from tldb.core.lib.entries import entries_to_boundary
 
 
 class RTree(IndexStructure):
-    def __init__(self, object_name, max_n_children=2):
+    def __init__(self, object_name, max_n_children):
         super().__init__('rtree', object_name)
         self.root = None
         self.max_n_children = max_n_children
@@ -94,16 +94,16 @@ class RTree(IndexStructure):
             current_n_entries = current_range[1] - current_range[0]  # Number of entries contained in this current node
             # Calculate the height of this subtree based on max_n_children
             height = ceil(round(log(current_n_entries, self.max_n_children), 5))
-            logger.debug('%s %s', 'current_range:', ','.join(str(number) for number in current_range))
-            logger.debug('%s %d', 'current_n_entries:', current_n_entries)
-            logger.debug('%s %d', 'height:', height)
+            # logger.debug('%s %s', 'current_range:', ','.join(str(number) for number in current_range))
+            # logger.debug('%s %d', 'current_n_entries:', current_n_entries)
+            # logger.debug('%s %d', 'height:', height)
 
             # if current node contains has n_entries <= max_n_children then this is a leaf and proceed to add entries
             if current_n_entries <= self.max_n_children:
                 current_node.is_leaf = True
-                logger.debug("Found leaf => add entries")
+                # logger.debug("Found leaf => add entries")
                 adding_entries = entries[current_range[0]:current_range[1]]
-                logger.debug('%s %d', "len(adding_entries):", len(adding_entries))
+                # logger.debug('%s %d', "len(adding_entries):", len(adding_entries))
                 for i in range(len(adding_entries)):
                     current_node.add_entry(adding_entries[i])
 
@@ -111,15 +111,11 @@ class RTree(IndexStructure):
                 logger.debug('Not a leaf => add new nodes')
                 # Number of entries contained in the subtree of this node
                 n_entries_subtree = self.max_n_children ** (height - 1)
-                # n_slices = math.floor(math.sqrt(math.ceil(current_n_entries / n_entries_subtree)))
                 #  Number of slices according to the formula of OMT
                 n_slices = ceil(current_n_entries / n_entries_subtree)
 
-                # if n_entries_subtree == current_n_entries:
-                # 	n_slices = 0
-
-                logger.debug('%s %d', 'n_entries_subtree', n_entries_subtree)
-                logger.debug('%s %d', 'n_slices', n_slices)
+                # logger.debug('%s %d', 'n_entries_subtree', n_entries_subtree)
+                # logger.debug('%s %d', 'n_slices', n_slices)
 
                 # divide into n_slice + 1 nodes, add to current node
                 for i in range(n_slices):
@@ -131,11 +127,12 @@ class RTree(IndexStructure):
                     if i == n_slices - 1:
                         range_high = current_range[1]
 
-                    logger.debug('%s %d %s %d %d', "Child node index:", i, "range", range_low, range_high)
+                    # logger.debug('%s %d %s %d %d', "Child node index:", i, "range", range_low, range_high)
 
-                    subtree_node = node_type(self.max_n_children, parent=current_node, name=self.object_name)
-                    subtree_node.boundary = entries_to_boundary(entries[range_low:range_high])
-                    logger.debug('%s %s', "Child node", str(subtree_node))
+                    subtree_boundary = entries_to_boundary(set(entries[range_low:range_high]))
+                    subtree_node = node_type(self.max_n_children, parent=current_node, name=self.object_name,
+                                             boundary=subtree_boundary)
+                    # logger.debug('%s %s', "Child node", str(subtree_node))
                     current_node.add_child_node(subtree_node)
                     queue.put((subtree_node, (range_low, range_high)))
         self.root = root

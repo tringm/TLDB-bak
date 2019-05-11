@@ -74,19 +74,21 @@ class ComplexXMLSQLJoin(Operator):
         xml_object: HierarchyObject = self.tldb.get_object(self.xml_query.object_name)
         root_attr_index_structure = xml_object.get_attribute(traverse_order[0]).index_structure
         traverse_queue = queue.Queue()
-        traverse_queue.put(root_attr_index_structure.root)
+        traverse_queue.put((root_attr_index_structure.root, [self.initial_range_context]))
 
         results = []
 
         while not traverse_queue.empty():
-            attr_node = traverse_queue.get()
+            attr_node, contexts = traverse_queue.get()
             try:
-                self.filter_with_context(attr_node)
+                reduced_contexts = self.filter_with_context(attr_node, contexts)
+                _l.info(f"\tFilter {str(attr_node)} SUCCESS, returned {str(len(reduced_contexts))} reduced contexts")
+                _l.verbose(f"\tReduced contexts: {str(reduced_contexts)}")
                 _l.debug(f"\tAssign this node children to queue with the reduced contexts: {str(attr_node.children)}")
                 if attr_node.is_leaf:
-                    results.append(attr_node)
+                    results.append((attr_node, reduced_contexts))
                 for child in attr_node.children:
-                    traverse_queue.put(child)
+                    traverse_queue.put((child, [copy.copy(c) for c in reduced_contexts]))
             except NodeFilteredException:
                 pass
                 _l.info(f"\tFilter {str(attr_node)} FAILED")
@@ -100,13 +102,15 @@ class ComplexXMLSQLJoin(Operator):
         for node, time in self.timer['filter_with_context']:
             _l.verbose(f"Node:{node} - time:{time:.3f}")
 
-    def filter_with_context(self, flt_node: XMLNode):
+    def filter_with_context(self, flt_node: XMLNode, contexts: List[RangeContext]):
         def filter_node(msg):
             self.timer['filter_with_context'].append((flt_node, timeit.default_timer() - start_filter_with_context))
             self.mark_node_as_filtered(flt_node, f"filter_w_context: {msg}")
 
         _l = self.logger
         _l.debug(f"{'-'*5} FILTER WITH CONTEXT {'-' * 5}")
+        _l.debug(f"Filter {flt_node} with {len(contexts)} contexts")
+        _l.verbose(f"Contexts: {contexts}")
         start_filter_with_context = timeit.default_timer()
 
         if flt_node.filtered:
@@ -114,7 +118,13 @@ class ComplexXMLSQLJoin(Operator):
             _l.debug(f"{'-' * 20}")
             return
         try:
+            ori_len_contexts = len(contexts)
             v_interval_range_context = RangeContext([flt_node.name], [flt_node.v_interval])
+
+            contexts = [c for c in contexts if c.check_intersection_and_update_boundaries(v_interval_range_context)]
+            _l.debug(f"\tFilter {ori_len_contexts} -> {len(contexts)} contexts based on node v_boundary took {(timeit.default_timer() - start_filter_with_context):.3f}")
+            if not contexts:
+                filter_node(f"None of contexts interX with v_interval {flt_node.v_interval}")
 
             _l.debug(f"{'-' * 20}")
 
@@ -125,7 +135,14 @@ class ComplexXMLSQLJoin(Operator):
             _l.debug("Filter by join intervals combined")
             if flt_node.join_intervals_combined:
                 start_flt_join_intv = timeit.default_timer()
+                ori_len_contexts = len(contexts)
                 compare_context = RangeContext(flt_node.join_boundaries_attributes, flt_node.join_intervals_combined)
+                contexts = [c for c in contexts if c.check_intersection_and_update_boundaries(compare_context)]
+                _l.debug("Filter context based on join intervals combined")
+                _l.debug(f"\tFilter {ori_len_contexts} -> {len(contexts)} took {(timeit.default_timer() - start_flt_join_intv):.3f}")
+                _l.verbose(f"Updated contexts based on join_b: {contexts}")
+                if not contexts:
+                    filter_node('None of contexts interX with node join boundaries')
             else:
                 _l.debug("No join interval combined")
                 pass
@@ -136,12 +153,20 @@ class ComplexXMLSQLJoin(Operator):
             children_relationships = self.xml_query.relationships[flt_node.name]
             for c_rel in children_relationships:
                 c_attr = c_rel[0]
+                updated_contexts = []
                 start_filter_child_attr = timeit.default_timer()
                 for c_node in flt_node.link_xml[c_attr]:
                     try:
-                        self.filter_with_context(c_node)
+                        c_node_contexts = self.filter_with_context(c_node, [copy.copy(c) for c in contexts])
                     except NodeFilteredException:
                         continue
+                    updated_contexts.append(c_node_contexts)
+                updated_contexts = list(itertools.chain(*updated_contexts))
+                _l.debug(f"Filter {len(flt_node.link_xml[c_attr])} {c_attr} children attribute {len(contexts)} -> {len(updated_contexts)} contexts took {(timeit.default_timer() - start_filter_child_attr):.3f}")
+                _l.verbose(f"Updated contexts based on {c_attr} children attribute: {updated_contexts}")
+                if not updated_contexts:
+                    filter_node(f"None of child attribute {c_attr} satisfy contexts")
+                contexts = updated_contexts
                 _l.debug(f"{'-' * 20}")
             _l.debug(f"{'-' * 20}")
         except NodeFilteredException as e:
@@ -150,9 +175,11 @@ class ComplexXMLSQLJoin(Operator):
             raise e
         flt_time = timeit.default_timer() - start_filter_with_context
         self.timer['filter_with_context'].append((flt_node, flt_time))
+        _l.debug(f"Filter with context OK return {len(contexts)}")
+        _l.verbose(f"\t Results contexts: {contexts}")
         _l.debug(f"Filter {flt_node} with contexts took {flt_time:.3f}")
         _l.debug('=====\n')
-        return
+        return contexts
 
     def init_link(self, flt_node: XMLNode):
         _l = self.logger
@@ -271,9 +298,11 @@ class ComplexXMLSQLJoin(Operator):
             join_b_attributes = flt_node.join_boundaries_attributes
             join_b_attr_to_index = {a: join_b_attributes.index(a) for a in join_b_attributes}
             for join_intv in flt_node.join_intervals:
+                init_context = RangeContext(join_b_attributes, join_intv)
                 nodes_in_range = flt_node.range_search(join_intv[join_b_attr_to_index[flt_node.name]])
                 for node in nodes_in_range:
                     link_children.add(node)
+                    node.inited_contexts.add(init_context)
 
             if not link_children:
                 self.mark_node_as_filtered(flt_node, f"link_children: No descendant node satisfy join boundaries")

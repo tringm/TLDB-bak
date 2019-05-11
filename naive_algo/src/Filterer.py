@@ -1,7 +1,7 @@
 from naive_algo.src import Loader
 import timeit
 import copy
-import pandas as pd
+# import pandas as pd
 
 
 def binary_search_entries(entries, value, dimension):
@@ -35,9 +35,6 @@ class Filterer():
     def join_rdb_naive(self):
         def hash_join(array1, array2):
             hash_array = [None] * len(array1)
-
-
-
 
         start_join_rdb_naive = timeit.default_timer()
         join_results = []
@@ -88,40 +85,40 @@ class Filterer():
         print('')
         return join_results
 
-    def join_rdb_pandas(self):
-        # Convert to pd dataframe
-        start_creating_df = timeit.default_timer()
-        tables_df = {}
-        for tbl in self.loader.all_tables:
-            tbl_e = tbl.split('_')
-            tbl_data = {}
-            for d, e in enumerate(tbl_e):
-                tbl_data[e] = [e.coordinates[d] for e in self.loader.all_tables[tbl]]
-            tables_df[tbl] = pd.DataFrame(tbl_data)
-
-        # Start join
-        start_join_rdb_pandas = timeit.default_timer()
-
-        tables = sorted(list(tables_df.keys()), key=lambda tbl: len(tbl), reverse=True)
-        print('BUILD TABLES TOOK', timeit.default_timer() - start_creating_df)
-
-
-        merged_df = tables_df[tables[0]]
-        for idx in range(1, len(tables)):
-            this_tbl = tables[idx]
-            commons_e = list(set(this_tbl.split('_')).intersection(set(list(merged_df.columns))))
-            # print('Common', commons_e)
-            # print('THIS TABLE\n', tables_df[this_tbl].to_string)
-            # print('Previous TABLE\n', merged_df.to_string)
-            merged_df = merged_df.merge(tables_df[this_tbl], on=commons_e, how='inner')
-            # print('Merged result\n', merged_df.to_string)
-            # print('')
-
-        print('JOIN RDB PANDAS RESULTS: ', merged_df.shape[0])
-        # print(merged_df.to_string)
-        print('JOIN RDB PANDAS TIME ', timeit.default_timer() - start_join_rdb_pandas)
-        print('')
-        return merged_df
+    # def join_rdb_pandas(self):
+    #     # Convert to pd dataframe
+    #     start_creating_df = timeit.default_timer()
+    #     tables_df = {}
+    #     for tbl in self.loader.all_tables:
+    #         tbl_e = tbl.split('_')
+    #         tbl_data = {}
+    #         for d, e in enumerate(tbl_e):
+    #             tbl_data[e] = [e.coordinates[d] for e in self.loader.all_tables[tbl]]
+    #         tables_df[tbl] = pd.DataFrame(tbl_data)
+    #
+    #     # Start join
+    #     start_join_rdb_pandas = timeit.default_timer()
+    #
+    #     tables = sorted(list(tables_df.keys()), key=lambda tbl: len(tbl), reverse=True)
+    #     print('BUILD TABLES TOOK', timeit.default_timer() - start_creating_df)
+    #
+    #
+    #     merged_df = tables_df[tables[0]]
+    #     for idx in range(1, len(tables)):
+    #         this_tbl = tables[idx]
+    #         commons_e = list(set(this_tbl.split('_')).intersection(set(list(merged_df.columns))))
+    #         # print('Common', commons_e)
+    #         # print('THIS TABLE\n', tables_df[this_tbl].to_string)
+    #         # print('Previous TABLE\n', merged_df.to_string)
+    #         merged_df = merged_df.merge(tables_df[this_tbl], on=commons_e, how='inner')
+    #         # print('Merged result\n', merged_df.to_string)
+    #         # print('')
+    #
+    #     print('JOIN RDB PANDAS RESULTS: ', merged_df.shape[0])
+    #     # print(merged_df.to_string)
+    #     print('JOIN RDB PANDAS TIME ', timeit.default_timer() - start_join_rdb_pandas)
+    #     print('')
+    #     return merged_df
 
     def join_xml_naive(self, join_rdb_results):
         start_join_xml = timeit.default_timer()
@@ -187,79 +184,79 @@ class Filterer():
 
         print('JOIN XML TIME: ', timeit.default_timer() - start_join_xml)
 
-    def join_xml_pandas(self, merged_rdb):
-        start_build_df = timeit.default_timer()
-        elements_df = {}
-        merged_rdb_xml = merged_rdb
-        for e in self.loader.all_elements:
-            index, v = zip(*[(str(e.coordinates[0]), e.coordinates[1]) for e in self.loader.all_elements[e]])
-            elements_df[e] = pd.DataFrame({e + '_index': index, e + '_value': v})
-            merged_rdb_xml = merged_rdb_xml.merge(elements_df[e], how='inner', left_on=[e], right_on=[e + '_value'])
-            merged_rdb_xml = merged_rdb_xml.drop(columns=[e + '_value'])
-
-            # print('MERGED AFTER ', e)
-            # print(merged_rdb_xml.to_string)
-
-        print('Build table took: ', timeit.default_timer() - start_build_df)
-
-        def is_ancestor(str1, str2) -> bool:
-            components1 = str1.split('.')
-            components2 = str2.split('.')
-            # id2 is shorter -> can't be descendant
-            if len(components1) >= len(components2):
-                return False
-            # Compare element wise
-            for i in range(len(components1)):
-                if components1[i] != components2[i]:
-                    return False
-            return True
-
-        def is_parent(str1, str2) -> bool:
-            components1 = str1.split('.')
-            components2 = str2.split('.')
-            if len(components2) != (len(components1) + 1):
-                return False
-            # Compare element wise
-            for i in range(len(components1)):
-                if components1[i] != components2[i]:
-                    return False
-            return True
-
-        start_check_rsl = timeit.default_timer()
-        # print(self.loader.relationship_matrix)
-        for idx_a in range(len(self.loader.all_elements_name)):
-            for idx_d in range(idx_a + 1, len(self.loader.all_elements_name)):
-                if self.loader.relationship_matrix[idx_a, idx_d] != 0:
-                    remove_rows = []
-                    e_a_col = self.loader.all_elements_name[idx_a] + '_index'
-                    e_d_col = self.loader.all_elements_name[idx_d] + '_index'
-                    for idx, row in merged_rdb_xml.iterrows():
-                        if self.loader.relationship_matrix[idx_a, idx_d] == 1:
-                            if not is_parent(row[e_a_col], row[e_d_col]):
-                                remove_rows.append(idx)
-                        if self.loader.relationship_matrix[idx_a, idx_d] == 2:
-                            if not is_ancestor(row[e_a_col], row[e_d_col]):
-                                remove_rows.append(idx)
-                    merged_rdb_xml = merged_rdb_xml.drop(remove_rows)
-                    # print(e_a_col, e_d_col, 'results: ', merged_rdb_xml.to_string)
-
-        print('CHECK RLS TOOK: ', timeit.default_timer() - start_check_rsl)
-        print('FINAL RESULT: ')
-        print(merged_rdb_xml.to_string)
+    # def join_xml_pandas(self, merged_rdb):
+    #     start_build_df = timeit.default_timer()
+    #     elements_df = {}
+    #     merged_rdb_xml = merged_rdb
+    #     for e in self.loader.all_elements:
+    #         index, v = zip(*[(str(e.coordinates[0]), e.coordinates[1]) for e in self.loader.all_elements[e]])
+    #         elements_df[e] = pd.DataFrame({e + '_index': index, e + '_value': v})
+    #         merged_rdb_xml = merged_rdb_xml.merge(elements_df[e], how='inner', left_on=[e], right_on=[e + '_value'])
+    #         merged_rdb_xml = merged_rdb_xml.drop(columns=[e + '_value'])
+    #
+    #         # print('MERGED AFTER ', e)
+    #         # print(merged_rdb_xml.to_string)
+    #
+    #     print('Build table took: ', timeit.default_timer() - start_build_df)
+    #
+    #     def is_ancestor(str1, str2) -> bool:
+    #         components1 = str1.split('.')
+    #         components2 = str2.split('.')
+    #         # id2 is shorter -> can't be descendant
+    #         if len(components1) >= len(components2):
+    #             return False
+    #         # Compare element wise
+    #         for i in range(len(components1)):
+    #             if components1[i] != components2[i]:
+    #                 return False
+    #         return True
+    #
+    #     def is_parent(str1, str2) -> bool:
+    #         components1 = str1.split('.')
+    #         components2 = str2.split('.')
+    #         if len(components2) != (len(components1) + 1):
+    #             return False
+    #         # Compare element wise
+    #         for i in range(len(components1)):
+    #             if components1[i] != components2[i]:
+    #                 return False
+    #         return True
+    #
+    #     start_check_rsl = timeit.default_timer()
+    #     # print(self.loader.relationship_matrix)
+    #     for idx_a in range(len(self.loader.all_elements_name)):
+    #         for idx_d in range(idx_a + 1, len(self.loader.all_elements_name)):
+    #             if self.loader.relationship_matrix[idx_a, idx_d] != 0:
+    #                 remove_rows = []
+    #                 e_a_col = self.loader.all_elements_name[idx_a] + '_index'
+    #                 e_d_col = self.loader.all_elements_name[idx_d] + '_index'
+    #                 for idx, row in merged_rdb_xml.iterrows():
+    #                     if self.loader.relationship_matrix[idx_a, idx_d] == 1:
+    #                         if not is_parent(row[e_a_col], row[e_d_col]):
+    #                             remove_rows.append(idx)
+    #                     if self.loader.relationship_matrix[idx_a, idx_d] == 2:
+    #                         if not is_ancestor(row[e_a_col], row[e_d_col]):
+    #                             remove_rows.append(idx)
+    #                 merged_rdb_xml = merged_rdb_xml.drop(remove_rows)
+    #                 # print(e_a_col, e_d_col, 'results: ', merged_rdb_xml.to_string)
+    #
+    #     print('CHECK RLS TOOK: ', timeit.default_timer() - start_check_rsl)
+    #     print('FINAL RESULT: ')
+    #     print(merged_rdb_xml.to_string)
 
     def perform(self):
 
-        # start_naive = timeit.default_timer()
-        # join_results_naive = self.join_rdb_naive()
-        # self.join_xml_naive(join_results_naive)
-        # print('TOTAL TIME NAIVE: ', timeit.default_timer() - start_naive)
+        start_naive = timeit.default_timer()
+        join_results_naive = self.join_rdb_naive()
+        self.join_xml_naive(join_results_naive)
+        print('TOTAL TIME NAIVE: ', timeit.default_timer() - start_naive)
         #
         # print("###")
         # print("###")
         # print("###")
 
-        start_pandas = timeit.default_timer()
-        join_results_pandas = self.join_rdb_pandas()
-        self.join_xml_pandas(join_results_pandas)
-
-        print('TOTAL TIME PANDAS: ', timeit.default_timer() - start_pandas)
+        # start_pandas = timeit.default_timer()
+        # join_results_pandas = self.join_rdb_pandas()
+        # self.join_xml_pandas(join_results_pandas)
+        #
+        # print('TOTAL TIME PANDAS: ', timeit.default_timer() - start_pandas)

@@ -497,7 +497,7 @@ def test_big():
 def test_xml_twig1():
     start_time = time.time()
     # id_value_pairs = [['data/test_case1/xml/asin_id_small.dat','data/test_case1/xml/asin_v_index_small.dat'],['data/test_case1/xml/price_id_small.dat','data/test_case1/xml/price_v_small.dat'],['data/test_case1/xml/Orderline_id_small.dat','data/test_case1/xml/Orderline_v_small.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
-    id_value_pairs = [['data/test_case1/xml/asin_id.dat','data/test_case1/xml/asin_v_index.dat'],['data/test_case1/xml/price_id.dat','data/test_case1/xml/price_v.dat'],['data/test_case1/xml/Orderline_id.dat','data/test_case1/xml/Orderline_v.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
+    id_value_pairs = [['data/test_case1/xml/asin_id.dat','data/test_case1/xml/asin_v_index.dat'],['data/test_case1/xml/price_id.dat','data/test_case1/xml/price_v.dat'],['data/test_case1/xml/orderline_id.dat','data/test_case1/xml/orderline_v.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
     attribute_pairs = [['orderline', 'asin'],['orderline', 'price']]
     # print(twig_tables(twig_node_pair(id_value_pairs), attribute_pairs))
 
@@ -542,7 +542,7 @@ def test_xml_twig2():
 def test_xml_twig1_1():
     start_time = time.time()
     # id_value_pairs = [['data/test_case1/xml/asin_id_small.dat','data/test_case1/xml/asin_v_index_small.dat'],['data/test_case1/xml/price_id_small.dat','data/test_case1/xml/price_v_small.dat'],['data/test_case1/xml/Orderline_id_small.dat','data/test_case1/xml/Orderline_v_small.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
-    id_value_pairs = [['data/test_case1/xml/asin_id.dat','data/test_case1/xml/asin_v_index.dat'],['data/test_case1/xml/price_id.dat','data/test_case1/xml/price_v.dat'],['data/test_case1/xml/Orderline_id.dat','data/test_case1/xml/Orderline_v.dat'],['data/test_case1/xml/invoice_id.dat','data/test_case1/xml/invoice_v.dat'],['data/test_case1/xml/OrderId_id.dat','data/test_case1/xml/OrderId_v.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
+    id_value_pairs = [['data/test_case1/xml/asin_id.dat','data/test_case1/xml/asin_v_index.dat'],['data/test_case1/xml/price_id.dat','data/test_case1/xml/price_v.dat'],['data/test_case1/xml/orderline_id.dat','data/test_case1/xml/orderline_v.dat'],['data/test_case1/xml/invoice_id.dat','data/test_case1/xml/invoice_v.dat'],['data/test_case1/xml/OrderId_id.dat','data/test_case1/xml/OrderId_v.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
     attribute_pairs = [['invoice','OrderId'],['invoice','orderline', 'asin'],['invoice','orderline', 'price']]
     # print(twig_tables(twig_node_pair(id_value_pairs), attribute_pairs))
 
@@ -562,13 +562,13 @@ def test_xml_twig1_1():
 
 def test_case3_small():
     start_time = time.time()
-    id_value_pairs = [['data/test_case3/small/asin_id.dat','data/test_case3/small/asin_v.dat'],['data/test_case3/small/price_id.dat','data/test_case3/small/price_v.dat'],['data/test_case3/small/Orderline_id.dat','data/test_case3/small/Orderline_v.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
+    id_value_pairs = [['data/test_case3/small/asin_id.dat','data/test_case3/small/asin_v.dat'],['data/test_case3/small/price_id.dat','data/test_case3/small/price_v.dat'],['data/test_case3/small/orderline_id.dat','data/test_case3/small/orderline_v.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
     attribute_pairs = [['orderline', 'asin'],['orderline', 'price']]
     # print(twig_tables(twig_node_pair(id_value_pairs), attribute_pairs))
 
 
     # rdb_files = ['data/test_case1/rdb/table_invoice_asin.dat','data/test_case1/rdb/rdb_table6_mediate.dat', 'data/test_case1/rdb/rdb_table7_mediate.dat']
-    rdb_files = ['data/test_case3/small/price_asin_table.dat','data/test_case3/small/Orderline_asin_table.dat']
+    rdb_files = ['data/test_case3/small/price_asin_table.dat','data/test_case3/small/orderline_asin_table.dat']
     # for row in (load_data(rdb_files)):
     #     print (row)
     joining_order = ['asin', 'price', 'orderline']
@@ -584,13 +584,13 @@ def test_case3_small():
 
 def test_case3_big():
     start_time = time.time()
-    id_value_pairs = [['data/test_case3/big5k/asin_id.dat','data/test_case3/big5k/asin_v.dat'],['data/test_case3/big5k/price_id.dat','data/test_case3/big5k/price_v.dat'],['data/test_case3/big5k/Orderline_id.dat','data/test_case3/big5k/Orderline_v.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
+    id_value_pairs = [['data/test_case3/big5k/asin_id.dat','data/test_case3/big5k/asin_v.dat'],['data/test_case3/big5k/price_id.dat','data/test_case3/big5k/price_v.dat'],['data/test_case3/big5k/orderline_id.dat','data/test_case3/big5k/orderline_v.dat']]#,['data/test_case1/xml/asdf_id_small.dat','data/test_case1/xml/asdf_v_index_small.dat']]
     attribute_pairs = [['orderline', 'asin'],['orderline', 'price']]
     # print(twig_tables(twig_node_pair(id_value_pairs), attribute_pairs))
 
 
     # rdb_files = ['data/test_case1/rdb/table_invoice_asin.dat','data/test_case1/rdb/rdb_table6_mediate.dat', 'data/test_case1/rdb/rdb_table7_mediate.dat']
-    rdb_files = ['data/test_case3/big5k/price_asin_table.dat','data/test_case3/big5k/Orderline_asin_table.dat']
+    rdb_files = ['data/test_case3/big5k/price_asin_table.dat','data/test_case3/big5k/orderline_asin_table.dat']
     # for row in (load_data(rdb_files)):
     #     print (row)
     joining_order = ['asin', 'price', 'orderline']
@@ -606,8 +606,8 @@ def evaluation_small_naive_q1():
     start_time = time.time()
     id_value_pairs = [['data/test_case3/small/asin_id.dat', 'data/test_case3/small/asin_v.dat'],
                       ['data/test_case3/small/price_id.dat', 'data/test_case3/small/price_v.dat'],
-                      ['data/test_case3/small/Orderline_id.dat',
-                       'data/test_case3/small/Orderline_v.dat']]
+                      ['data/test_case3/small/orderline_id.dat',
+                       'data/test_case3/small/orderline_v.dat']]
     attribute_pairs = [['orderline', 'asin'], ['orderline', 'price']]
     rdb_files = ['data/test_case3/small/table_asin_price_OrderId.dat', 'data/test_case3/small/table_invoice_asin.dat',
                  'data/test_case3/small/table_invoice_orderline.dat',  'data/test_case3/small/table_orderline_asin.dat']
@@ -633,8 +633,8 @@ def evaluation_mediate_naive_q1():
     start_time = time.time()
     id_value_pairs = [['data/test_case3/mediate/asin_id.dat', 'data/test_case3/mediate/asin_v.dat'],
                       ['data/test_case3/mediate/price_id.dat', 'data/test_case3/mediate/price_v.dat'],
-                      ['data/test_case3/mediate/Orderline_id.dat',
-                       'data/test_case3/mediate/Orderline_v.dat']]
+                      ['data/test_case3/mediate/orderline_id.dat',
+                       'data/test_case3/mediate/orderline_v.dat']]
     attribute_pairs = [['orderline', 'asin'], ['orderline', 'price']]
     rdb_files = ['data/test_case3/mediate/table_asin_price_OrderId.dat', 'data/test_case3/mediate/table_invoice_asin.dat',
                  'data/test_case3/mediate/table_invoice_orderline.dat',  'data/test_case3/mediate/table_orderline_asin.dat']
@@ -660,8 +660,8 @@ def evaluation_big_naive_q1():
     start_time = time.time()
     id_value_pairs = [['data/test_case3/big5k/asin_id.dat', 'data/test_case3/big5k/asin_v.dat'],
                       ['data/test_case3/big5k/price_id.dat', 'data/test_case3/big5k/price_v.dat'],
-                      ['data/test_case3/big5k/Orderline_id.dat',
-                       'data/test_case3/big5k/Orderline_v.dat']]
+                      ['data/test_case3/big5k/orderline_id.dat',
+                       'data/test_case3/big5k/orderline_v.dat']]
     attribute_pairs = [['orderline', 'asin'], ['orderline', 'price']]
     rdb_files = ['data/test_case3/big5k/table_asin_price_OrderId.dat', 'data/test_case3/big5k/table_invoice_asin.dat',
                  'data/test_case3/big5k/table_invoice_orderline.dat', 'data/test_case3/big5k/table_orderline_asin.dat']
@@ -686,7 +686,7 @@ def evaluation_small_naive_q2():
     start_time = time.time()
     id_value_pairs = [['data/test_case3/small/asin_id.dat', 'data/test_case3/small/asin_v.dat'],
                       ['data/test_case3/small/price_id.dat', 'data/test_case3/small/price_v.dat'],
-                      ['data/test_case3/small/Orderline_id.dat','data/test_case3/small/Orderline_v.dat'],
+                      ['data/test_case3/small/orderline_id.dat','data/test_case3/small/orderline_v.dat'],
                       ['data/test_case3/small/invoice_id.dat', 'data/test_case3/small/invoice_v.dat'],
                       ['data/test_case3/small/OrderId_id.dat', 'data/test_case3/small/OrderId_v.dat']
                       ]
@@ -717,7 +717,7 @@ def evaluation_mediate_naive_q2():
     start_time = time.time()
     id_value_pairs = [['data/test_case3/mediate/asin_id.dat', 'data/test_case3/mediate/asin_v.dat'],
                       ['data/test_case3/mediate/price_id.dat', 'data/test_case3/mediate/price_v.dat'],
-                      ['data/test_case3/mediate/Orderline_id.dat','data/test_case3/mediate/Orderline_v.dat'],
+                      ['data/test_case3/mediate/orderline_id.dat','data/test_case3/mediate/orderline_v.dat'],
                       ['data/test_case3/mediate/invoice_id.dat', 'data/test_case3/mediate/invoice_v.dat'],
                       ['data/test_case3/mediate/OrderId_id.dat', 'data/test_case3/mediate/OrderId_v.dat']
                       ]
@@ -749,7 +749,7 @@ def evaluation_big_naive_q2():
     start_time = time.time()
     id_value_pairs = [['data/test_case3/big5k/asin_id.dat', 'data/test_case3/big5k/asin_v.dat'],
                       ['data/test_case3/big5k/price_id.dat', 'data/test_case3/big5k/price_v.dat'],
-                      ['data/test_case3/big5k/Orderline_id.dat','data/test_case3/big5k/Orderline_v.dat'],
+                      ['data/test_case3/big5k/orderline_id.dat','data/test_case3/big5k/orderline_v.dat'],
                       ['data/test_case3/big5k/invoice_id.dat', 'data/test_case3/big5k/invoice_v.dat'],
                       ['data/test_case3/big5k/OrderId_id.dat', 'data/test_case3/big5k/OrderId_v.dat']
                       ]
@@ -908,8 +908,8 @@ def evaluation_naive_q1():
     data_size ='big5k'
     id_value_pairs = [['data/'+folder+'/'+data_size+'//asin_id.dat', 'data/'+folder+'/'+data_size+'//asin_v.dat'],
                       ['data/'+folder+'/'+data_size+'//price_id.dat', 'data/'+folder+'/'+data_size+'//price_v.dat'],
-                      ['data/'+folder+'/'+data_size+'//Orderline_id.dat',
-                       'data/'+folder+'/'+data_size+'//Orderline_v.dat']]
+                      ['data/'+folder+'/'+data_size+'//orderline_id.dat',
+                       'data/'+folder+'/'+data_size+'//orderline_v.dat']]
     attribute_pairs = [['orderline', 'asin'], ['orderline', 'price']]
     A_D_pair = []
     rdb_files = ['data/'+folder+'/'+data_size+'//table_asin_price_OrderId.dat', 'data/'+folder+'/'+data_size+'//table_invoice_asin.dat',
@@ -938,7 +938,7 @@ def evaluation_naive_q2():
     A_D_pair = []
     id_value_pairs = [['data/'+folder+'/'+data_size+'//asin_id.dat', 'data/'+folder+'/'+data_size+'//asin_v.dat'],
                       ['data/'+folder+'/'+data_size+'//price_id.dat', 'data/'+folder+'/'+data_size+'//price_v.dat'],
-                      ['data/'+folder+'/'+data_size+'//Orderline_id.dat','data/'+folder+'/'+data_size+'//Orderline_v.dat'],
+                      ['data/'+folder+'/'+data_size+'//orderline_id.dat','data/'+folder+'/'+data_size+'//orderline_v.dat'],
                       ['data/'+folder+'/'+data_size+'//invoice_id.dat', 'data/'+folder+'/'+data_size+'//invoice_v.dat'],
                       ['data/'+folder+'/'+data_size+'//OrderId_id.dat', 'data/'+folder+'/'+data_size+'//OrderId_v.dat']
                       ]
@@ -1387,8 +1387,8 @@ def evaluation_naive_q10():
     data_size ='big1m2m'
     id_value_pairs = [['data/'+folder+'/'+data_size+'/asin_id.dat', 'data/'+folder+'/'+data_size+'/asin_v.dat'],
                       ['data/'+folder+'/'+data_size+'/price_id.dat', 'data/'+folder+'/'+data_size+'/price_v.dat'],
-                      ['data/'+folder+'/'+data_size+'/Orderline_id.dat',
-                       'data/'+folder+'/'+data_size+'/Orderline_v.dat']]
+                      ['data/'+folder+'/'+data_size+'/orderline_id.dat',
+                       'data/'+folder+'/'+data_size+'/orderline_v.dat']]
     attribute_pairs = [['orderline', 'asin'], ['orderline', 'price']]
     A_D_pairs = []
     rdb_files = [ 'data/'+folder+'/'+data_size+'/table_orderid_personid_asin.dat', 'data/'+folder+'/'+data_size+'/table_asin_orderId.dat',
@@ -1425,7 +1425,7 @@ def evaluation_naive_q11():
     A_D_pair = []
     id_value_pairs = [['data/'+folder+'/'+data_size+'//asin_id.dat', 'data/'+folder+'/'+data_size+'//asin_v.dat'],
                       ['data/'+folder+'/'+data_size+'//price_id.dat', 'data/'+folder+'/'+data_size+'//price_v.dat'],
-                      ['data/'+folder+'/'+data_size+'//Orderline_id.dat','data/'+folder+'/'+data_size+'//orderline_v.dat'],
+                      ['data/'+folder+'/'+data_size+'//orderline_id.dat','data/'+folder+'/'+data_size+'//orderline_v.dat'],
                       ['data/'+folder+'/'+data_size+'//invoice_id.dat', 'data/'+folder+'/'+data_size+'//invoice_v.dat'],
                       ['data/'+folder+'/'+data_size+'//OrderId_id.dat', 'data/'+folder+'/'+data_size+'//orderId_v.dat']
                       ]
