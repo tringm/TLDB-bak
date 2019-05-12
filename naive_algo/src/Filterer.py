@@ -33,14 +33,12 @@ class Filterer():
         self.loader = loader
 
     def join_rdb_naive(self):
-        def hash_join(array1, array2):
-            hash_array = [None] * len(array1)
-
         start_join_rdb_naive = timeit.default_timer()
         join_results = []
         tables = sorted(list(self.loader.all_tables.keys()), key=lambda tbl: len(tbl), reverse=True)
 
         for tbl in tables:
+            print(f"Joining table {tbl}")
             tbl_elements = tbl.split('_')
             tbl_entries = self.loader.all_tables[tbl]
             if not join_results:
@@ -50,33 +48,30 @@ class Filterer():
                 updated_join_results = []
                 commons_e = list(set(tbl_elements).intersection(set(list(join_results[0].keys()))))
 
-
                 # TODO: No commons_e
-                print('Common E: ', commons_e[0])
-                print(hash_join([join_rslt[commons_e[0]] for join_rslt in join_results],
-                                [tbl_e.coordinates[tbl_elements.index(commons_e[0])] for tbl_e in tbl_entries]))
-
+                if commons_e:
+                    print('Common E: ', commons_e[0])
+                # print(hash_join([join_rslt[commons_e[0]] for join_rslt in join_results],
+                #                 [tbl_e.coordinates[tbl_elements.index(commons_e[0])] for tbl_e in tbl_entries]))
 
                 for join_rslt in join_results:
                     for tbl_e in tbl_entries:
-                        interx = {}
+                        interx = {e: join_rslt[e] for e in join_rslt}
                         all_e_ok = True
                         for d, e in enumerate(tbl_elements):
                             if e not in join_rslt:
                                 interx[e] = tbl_e.coordinates[d]
                             else:
-                                if join_rslt[e] != tbl_e.coordinates[d]:
+                                if interx[e] != tbl_e.coordinates[d]:
                                     all_e_ok = False
                                     break
                         if all_e_ok:
-                            for e in join_rslt:
-                                if e not in interx:
-                                    interx[e] = join_rslt[e]
                             updated_join_results.append(interx)
 
                 join_results = updated_join_results
                 if not updated_join_results:
                     break
+            print(f"Intermediate results after joining table {tbl}: {len(join_results)}")
 
         print('JOIN RDB NAIVE RESULTS: ', len(join_results))
         # for join_rslt in join_results:
@@ -123,6 +118,7 @@ class Filterer():
     def join_xml_naive(self, join_rdb_results):
         start_join_xml = timeit.default_timer()
         matches = []
+
         for e in join_rdb_results[0]:
             if not matches:
                 for join_idx, join_rslt in enumerate(join_rdb_results):
@@ -248,7 +244,10 @@ class Filterer():
 
         start_naive = timeit.default_timer()
         join_results_naive = self.join_rdb_naive()
-        self.join_xml_naive(join_results_naive)
+        if join_results_naive:
+            self.join_xml_naive(join_results_naive)
+        else:
+            print('No result found after join_rdb')
         print('TOTAL TIME NAIVE: ', timeit.default_timer() - start_naive)
         #
         # print("###")
