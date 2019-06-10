@@ -1,7 +1,7 @@
 import xmltodict
 
 from .attribute import TLDBAttribute
-from .object import HierarchyObject, TableObject
+from .object import TLDBObject, HierarchyObject, TableObject
 from tldb.core.lib.dewey_id import generate_dewey_id_from_dict
 from tldb.core.structure.dewey_id import DeweyID
 from tldb.core.structure.entry import Entry
@@ -37,12 +37,12 @@ class TLDB:
     def all_objects_name(self):
         return self._all_objects_names
 
-    def get_object(self, obj_name):
+    def get_object(self, obj_name: str) -> TLDBObject:
         if obj_name not in self._all_objects:
             raise Exception("Object %s does not exist" % obj_name)
         return self._all_objects[obj_name]
 
-    def get_multiple_objects(self, objects_name: List[str]):
+    def get_multiple_objects(self, objects_name: List[str]) -> List[TLDBObject]:
         objects = []
         for obj_name in objects_name:
             if obj_name not in self._all_objects:
@@ -50,13 +50,13 @@ class TLDB:
             objects.append(self._all_objects[obj_name])
         return objects
 
-    def add_object(self, obj):
+    def add_object(self, obj: TLDBObject):
         if obj.name in self._all_objects:
             raise Exception("Object %s existed" % obj.name)
         self._all_objects_names.append(obj.name)
         self._all_objects[obj.name] = obj
 
-    def add_multiple_objects(self, objects):
+    def add_multiple_objects(self, objects: List[TLDBObject]):
         for obj in objects:
             if obj.name in self._all_objects:
                 raise Exception("Object %s existed" % obj.name)

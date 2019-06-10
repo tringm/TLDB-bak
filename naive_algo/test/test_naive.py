@@ -14,7 +14,7 @@ logging.addLevelName(logging.TIMER, "TIMER")
 logging.Logger.timer = lambda inst, msg, *args, **kwargs: inst.log(logging.TIMER, msg, *args, **kwargs)
 logging.timer = lambda msg, *args, **kwargs: logging.log(logging.TIMER, msg, *args, **kwargs)
 
-folder_name = "orderline_price_asin_medium"
+folder_name = "invoice_complex_medium"
 # folder_name = "simple_small"
 
 start_loading = timeit.default_timer()

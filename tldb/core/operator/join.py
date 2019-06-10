@@ -164,7 +164,8 @@ class ComplexXMLSQLJoin(Operator):
                         c_node_contexts = self.filter_with_context(c_node, [copy.copy(c) for c in contexts])
                     except NodeFilteredException:
                         continue
-                    updated_contexts.append(c_node_contexts)
+                    if c_node_contexts:
+                        updated_contexts.append(c_node_contexts)
                 updated_contexts = set(itertools.chain(*updated_contexts))
                 _l.debug(f"Filter {c_attr} children attribute {len(contexts)} -> {len(updated_contexts)} took {(timeit.default_timer() - start_filter_child_attr):.3f}")
                 _l.verbose(f"Updated contexts based on {c_attr} children attribute: {updated_contexts}")
@@ -174,8 +175,7 @@ class ComplexXMLSQLJoin(Operator):
                 _l.debug(f"{'-' * 20}")
             _l.debug(f"{'-' * 20}")
         except NodeFilteredException as e:
-            _l.info(f"Filter with context {flt_node} FAILED")
-            _l.info(f"\tReason: {flt_node.reason_of_filtered}")
+            _l.debug(f"Filter with context {flt_node} FAILED: {flt_node.reason_of_filtered}")
             raise e
         flt_time = timeit.default_timer() - start_filter_with_context
         self.timer['filter_with_context'].append((flt_node, flt_time))

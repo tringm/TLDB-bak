@@ -115,16 +115,14 @@ def load_tables(folder_name, all_elements_name):
     Returns:
         all_tables_root (dict[string, Node]): 
     """
-    logger = logging.getLogger("Loader")
     all_tables_root = {}
     path = data_path / folder_name
     for file_path in path.glob('*_table.dat'):
         table_name = file_path.name[:-10]
-        logger.debug('%s %s', 'Loading table:', table_name)
         start_loading = timeit.default_timer()
         all_tables_root[table_name] = sorted(load_sql_entries(file_path), key=lambda e: e.coordinates[get_index_highest_element(all_elements_name, table_name)])
         end_loading = timeit.default_timer()
-        logger.debug('%s %d', 'Loading table:', end_loading - start_loading)
+        print(f"Loading table {table_name} took: {end_loading - start_loading}")
     return all_tables_root
 
 

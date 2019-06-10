@@ -3,8 +3,8 @@ import shutil
 
 TEST_PATH = root_path() / 'test' / 'io' / 'in' / 'cases'
 INPUT_FOLDER = 'invoice_complex'
-OUTPUT_FOLDER = 'invoice_complex_small'
-N_LINES = 1000
+OUTPUT_FOLDER = 'invoice_complex_big'
+N_LINES = 5000
 
 (TEST_PATH / OUTPUT_FOLDER).mkdir(parents=True, exist_ok=True)
 

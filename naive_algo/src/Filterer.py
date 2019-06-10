@@ -36,6 +36,7 @@ class Filterer():
         start_join_rdb_naive = timeit.default_timer()
         join_results = []
         tables = sorted(list(self.loader.all_tables.keys()), key=lambda tbl: len(tbl), reverse=True)
+        print(f"Tables: {tables}")
 
         for tbl in tables:
             print(f"Joining table {tbl}")
