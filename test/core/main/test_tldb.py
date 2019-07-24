@@ -15,8 +15,8 @@ class TestTLDB(TestCaseCompare):
         method_id = self.id().split('.')[-1]
         self.set_up_compare_files(method_id)
 
-        self.tldb.load_object_from_csv('table', self.input_folder / 'A_B_D_table.dat', delimiter=' ', index_type='rtree',
-                                       headers=['A', 'B', 'D'])
+        self.tldb.load_table_object_from_csv('table', self.input_folder / 'A_B_D_table.dat', delimiter=' ', index_type='rtree',
+                                             headers=['A', 'B', 'D'])
 
         with self.out_file[method_id].open(mode='w') as f:
             f.write(self.tldb.get_object('table').ordered_str())

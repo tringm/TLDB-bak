@@ -12,10 +12,10 @@ class TestMultiNodesRangeSearch(TestCaseCompare):
         super(TestMultiNodesRangeSearch, cls).setUpClass()
         cls.tldb = TLDB('local')
         cls.input_folder = cls.input_folder / 'cases' / 'simple_small'
-        cls.tldb.load_object_from_csv('table',
-                                      cls.input_folder / 'A_B_D_table.dat',
-                                      delimiter=' ',
-                                      headers=['A', 'B', 'D'])
+        cls.tldb.load_table_object_from_csv('table',
+                                            cls.input_folder / 'A_B_D_table.dat',
+                                            delimiter=' ',
+                                            headers=['A', 'B', 'D'])
         cls.table = cls.tldb.get_object('table')
 
     def test_gap(self):

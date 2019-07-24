@@ -65,14 +65,14 @@ class TLDB:
             self._all_objects[obj.name] = obj
 
     # TODO: think about flexible change file path to an url
-    def load_object_from_csv(self, obj_name, file_path, index_type='rtree', delimiter=',',
-                             headers_first_line=True, headers=None, **kwargs):
+    def load_table_object_from_csv(self, obj_name, file_path, index_type='rtree', delimiter=',',
+                                   headers_first_line=True, headers=None, **kwargs):
         """
 
-        :param obj_name:
-        :param file_path:
-        :param index_type:
-        :param delimiter:
+        :param obj_name: name of the table object
+        :param file_path: csv file path
+        :param index_type: index structure to be used
+        :param delimiter: character separated
         :param headers_first_line: True if header is in first line of the file
         :param headers: a list of headers
         :return:
@@ -146,7 +146,7 @@ class TLDB:
         self.add_object(xml_object)
         self.logger.info(f"Load {obj_name} from {file_path.stem} took {timeit.default_timer() - start}")
 
-    # TODO: This is very bad adhoc, used for previous data format
+    # TODO: This is a very bad adhoc, used for the previous data format
     def load_from_folder(self, folder_path, index_type='rtree', **kwargs):
         start = timeit.default_timer()
         xml_element_files = folder_path.glob('*_id.dat')
@@ -175,6 +175,6 @@ class TLDB:
         table_files = folder_path.glob('*_table.dat')
         for table_f in sorted(table_files):
             table_name = table_f.stem.replace('_table', '')
-            self.load_object_from_csv(table_name, table_f, delimiter=' ', headers=table_name.split('_'), **kwargs)
+            self.load_table_object_from_csv(table_name, table_f, delimiter=' ', headers=table_name.split('_'), **kwargs)
 
         self.logger.info(f"Load from folder {folder_path} took {timeit.default_timer() - start}")
