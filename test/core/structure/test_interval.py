@@ -1,15 +1,10 @@
 import unittest
 
-from test.tests import TestCaseCompare
+from test.test_case import TestCaseTimer
 from tldb.core.structure.interval import Interval
 
 
-class TestInterval(TestCaseCompare):
-    @classmethod
-    def setUpClass(cls):
-        super(TestInterval, cls).setUpClass()
-        cls.output_folder = cls.output_folder / 'core' / 'structure' / 'interval'
-
+class TestInterval(TestCaseTimer):
     def test_interval_from_tuple_and_list(self):
         interval1 = Interval([1, 2])
         interval2 = Interval((1, 2))

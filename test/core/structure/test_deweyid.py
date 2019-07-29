@@ -1,14 +1,8 @@
-from test.tests import TestCaseCompare
+from test.test_case import TestCaseTimer
 from tldb.core.structure.dewey_id import DeweyID
 
 
-class TestDeweyID(TestCaseCompare):
-    @classmethod
-    def setUpClass(cls):
-        super(TestDeweyID, cls).setUpClass()
-        cls.input_folder = cls.input_folder / 'cases' / 'simple_small'
-        cls.output_folder = cls.output_folder / 'core' / 'structure' / 'dewey_id'
-
+class TestDeweyID(TestCaseTimer):
     def test_deweyid_from_string(self):
         dewey_id = DeweyID('1.2.3')
         self.assertEqual(dewey_id.id, '1.2.3')

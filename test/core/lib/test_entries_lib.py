@@ -1,4 +1,4 @@
-from test.tests import TestCaseCompare
+from test.test_case import TestCaseCompare
 
 
 # class TestEntriesLib(TestCaseCompare):

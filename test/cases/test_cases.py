@@ -1,6 +1,6 @@
 import logging
 
-from test.tests import TestCaseCompare
+from test.test_case import TestCaseCompare
 from tldb.core.client import TLDB
 from tldb.core.object import TableObject
 from tldb.core.operator.join import ComplexXMLSQLJoin
@@ -13,15 +13,10 @@ import unittest
 class TestCaseSimpleSmall(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super(TestCaseSimpleSmall, cls).setUpClass()
+        super().setUpClass('cases/simple_small')
         cls.tldb = TLDB('local')
-        cls.input_folder = cls.input_folder / 'cases' / 'simple_small'
-        cls.output_folder = cls.output_folder / 'cases'
 
     def test_simple_small(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
-        self.set_up_logger(method_id, logging.VERBOSE)
         self.tldb.load_from_folder(self.input_folder, index_type='rtree', max_n_children=2)
         xml_query = XMLQuery('A_B_C_D_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'XML_query.dat')
@@ -41,16 +36,11 @@ class TestCaseSimpleSmall(TestCaseCompare):
 class TestCaseOrderline(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super(TestCaseOrderline, cls).setUpClass()
+        super().setUpClass('cases/orderline')
         cls.tldb = TLDB('local')
-        cls.input_folder = cls.input_folder / 'cases'
-        cls.output_folder = cls.output_folder / 'cases'
 
     @unittest.skip("")
     def test_orderline_price_asin_small_original(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
-        self.set_up_logger(method_id, logging.INFO)
         self.tldb.load_from_folder(self.input_folder / 'orderline_price_asin_small_original', index_type='rtree', max_n_children=500)
         xml_query = XMLQuery('asin_orderline_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'orderline_price_asin_small_original' / 'XML_query.dat')
@@ -68,9 +58,6 @@ class TestCaseOrderline(TestCaseCompare):
 
     @unittest.skip("")
     def test_orderline_price_asin_medium(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
-        self.set_up_logger(method_id, logging.INFO)
         self.tldb.load_from_folder(self.input_folder / 'orderline_price_asin_medium', index_type='rtree', max_n_children=500)
         xml_query = XMLQuery('asin_orderline_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'orderline_price_asin_medium' / 'XML_query.dat')
@@ -86,10 +73,8 @@ class TestCaseOrderline(TestCaseCompare):
         join_op = ComplexXMLSQLJoin(self.tldb, xml_query=xml_query, tables=tables_name, initial_range_context=initial_range)
         join_op.perform()
 
+    @unittest.skip("")
     def test_orderline_price_asin_big(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
-        self.set_up_logger(method_id, logging.INFO)
         self.tldb.load_from_folder(self.input_folder / 'orderline_price_asin_big', index_type='rtree', max_n_children=1000)
         xml_query = XMLQuery('asin_orderline_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'orderline_price_asin_big' / 'XML_query.dat')
@@ -109,16 +94,11 @@ class TestCaseOrderline(TestCaseCompare):
 class TestCaseInvoice(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super(TestCaseInvoice, cls).setUpClass()
+        super().setUpClass('cases/invoice')
         cls.tldb = TLDB('local')
-        cls.input_folder = cls.input_folder / 'cases'
-        cls.output_folder = cls.output_folder / 'cases'
 
     @unittest.skip("")
     def test_invoice_small(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
-        self.set_up_logger(method_id, logging.INFO)
         self.tldb.load_from_folder(self.input_folder / 'invoice_complex_small', index_type='rtree', max_n_children=100)
         xml_query = XMLQuery('Invoice_OrderId_Orderline_asin_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'invoice_complex_small' / 'XML_query.dat')
@@ -136,9 +116,6 @@ class TestCaseInvoice(TestCaseCompare):
 
     @unittest.skip("")
     def test_invoice_medium(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
-        self.set_up_logger(method_id, logging.INFO)
         self.tldb.load_from_folder(self.input_folder / 'invoice_complex_medium', index_type='rtree', max_n_children=100)
         xml_query = XMLQuery('Invoice_OrderId_Orderline_asin_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'invoice_complex_medium' / 'XML_query.dat')
@@ -176,9 +153,6 @@ class TestCaseInvoice(TestCaseCompare):
 
     @unittest.skip("")
     def test_invoice_small_with_range(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
-        self.set_up_logger(method_id, logging.INFO)
         self.tldb.load_from_folder(self.input_folder / 'invoice_complex_small', index_type='rtree', max_n_children=100)
         xml_query = XMLQuery('Invoice_OrderId_Orderline_asin_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'invoice_complex_big' / 'XML_query.dat')
@@ -195,11 +169,7 @@ class TestCaseInvoice(TestCaseCompare):
         join_op = ComplexXMLSQLJoin(self.tldb, xml_query=xml_query, tables=tables_name, initial_range_context=initial_range)
         join_op.perform()
 
-
     def test_invoice_medium_with_range(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
-        self.set_up_logger(method_id, logging.INFO)
         self.tldb.load_from_folder(self.input_folder / 'invoice_complex_medium', index_type='rtree', max_n_children=100)
         xml_query = XMLQuery('Invoice_OrderId_Orderline_asin_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'invoice_complex_big' / 'XML_query.dat')
@@ -218,9 +188,6 @@ class TestCaseInvoice(TestCaseCompare):
 
     @unittest.skip("")
     def test_invoice_big_with_range(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
-        self.set_up_logger(method_id, logging.INFO)
         self.tldb.load_from_folder(self.input_folder / 'invoice_complex_big', index_type='rtree', max_n_children=100)
         xml_query = XMLQuery('Invoice_OrderId_Orderline_asin_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'invoice_complex_big' / 'XML_query.dat')

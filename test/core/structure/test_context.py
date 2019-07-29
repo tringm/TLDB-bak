@@ -1,24 +1,22 @@
-from test.tests import TestCaseCompare
-from tldb.core.structure.context import RangeContext
 import copy
 
+from test.test_case import TestCaseCompare
+from tldb.core.structure.context import RangeContext
 from tldb.core.structure.interval import Interval
 
 
 class TestRangeContext(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super(TestRangeContext, cls).setUpClass()
-        cls.output_folder = cls.output_folder / 'core' / 'structure' / 'context' / 'range_context'
+        super().setUpClass('core/structure/context/range_context')
 
     def test_str(self):
-        method_id = self.id().split('.')[-1]
-        self.set_up_compare_files(method_id)
+        method_name = self.id().split('.')[-1]
         context = RangeContext(['A', 'B', 'D'],
                                [Interval([6.0, 118.0]), Interval([17.0, 600.0]), Interval([13.0, 72.0])])
-        with self.out_file[method_id].open(mode='w') as f:
+        with self.out_file[method_name].open(mode='w') as f:
             f.write(str(context))
-        self.file_compare(self.out_file[method_id], self.exp_file[method_id])
+        self.file_compare(self.out_file[method_name], self.exp_file[method_name])
 
     def test_check_intersection(self):
         context = RangeContext(['A', 'B', 'D'],

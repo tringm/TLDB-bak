@@ -1,6 +1,7 @@
 import unittest
 
-from test.tests import TestCaseCompare
+from config import root_path
+from test.test_case import TestCaseTimer
 from tldb.core.client import TLDB
 from tldb.core.structure.boundary import Boundary
 from tldb.core.structure.dewey_id import DeweyID
@@ -9,11 +10,7 @@ from tldb.core.structure.interval import Interval
 from tldb.core.structure.node import Node
 
 
-class TestNode(TestCaseCompare):
-    @classmethod
-    def setUpClass(cls):
-        super(TestNode, cls).setUpClass()
-
+class TestNode(TestCaseTimer):
     def test_add_entry(self):
         node = Node(2, 'node')
         node.add_entry(Entry((1, 2, 3)))
@@ -78,17 +75,14 @@ class TestNode(TestCaseCompare):
         self.assertSetEqual(node.get_leaf_nodes(), {child1})
 
 
-class TestNodeRangeSearch(TestCaseCompare):
+class TestNodeRangeSearch(TestCaseTimer):
     @classmethod
     def setUpClass(cls):
-        super(TestNodeRangeSearch, cls).setUpClass()
+        super().setUpClass()
         cls.tldb = TLDB('local')
-        cls.input_folder = cls.input_folder / 'cases' / 'simple_small'
-        cls.tldb.load_table_object_from_csv('table',
-                                            cls.input_folder / 'A_B_D_table.dat',
-                                            delimiter=' ',
-                                            headers=['A', 'B', 'D'])
-
+        input_path = root_path() / 'test' / 'io' / 'in' / 'cases' / 'simple_small' / 'A_B_D_table.dat'
+        cls.tldb.load_table_object_from_csv('table', input_path, delimiter=' ', headers=['A', 'B', 'D'],
+                                            max_n_children=2)
         cls.table = cls.tldb.get_object('table')
 
     def test_out_of_range_below(self):
@@ -125,13 +119,13 @@ class TestNodeRangeSearch(TestCaseCompare):
         self.assertFalse(result, "Should not return any result due to the gap [19, 20]")
 
 
-class TestXMLNode(TestCaseCompare):
+class TestXMLNode(TestCaseTimer):
     @classmethod
     def setUpClass(cls):
-        super(TestXMLNode, cls).setUpClass()
+        super().setUpClass()
         cls.tldb = TLDB('local')
-        cls.input_folder = cls.input_folder / 'cases' / 'simple_small'
-        cls.tldb.load_from_folder(cls.input_folder)
+        input_path = root_path() / 'test' / 'io' / 'in' / 'cases' / 'simple_small'
+        cls.tldb.load_from_folder(input_path, max_n_children=2)
 
     @unittest.SkipTest
     def test_descendant_range_search_only_v(self):

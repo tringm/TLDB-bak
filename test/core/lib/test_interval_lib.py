@@ -1,13 +1,9 @@
-from test.tests import TestCaseCompare
+from test.test_case import TestCaseTimer
 from tldb.core.lib.interval import union_two_intervals, intersect_two_intervals, union_multiple_intervals
 from tldb.core.structure.interval import Interval
 
 
-class TestInterValLib(TestCaseCompare):
-    @classmethod
-    def setUpClass(cls):
-        super(TestInterValLib, cls).setUpClass()
-
+class TestInterValLib(TestCaseTimer):
     def test_union_two_intervals(self):
         interval1 = Interval((1, 10))
         interval2 = Interval((5, 20))

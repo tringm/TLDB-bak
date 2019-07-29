@@ -1,16 +1,9 @@
-import unittest
-
-from test.tests import TestCaseCompare
-from tldb.core.structure.interval import Interval
+from test.test_case import TestCaseTimer
 from tldb.core.structure.boundary import Boundary
+from tldb.core.structure.interval import Interval
 
 
-class TestBoundary(TestCaseCompare):
-    @classmethod
-    def setUpClass(cls):
-        super(TestBoundary, cls).setUpClass()
-        cls.output_folder = cls.output_folder / 'core' / 'structure' / 'boundary'
-
+class TestBoundary(TestCaseTimer):
     def test_str(self):
         boundary = Boundary((Interval((1, 2)), Interval((2, 3))))
         self.assertEqual(str((Interval((1, 2)), Interval((2, 3)))), str(boundary))
