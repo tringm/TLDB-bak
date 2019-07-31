@@ -1,6 +1,6 @@
 import logging
 
-from test.test_case import TestCaseCompare
+from tests.test_case import TestCaseCompare
 from tldb.core.client import TLDB
 from tldb.core.object import TableObject
 from tldb.core.operator.join import ComplexXMLSQLJoin
@@ -39,12 +39,10 @@ class TestCaseOrderline(TestCaseCompare):
         super().setUpClass('cases/orderline')
         cls.tldb = TLDB('local')
 
-    @unittest.skip("")
     def test_orderline_price_asin_small_original(self):
         self.tldb.load_from_folder(self.input_folder / 'orderline_price_asin_small_original', index_type='rtree', max_n_children=500)
         xml_query = XMLQuery('asin_orderline_price_xml')
         xml_query.load_from_matrix_file(self.input_folder / 'orderline_price_asin_small_original' / 'XML_query.dat')
-
         attributes = xml_query.traverse_order
         initial_range = RangeContext(attributes,
                                      [self.tldb.get_object('asin_orderline_price_xml').get_attribute(a).index_structure.root.v_interval

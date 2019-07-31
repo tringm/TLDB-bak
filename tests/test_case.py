@@ -25,11 +25,11 @@ class TestCaseCompare(TestCaseTimer):
         :return:
         """
         if not test_path:
-            cls.input_folder = root_path() / 'test' / 'io' / 'in' / cls.__name__
-            cls.output_folder = root_path() / 'test' / 'io' / 'out' / cls.__name__
+            cls.input_folder = root_path() / 'tests' / 'io' / 'in' / cls.__name__
+            cls.output_folder = root_path() / 'tests' / 'io' / 'out' / cls.__name__
         else:
-            cls.input_folder = (root_path() / 'test' / 'io' / 'in').joinpath(test_path)
-            cls.output_folder = (root_path() / 'test' / 'io' / 'out').joinpath(test_path)
+            cls.input_folder = (root_path() / 'tests' / 'io' / 'in').joinpath(test_path)
+            cls.output_folder = (root_path() / 'tests' / 'io' / 'out').joinpath(test_path)
         cls.input_folder.mkdir(parents=True, exist_ok=True)
         cls.output_folder.mkdir(parents=True, exist_ok=True)
         cls.out_file = {}

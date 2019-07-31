@@ -1,4 +1,4 @@
-from test.test_case import TestCaseTimer
+from tests.test_case import TestCaseTimer
 from tldb.core.lib.interval import union_two_intervals, intersect_two_intervals, union_multiple_intervals
 from tldb.core.structure.interval import Interval
 

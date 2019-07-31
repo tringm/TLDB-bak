@@ -10,7 +10,7 @@ import logging
 import timeit
 
 
-data_path = root_path() / 'test' / 'io' / 'in' / 'cases'
+data_path = root_path() / 'tests' / 'io' / 'in' / 'cases'
 
 
 def get_index_highest_element(all_elements_name: [str], table_name: str) -> int:

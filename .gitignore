@@ -11,4 +11,4 @@ __pycache__/
 *.log
 
 #cases data
-test/io/in/cases/
+tests/io/in/cases/

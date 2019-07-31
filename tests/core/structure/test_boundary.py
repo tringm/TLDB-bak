@@ -1,4 +1,4 @@
-from test.test_case import TestCaseTimer
+from tests.test_case import TestCaseTimer
 from tldb.core.structure.boundary import Boundary
 from tldb.core.structure.interval import Interval
 

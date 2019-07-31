@@ -1,7 +1,7 @@
 import unittest
 
 from config import root_path
-from test.test_case import TestCaseTimer
+from tests.test_case import TestCaseTimer
 from tldb.core.client import TLDB
 from tldb.core.structure.boundary import Boundary
 from tldb.core.structure.dewey_id import DeweyID
@@ -80,7 +80,7 @@ class TestNodeRangeSearch(TestCaseTimer):
     def setUpClass(cls):
         super().setUpClass()
         cls.tldb = TLDB('local')
-        input_path = root_path() / 'test' / 'io' / 'in' / 'cases' / 'simple_small' / 'A_B_D_table.dat'
+        input_path = root_path() / 'tests' / 'io' / 'in' / 'cases' / 'simple_small' / 'A_B_D_table.dat'
         cls.tldb.load_table_object_from_csv('table', input_path, delimiter=' ', headers=['A', 'B', 'D'],
                                             max_n_children=2)
         cls.table = cls.tldb.get_object('table')
@@ -124,7 +124,7 @@ class TestXMLNode(TestCaseTimer):
     def setUpClass(cls):
         super().setUpClass()
         cls.tldb = TLDB('local')
-        input_path = root_path() / 'test' / 'io' / 'in' / 'cases' / 'simple_small'
+        input_path = root_path() / 'tests' / 'io' / 'in' / 'cases' / 'simple_small'
         cls.tldb.load_from_folder(input_path, max_n_children=2)
 
     @unittest.SkipTest

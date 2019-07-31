@@ -1,6 +1,6 @@
 import copy
 
-from test.test_case import TestCaseCompare
+from tests.test_case import TestCaseCompare
 from tldb.core.structure.context import RangeContext
 from tldb.core.structure.interval import Interval
 

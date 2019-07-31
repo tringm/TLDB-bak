@@ -9,6 +9,6 @@ install:
   - sh downloadTestData.sh
   - cd ..
 script:
-  - coverage run main.py --test all --meld false
+  - coverage run test.py all
 after_script:
   - coverage report

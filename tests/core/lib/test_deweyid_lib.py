@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 import xmltodict
 
-from test.test_case import TestCaseCompare
+from tests.test_case import TestCaseCompare
 from tldb.core.lib.dewey_id import generate_dewey_id_from_dict
 
 
