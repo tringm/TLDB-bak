@@ -1,10 +1,8 @@
 import argparse
-import importlib
 import sys
 
 from tests.test_case import *
 from tests.test_result import *
-
 
 METRICS_LOGS_PATH = root_path() / 'tests' / 'io' / 'out' / 'metrics.log'
 
@@ -39,8 +37,10 @@ def generate_parser():
     sub_parser = parser.add_subparsers(help="Input testing option", dest='testOption')
     suite_parser = sub_parser.add_parser('suite', help='Test an existing suite')
     suite_parser.add_argument('suiteName', type=str, help=f"Name of the suite. Use list to see existing suite")
-    case_parser = sub_parser.add_parser('case', help='Test an existing test case using')
-    case_parser.add_argument('caseName', type=str, help="Path to test class. E.g: test/testDir/testFile/testClass")
+    case_parser = sub_parser.add_parser('case', help='Test an existing TestCase or method')
+    case_parser.add_argument('caseName', type=str,
+                             help="Path to TestCase or method from project root separated by dot. "
+                                  "E.g: test.testDir.testFile.TestCaseClass.testMethod")
     all_parser = sub_parser.add_parser('all', help='Test all existing cases from a testDir')
     list_parser = sub_parser.add_parser('listSuite', help='List test suites in a dir')
     list_parser.add_argument('dirPath', help='path to dir from project root')
@@ -103,15 +103,8 @@ if __name__ == '__main__':
                                  f"Try another test suite or test dir.\n")
                 test_parser.print_help()
         elif args.testOption == 'case':
-            try:
-                test_path = args.caseName.split('.')
-                module = importlib.import_module('.'.join(test_path[:-1]))
-                test_case_class = getattr(module, test_path[-1])
-                suite = unittest.defaultTestLoader.loadTestsFromTestCase(test_case_class)
-                result = runner.run(suite).wasSuccessful()
-            except ValueError:
-                sys.stderr.write(f"error: Suite {args.caseName} not found\n")
-                test_parser.print_help()
+            suite = unittest.defaultTestLoader.loadTestsFromName(name=args.caseName)
+            result = runner.run(suite).wasSuccessful()
         elif args.testOption == 'listSuite':
             t_suites = get_test_suites(root_path().joinpath(args.dirPath))
             if not t_suites:

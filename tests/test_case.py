@@ -38,12 +38,12 @@ class TestCaseCompare(TestCaseTimer):
         cls.exp_file = {}
         cls.in_file = {}
 
-    def setUp(self, default_logging_level: Optional[int] = logging.INFO) -> None:
+    def setUp(self, logging_level: Optional[int] = logging.INFO) -> None:
         super().setUp()
         method_name = self.id().split('.')[-1]
         self.out_file[method_name] = self.output_folder / (method_name + '_out.txt')
         self.exp_file[method_name] = self.output_folder / (method_name + '_exp.txt')
-        set_up_logger(self.output_folder, method_name, default_logging_level)
+        set_up_logger(self.output_folder, method_name, logging_level)
         self.logger = logging.getLogger(method_name)
 
     def file_compare(self, out_f: Path, exp_f: Path, msg=None):
