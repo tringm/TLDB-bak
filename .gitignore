@@ -108,6 +108,7 @@ venv.bak/
 
 #cases data
 tests/io/in/cases/
+tests/io/in/real_cases/
 
 #out file
 *_out.txt
