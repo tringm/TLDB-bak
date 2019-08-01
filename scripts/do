@@ -1,0 +1,75 @@
+#!/bin/bash
+
+_verbose=0
+_rebuild=0
+
+function usage {
+    echo "usage: $(basename "$0") [options] [command]
+    options:
+        -v
+            verbose mode
+
+    commands:
+        -h, --help
+            Show this help text
+
+    clean-all-logs
+        remove all logs file
+
+    download-test-data
+        download test data from google drive
+"
+}
+
+function do-clean-all-logs {
+    find ../ -type f -name '*.log' -exec rm {} \;
+}
+
+function do-download-test-data {
+    cd .. && mkdir -p tests/io/in/cases && rm -r test/io/in/cases/*
+    cd test/io/in/cases
+    FILENAME="cases.tar.gz"
+    FILEID="11Zamj_r2cnXVTXivRclgCV-_0MZqENxU"
+    wget --no-check-certificate "https://drive.google.com/uc?export=download&id=${FILEID}" -O $FILENAME
+    tar -xzf cases.tar.gz --strip 1 && rm cases.tar.gz
+}
+
+
+if [[ "$1" == "-v" ]]
+then
+    _verbose=1
+    shift
+fi
+
+if [[ "$1" == "" ]]
+then
+  echo
+  echo "error: no command"
+  echo
+  usage
+  exit 1
+fi
+
+_cmd=$1
+shift
+
+case $_cmd in
+    do-clean-all-logs)
+        do-clean-all-logs $@
+        ;;
+    download-test-data)
+        do-download-test-data $@
+        ;;
+    -h|--help)
+        usage
+        ;;
+    *)
+        echo
+        echo "error: unknown command '$_cmd'"
+        echo
+        usage
+        exit 1
+        ;;
+esac
+
+exit $!

@@ -10,9 +10,11 @@ from config import root_path, set_up_logger
 
 class TestCaseTimer(unittest.TestCase):
     def setUp(self) -> None:
+        super().setUp()
         self._started_at = time.time()
 
     def tearDown(self) -> None:
+        super().tearDown()
         self._elapsed = time.time() - self._started_at
 
 

@@ -5,8 +5,8 @@ install:
   - pip install pipenv
   - pipenv install
   - cd scripts
-  - chmod +x downloadTestData.sh
-  - sh downloadTestData.sh
+  - chmod +x do
+  - ./do download-test-data
   - cd ..
 script:
   - coverage run test.py all

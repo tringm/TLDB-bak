@@ -1,4 +1,7 @@
 import logging
+import unittest
+from pathlib import Path
+from typing import Optional, Union
 
 from tests.test_case import TestCaseCompare
 from tldb.core.client import TLDB
@@ -7,7 +10,6 @@ from tldb.core.operator.join import ComplexXMLSQLJoin
 from tldb.core.structure.context import RangeContext
 from tldb.core.structure.interval import Interval
 from tldb.server.query.xml_query import XMLQuery
-import unittest
 
 
 class TestCaseSimpleSmall(TestCaseCompare):
@@ -35,9 +37,12 @@ class TestCaseSimpleSmall(TestCaseCompare):
 
 class TestCaseOrderline(TestCaseCompare):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls, test_path: Optional[Union[Path, str]] = None):
         super().setUpClass('cases/orderline')
         cls.tldb = TLDB('local')
+
+    def setUp(self, default_logging_level: Optional[int] = logging.INFO) -> None:
+        super().setUp(default_logging_level=logging.VERBOSE)
 
     def test_orderline_price_asin_small_original(self):
         self.tldb.load_from_folder(self.input_folder / 'orderline_price_asin_small_original', index_type='rtree', max_n_children=500)
