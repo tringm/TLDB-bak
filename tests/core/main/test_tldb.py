@@ -8,7 +8,7 @@ from tldb.core.client import TLDB
 class TestTLDB(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super().setUpClass('core/tldb')
+        super().setUpClass(test_path='core/tldb')
         cls.tldb = TLDB('local')
 
     def test_rtree_index_csv_file(self):

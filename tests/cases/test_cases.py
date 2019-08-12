@@ -15,7 +15,7 @@ from tldb.server.query.xml_query import XMLQuery
 class TestCaseSimpleSmall(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super().setUpClass('cases/simple_small')
+        super().setUpClass(test_path='cases/simple_small')
         cls.tldb = TLDB('local')
 
     def test_simple_small(self):
@@ -38,7 +38,7 @@ class TestCaseSimpleSmall(TestCaseCompare):
 class TestCaseOrderline(TestCaseCompare):
     @classmethod
     def setUpClass(cls, test_path: Optional[Union[Path, str]] = None):
-        super().setUpClass('cases/orderline')
+        super().setUpClass(test_path='cases/orderline')
         cls.tldb = TLDB('local')
 
     def setUp(self, logging_level: Optional[int] = logging.INFO) -> None:
@@ -100,7 +100,7 @@ class TestCaseOrderline(TestCaseCompare):
 class TestCaseInvoice(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super().setUpClass('cases/invoice')
+        super().setUpClass(test_path='cases/invoice')
         cls.tldb = TLDB('local')
 
     @unittest.skip("")

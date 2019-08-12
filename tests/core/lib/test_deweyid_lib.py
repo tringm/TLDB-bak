@@ -10,7 +10,7 @@ from tldb.core.lib.dewey_id import generate_dewey_id_from_dict
 class TestGenerateDewey(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super().setUpClass('core/lib/dewey_id')
+        super().setUpClass(test_path='core/lib/dewey_id')
 
     def test_generate_dewey_id_from_json(self):
         """

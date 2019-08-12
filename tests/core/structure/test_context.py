@@ -8,7 +8,7 @@ from tldb.core.structure.interval import Interval
 class TestRangeContext(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super().setUpClass('core/structure/context/range_context')
+        super().setUpClass(test_path='core/structure/context/range_context')
 
     def test_str(self):
         method_name = self.id().split('.')[-1]

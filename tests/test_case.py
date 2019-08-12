@@ -20,18 +20,23 @@ class TestCaseTimer(unittest.TestCase):
 
 class TestCaseCompare(TestCaseTimer):
     @classmethod
-    def setUpClass(cls, test_path: Optional[Union[Path, str]] = None):
+    def setUpClass(cls,
+                   io_folder_path: Optional[Union[Path, str]] = 'tests/io',
+                   in_folder_name: Optional[str] = 'in',
+                   out_folder_name: Optional[str] = 'out',
+                   test_path: Optional[Union[Path, str]] = None):
         """
-
-        :param test_path: test path that will be used for the input and output folder. E.g: case/a_single_case
+        :param io_folder_path: Path to test io folder from project root
+        :param in_folder_name: Input folder name
+        :param out_folder_name: Output folder name
+        :param test_path: Path to test class if specfied, else use class name
         :return:
         """
+        io_path = root_path().joinpath(io_folder_path)
         if not test_path:
-            cls.input_folder = root_path() / 'tests' / 'io' / 'in' / cls.__name__
-            cls.output_folder = root_path() / 'tests' / 'io' / 'out' / cls.__name__
-        else:
-            cls.input_folder = (root_path() / 'tests' / 'io' / 'in').joinpath(test_path)
-            cls.output_folder = (root_path() / 'tests' / 'io' / 'out').joinpath(test_path)
+            test_path = cls.__name__
+        cls.input_folder = io_path.joinpath(in_folder_name).joinpath(test_path)
+        cls.output_folder = (io_path / out_folder_name).joinpath(test_path)
         cls.input_folder.mkdir(parents=True, exist_ok=True)
         cls.output_folder.mkdir(parents=True, exist_ok=True)
         cls.out_file = {}

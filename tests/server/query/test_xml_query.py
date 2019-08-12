@@ -6,7 +6,7 @@ from config import root_path
 class TestXMLQuery(TestCaseCompare):
     @classmethod
     def setUpClass(cls):
-        super().setUpClass('server/query')
+        super().setUpClass(test_path='server/query')
 
     def test_load_from_matrix_file(self):
         method_id = self.id().split('.')[-1]
